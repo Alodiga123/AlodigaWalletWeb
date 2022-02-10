@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Validar Documentos</ui:define>
+
+    <ui:define name="content">
+        <h:form enctype="multipart/form-data">
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card">
+                            <h1>Registro de documentos</h1>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                <p:outputLabel value="Documento de Identificación" />
+                                <p:fileUpload value="#{fileUploadView.documentIden}" mode="simple" skinSimple="true"
+                                              auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                <p:outputLabel value="Selfie" />
+                                <p:fileUpload value="#{fileUploadView.profile}" mode="simple" skinSimple="true"
+                                              auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                            </p:panelGrid>
+                            <p:commandButton value="Submit" ajax="false" action="#{fileUploadView.upload}" styleClass="p-mt-3 ui-button-outlined p-d-block"/>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
