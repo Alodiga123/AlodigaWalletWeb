@@ -181,7 +181,7 @@ public class LoginBean extends GenericController implements Serializable {
                     session.setAttribute("userId", respuestaUsuario.getDatosRespuesta().getUsuarioID());
                     session.setAttribute("countryId", respuestaUsuario.getDatosRespuesta().getDireccion().getPaisId());
                     session.setAttribute("zipCode", respuestaUsuario.getDatosRespuesta().getDireccion().getCodigoPostal());
-                    return "dashboard.xhtml?faces-redirect=true";
+                    return "rechargeCard.xhtml?faces-redirect=true";
                 } else {
                     FacesContext.getCurrentInstance().addMessage(
                             null,
