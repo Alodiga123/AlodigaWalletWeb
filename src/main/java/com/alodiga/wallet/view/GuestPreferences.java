@@ -36,6 +36,8 @@ public class GuestPreferences implements Serializable {
     
     private String menuLayout = "static";
     
+    private boolean compact = true;
+    
     @PostConstruct
     public void init() {
         themeColors = new HashMap<String,String>();
@@ -95,5 +97,13 @@ public class GuestPreferences implements Serializable {
     
     public Map getThemeColors() {
         return this.themeColors;
+    }
+    
+    public void setCompact(boolean value) {
+        this.compact = value;
+    }
+    
+    public boolean isCompact() {
+        return this.compact;
     }
 }

@@ -18,4 +18,15 @@
         </renderer>
     </render-kit>
     
+    <application>
+       <locale-config>
+       <default-locale>es</default-locale>
+       <supported-locale>en</supported-locale>
+       </locale-config>
+       <resource-bundle>
+           <base-name>com.alodiga.wallet.web.message.messages.messages</base-name>
+           <var>msg</var>
+       </resource-bundle>
+    </application>
+    
 </faces-config>
