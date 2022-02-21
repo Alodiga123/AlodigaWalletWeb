@@ -41,8 +41,51 @@
 
     <ui:define name="content">
         <h:form id="form">
-            <div class="ui-g">
-                <div class="ui-g-12">
+            
+            <div class="layout-breadcrumb">
+                    <p:menubar>
+                            <p:submenu label="File" icon="ui-icon-insert-drive-file">
+                                <p:submenu label="New" icon="ui-icon-add-box">
+                                    <p:menuitem value="Project" url="#" />
+                                    <p:menuitem value="Other" url="#" />
+                                </p:submenu>
+                                <p:menuitem value="Open" url="#" icon="ui-icon-open-in-browser"/>
+                                <p:separator />
+                                <p:menuitem value="Quit" url="#" icon="ui-icon-close"/>
+                            </p:submenu>
+
+                            <p:submenu label="Edit" icon="ui-icon-mode-edit">
+                                <p:menuitem value="Undo" url="#" icon="ui-icon-undo" />
+                                <p:menuitem value="Redo" url="#" icon="ui-icon-redo" />
+                            </p:submenu>
+
+                            <p:submenu label="Help" icon="ui-icon-help">
+                                <p:menuitem value="Contents" url="#" icon="ui-icon-inbox"/>
+                                <p:submenu label="Search" icon="ui-icon-search">
+                                    <p:submenu label="Text" icon="ui-icon-text-fields">
+                                        <p:menuitem value="Workspace" url="#" icon="ui-icon-work"/>
+                                    </p:submenu>
+                                    <p:menuitem value="File" url="#" icon="ui-icon-attach-file"/>
+                                </p:submenu>
+                            </p:submenu>
+                        
+
+                            <p:submenu label="Actions" icon="ui-icon-settings-applications">
+                                <p:submenu label="Ajax" icon="ui-icon-refresh">
+                                    <p:menuitem value="Save" icon="ui-icon-save"/>
+                                    <p:menuitem value="Update" icon="ui-icon-update"/>
+                                </p:submenu>
+                                <p:submenu label="Non-Ajax" icon="ui-icon-compare-arrows">
+                                    <p:menuitem value="Delete" icon="ui-icon-close"/>
+                                </p:submenu>
+                            </p:submenu>
+
+                            <p:menuitem value="Quit" url="http://www.primefaces.org" icon="ui-icon-close" />
+
+                            <f:facet name="options">
+                                <p:inputText style="margin-right:10px;vertical-align:middle;padding:2px" placeholder="Search"/>
+                            </f:facet>
+                        </p:menubar>
                     <div class="card">
                         <h1>DataTable</h1>
                         <p:dataTable var="car" value="#{dtSelectionView.cars7}" selectionMode="single" reflow="true"
@@ -67,7 +110,7 @@
                             </p:column>
                         </p:dataTable>
                     </div>
-                </div>
+                
                 <div class="ui-g-12">
                     <!-- Left Side -->
                     <div class="card">
