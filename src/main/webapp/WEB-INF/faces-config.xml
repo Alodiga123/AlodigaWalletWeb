@@ -19,12 +19,21 @@
     </render-kit>
     
     <application>
-       <locale-config>
+       <!--<locale-config>
        <default-locale>es</default-locale>
        <supported-locale>en</supported-locale>
        </locale-config>
        <resource-bundle>
            <base-name>com.alodiga.wallet.web.message.messages.messages</base-name>
+           <var>msg</var>
+       </resource-bundle>-->
+       
+       <locale-config>
+       <default-locale>es</default-locale>
+       <supported-locale>en</supported-locale>
+       </locale-config>
+       <resource-bundle>
+           <base-name>com.alodiga.wallet.messages.message</base-name>
            <var>msg</var>
        </resource-bundle>
     </application>

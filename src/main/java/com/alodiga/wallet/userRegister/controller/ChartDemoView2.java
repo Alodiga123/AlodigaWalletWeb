@@ -15,7 +15,6 @@
  */
 package com.alodiga.wallet.userRegister.controller;
 
-import com.alodiga.wallet.userRegister.view.*;
 import com.alodiga.wallet.view.*;
 import java.io.Serializable;
 import java.util.ArrayList;
