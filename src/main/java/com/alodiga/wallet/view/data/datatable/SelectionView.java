@@ -27,91 +27,59 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import com.alodiga.wallet.domain.Car;
 import com.alodiga.wallet.service.CarService;
+import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
+import com.alodiga.wallet.ws.Maw_transaction;
+import com.alodiga.wallet.ws.TransactionListResponse;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @ManagedBean(name="dtSelectionView")
 @ViewScoped
 public class SelectionView implements Serializable {
+
     
-    private List<Car> cars1;
-    private List<Car> cars2;
-    private List<Car> cars3;
-    private List<Car> cars4;
-    private List<Car> cars5;
-    private List<Car> cars6;
-    private List<Car> cars7;
-    private Car selectedCar;
-    private List<Car> selectedCars;
-   
-    @ManagedProperty("#{carService}")
-    private CarService service;
-    
+    private List<Maw_transaction> maw_transactions;
+
     @PostConstruct
     public void init() {
-        cars1 = service.createCars(10);
-        cars2 = service.createCars(10);
-        cars3 = service.createCars(10);
-        cars4 = service.createCars(10);
-        cars5 = service.createCars(10);
-        cars6 = service.createCars(10);
-        cars7 = service.createCars(50);
+        try {
+            
+            APIAlodigaWalletProxy proxy = new APIAlodigaWalletProxy();
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            HttpSession session = request.getSession(false);
+            Object userId= session.getAttribute("userId");
+            
+            TransactionListResponse transactionListResponse = proxy.getTransactionsByUserIdApp(userId.toString(), "50");
+            maw_transactions = Arrays.asList(transactionListResponse.getTransactions());
+            
+            
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage(
+                        null,
+                        new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                "No se pudo obtener la lista",
+                                "Intente nuevamente"));
+        }
     }
 
-    public List<Car> getCars1() {
-        return cars1;
+
+    public List<Maw_transaction> getMaw_transactions() {
+        return maw_transactions;
     }
 
-    public List<Car> getCars2() {
-        return cars2;
-    }
-
-    public List<Car> getCars3() {
-        return cars3;
-    }
-
-    public List<Car> getCars4() {
-        return cars4;
-    }
-
-    public List<Car> getCars5() {
-        return cars5;
-    }
-
-    public List<Car> getCars6() {
-        return cars6;
-    }
-
-    public List<Car> getCars7() {
-        return cars7;
-    }
-
-    public void setService(CarService service) {
-        this.service = service;
-    }
-
-    public Car getSelectedCar() {
-        return selectedCar;
-    }
-
-    public void setSelectedCar(Car selectedCar) {
-        this.selectedCar = selectedCar;
-    }
-
-    public List<Car> getSelectedCars() {
-        return selectedCars;
-    }
-
-    public void setSelectedCars(List<Car> selectedCars) {
-        this.selectedCars = selectedCars;
+    public void setMaw_transactions(List<Maw_transaction> maw_transactions) {
+        this.maw_transactions = maw_transactions;
     }
     
-    public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("Car Selected", ((Car) event.getObject()).getId());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public void onRowUnselect(UnselectEvent event) {
-        FacesMessage msg = new FacesMessage("Car Unselected", ((Car) event.getObject()).getId());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
+    
+    
+    
+    
 }
 
