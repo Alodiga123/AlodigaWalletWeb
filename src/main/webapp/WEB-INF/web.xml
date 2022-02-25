@@ -29,15 +29,15 @@
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
     
-    <!--<filter>
+    <filter>
         <filter-name>Character Encoding Filter</filter-name>
         <filter-class>com.alodiga.remittance.filter.CharacterEncodingFilter</filter-class>
-    </filter>-->
+    </filter>
     
-    <!--<filter-mapping>
+    <filter-mapping>
         <filter-name>Character Encoding Filter</filter-name>
         <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>-->
+    </filter-mapping>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
