@@ -1,68 +1,59 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
-    <h:head>.
-        <f:facet name="first" >
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-            <meta name="apple-mobile-web-app-capable" content="yes" />
-        </f:facet>
-        <title>#{msg.title}</title>
-        <h:outputScript name="js/ripple.js" library="ultima-layout" />
-        <h:outputScript name="js/layout.js" library="ultima-layout" />
-        <style type="text/css">
-            .ui-selectonemenu .ui-selectonemenu-label {
-                text-align: center;
-            }
-            .label{
-                text-align: left;
-            }
-        </style>
-    </h:head>
-    <h:body>
-        <p:layout fullPage="true" style="border: none">
-            <f:view contentType="text/html" id="fview">
-                <p:layoutUnit position="center" style="border: none">
-                    <h:form id="CountryForm" styleClass="login-body" style="height:100%">
-                        <div class="card login-panel ui-fluid" style="width: 800px; max-height: 80vh;">
-                            <p:panel header="#{msg.requirement}">
-                                <p:panelGrid columns="3" layout="grid" styleClass="ui-panelgrid-blank form-group">
-                                    <p:outputLabel value="Country" for="country" />
-                                    <p:selectOneMenu id="country" value="#{RetirementController.selectedCountry}"  required="false">
-                                            <f:selectItem itemLabel="Country" noSelectionOption="true" itemDisabled="true"/>
-                                            <f:selectItems value="#{RetirementController.countryList}" var="obj" itemLabel="#{obj.name}"/>
-                                            <p:ajax listener="#{RetirementController.onCountryChange}" update="bank"/>
-<!--                                            <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true"/>
-                                            <f:selectItems value="#{basicView.countries}"/>-->
-                                        </p:selectOneMenu>
-                                    <p:outputLabel value="bank" for="bank" />
-                                    <p:selectOneMenu id="country"   required="false">
-                                            <f:selectItem itemLabel="bank" noSelectionOption="true" itemDisabled="true"/>
-                                            <f:selectItems value="#{RetirementController.countryList}" var="obj" itemLabel="#{obj.name}"/>
-                                   </p:selectOneMenu>
-                                    </p:panelGrid>
-                           <p:commandButton value="Save" icon="ui-icon-save" action="#{adminCountryController.submit()}"/>
-                           <p:commandButton id="btnBack" value="Back" icon="ui-icon-sign-out" ajax="true" action="ListCountry.xhtml?faces-redirect=true" />
-                            </p:panel>
-                        </div>
-                    </h:form>
-                </p:layoutUnit>
-                <p:layoutUnit position="south" style="border: none">
-                    <div style="color: #757575; text-align: center;">
-                        #{msg.copyright}
-                        <p:graphicImage name="images/icon-mc.png" library="ultima-layout" />
-                        <p:graphicImage name="images/icon-veri.png" library="ultima-layout" />
-                        <p:graphicImage name="images/icon-visa.png" library="ultima-layout" />
-                    </div>
-                </p:layoutUnit>
-                <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
-                <h:outputStylesheet name="css/layout-indigo.css" library="ultima-layout" />
-            </f:view>
-        </p:layout>
-    </h:body>
-</html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
 
+    <ui:define name="title">#{msg.titlecardWithdrawal}</ui:define>
+
+    <ui:define name="content">
+        <h:form id="cadWithdrawalForm" >
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <div align="center">
+                                <h1>#{msg.titlecardWithdrawal}</h1>
+                                <f:facet name="header">
+                                    <p:messages id="messages"  autoUpdate="true" closable="true" />
+                                </f:facet>
+                                <p:panelGrid id="cardWithdrawalGrid" columns="2" >
+                                    <p:outputLabel value="#{msg.commonsCountry}" for="country"/>
+                                    <p:selectOneMenu id="country" value="#{cardWithdrawalController.selectedCountry}" converter="#{countryConverter}" required="true">
+                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
+                                        <f:selectItems value="#{cardWithdrawalController.countryList}" var="country" itemLabel="#{country.name}"/>
+                                        <p:ajax event="change" update="bank"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="#{msg.commonsBank}" for="bank"/>
+                                    <p:selectOneMenu id="bank" value="#{cardWithdrawalController.selectedBank}" converter="#{bankConverter}" required="true">
+                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
+                                        <f:selectItems value="#{cardWithdrawalController.bankList}" var="bank" itemLabel="#{bank.name}"/>
+                                    </p:selectOneMenu>
+                                    <p:outputLabel value="Add Account" />
+                                    <p:commandButton id="btnBank" value="Add Account" icon="ui-icon-sign-out" ajax="true" action="addAccount.xhtml?redirect=true"/>
+                                    <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
+                                    <p:selectOneMenu id="product" value="#{cardWithdrawalController.selectedProduct}" converter="#{productConverter}" required="true">
+                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
+                                        <f:selectItems value="#{cardWithdrawalController.productList}" var="product" itemLabel="#{product.name}"/>
+                                    </p:selectOneMenu>  
+                                    <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
+                                    <p:inputNumber id="transactionAmount" value="#{cardWithdrawalController.transactionAmount}" decimalPlaces="2" required="false"/>
+                                    <p:outputLabel value="#{msg.commonsTransactionConcept}" for="transactionConcept" />
+                                    <p:inputText id="transactionConcept" value="#{cardWithdrawalController.transactionConcept}" required="false"/>
+                                </p:panelGrid>
+                            </div>
+
+                            <div align="center">
+                                <p:panelGrid  columns="1" >
+                                    <p:commandButton value="#{msg.buttonSavecardWithdrawal}" icon="ui-icon-save" action="#{cardWithdrawalController.submit()}"/>
+                                </p:panelGrid>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>    
+    </ui:define>
+
+</ui:composition>

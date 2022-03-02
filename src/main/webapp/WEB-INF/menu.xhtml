@@ -48,7 +48,7 @@
                     </ui:fragment>
                     
                     <pu:menu widgetVar="me">
-                        <p:menuitem id="um_dashboard" value="Inicio" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
                         <p:submenu id="themes" label="Themes" icon="palette">
                             <p:menuitem value="Indigo - Pink" icon="brush" actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false" />
                             <p:menuitem value="Brown - Green" icon="brush" actionListener="#{guestPreferences.setTheme('brown')}" ajax="false" />
@@ -61,8 +61,7 @@
                             <p:menuitem value="Cyan - Amber" icon="brush" actionListener="#{guestPreferences.setTheme('cyan')}" ajax="false" />
                             <p:menuitem value="Grey - Deep Orange" icon="brush" actionListener="#{guestPreferences.setTheme('grey')}" ajax="false" />
                         </p:submenu>
-                        <p:submenu id="um_customization" label="Validar Cuenta" icon="settings_application">
-                            <p:menuitem id="validate_document" value="Documentos" icon="desktop_mac" outcome="/manualRechargeRequest"/>
+                        <p:submenu id="um_customization" label="Customization" icon="settings_application">
                             <p:menuitem value="Static Menu" icon="menu" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
                             <p:menuitem value="Overlay Menu" icon="exit_to_app" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
                             <p:menuitem value="Horizontal Menu" icon="border_horizontal" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
@@ -90,6 +89,9 @@
                             <p:menuitem id="um_error" value="Error Page" icon="error" outcome="/error" />
                             <p:menuitem id="um_404" value="404 Page" icon="error_outline" outcome="/404" />
                             <p:menuitem id="um_access" value="Access Denied Page" icon="security" outcome="/access" />
+                        </p:submenu>
+                        <p:submenu id="um_operation" label="Operations" icon="get_app">
+                            <p:menuitem id="operations" value="Agregar Cuenta" icon="ui-icon-sign-out" outcome="/addAccount" />
                         </p:submenu>
                         <p:submenu id="um_hierarchy" label="Menu Hierarchy" icon="menu">
                             <p:submenu id="um_sm1" label="Submenu 1" icon="subject">
