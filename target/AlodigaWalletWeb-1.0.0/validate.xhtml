@@ -10,98 +10,30 @@
     <ui:define name="content">
         <h:form enctype="multipart/form-data">
             <div class="ui-fluid">
-                <p:panelGrid>
-                    <p:tabView>
-                        <p:tab title="Documento de identidad">
-                            <div class="ui-g">
-                                <div class="ui-g-12">
-                                    <div class="card">
-                                        <h1>Registro de documentos</h1>
-                                        <p>Adjunta una fotografía de la cara principal de un documento de identidad válido</p>
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-                                            
-                                            <p:outputLabel value="Documento de Identificación" />
-                                            <p:fileUpload value="#{fileUploadView.documentIden}" mode="simple" skinSimple="true"
-                                                          auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
-                                        </p:panelGrid>
-                                        <p:commandButton value="siguiente" ajax="false"
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card">
+                            <h1>Registro de documentos</h1>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
 
-                                                         actionListener="#{fileUploadView.activeTab}"
-                                                         update="@form"
-                                                         oncomplete="PF('tabView').select(1);" />
+                                <p:outputLabel value="Documento de Identificación" />
+                                <p:fileUpload value="#{fileUploadView.documentIden}" mode="simple" skinSimple="true"
+                                              auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                            </p:panelGrid>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
 
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </p:tab>
-                        <p:tab title="Selfie" >
-                            <div class="ui-g">
-                                <div class="ui-g-12">
-                                    <div class="card">
-                                        <h1>Registro de documentos</h1>
-                                        <p>Por favor toma una foto sostenido un cartel que diga Mejora Tu Vida con la fecha de hoy.</p>
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-
-                                            <p:outputLabel value="Selfie" />
-                                            <p:fileUpload value="#{fileUploadView.profile}" mode="simple" skinSimple="true"
-                                                          auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
-                                        </p:panelGrid>
-                                        <p:commandButton value="siguiente" ajax="false"
-
-                                                         actionListener="#{fileUploadView.activeTab}"
-                                                         update="@form"
-                                                         oncomplete="PF('tabView').select(1);" />
+                                <p:outputLabel value="Selfie" />
+                                <p:fileUpload value="#{fileUploadView.profile}" mode="simple" skinSimple="true"
+                                              auto="true" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>
+                            </p:panelGrid>
+                            <p:commandButton value="Submit" ajax="false" action="#{fileUploadView.upload}" styleClass="p-mt-3 ui-button-outlined p-d-block"/>
 
 
-                                    </div>
+                        </div>
 
-                                </div>
+                    </div>
 
-                            </div>
-                        </p:tab>
-                        <p:tab title="Dirección" disabled="true">
-                            <div class="ui-g">
-                                <div class="ui-g-12">
-                                    <div class="card">
-                                        <h1>Registro de dirección</h1>
-
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-
-                                            <h:outputText value="Introduzca el estado" />
-                                            <p:inputText id="country" value="#{fileUploadView.country}" />
-
-                                        </p:panelGrid>
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-
-                                            <h:outputText value="Introduzca la Ciudad" />
-                                            <p:inputText id="town" value="#{fileUploadView.town}" />
-
-                                        </p:panelGrid>
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-
-                                            <h:outputText value="Introduzca el Código Postal" />
-                                            <p:inputText id="zipCode" value="#{fileUploadView.zipCode}" />
-
-                                        </p:panelGrid>
-                                        <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-
-                                            <h:outputText value="Ingrese su calle, Av, casa" />
-                                            <p:inputText id="address" value="#{fileUploadView.address}" />
-
-                                        </p:panelGrid>
-                                        <p:commandButton value="Submit" ajax="false" action="#{fileUploadView.upload}" styleClass="p-mt-3 ui-button-outlined p-d-block"/>
-
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </p:tab>
-                    </p:tabView>
-                </p:panelGrid>
+                </div>
             </div>
         </h:form>
     </ui:define>
