@@ -148,7 +148,7 @@ public class RechargeCardController {
         if (sourceProduct != null && rechargeAmount != null) {
             try {
                 com.alodiga.cms.ws.TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardRechargeWallet(cardNumber,messageMiddlewareId,channelWallet,rechargeAmount,rechargeConcept,transactioExternalId,acquirerCountry);
-                if (transactionResponse.getCodigoRespuesta().equals("00")) {
+                if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("cardRecharge.saveSuccesfull")));
 //                   context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "La recarga de la tarjeta se realizó correctamente", null));
                 }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INVALID_TRANSACTIONAL_LIMITS.getCode())) {
