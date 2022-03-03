@@ -47,7 +47,7 @@ public class AccountTypeBankConverter implements Converter {
             return "";
         } else {
             if (value instanceof AccountTypeBank) {
-                return Long.toString(((AccountTypeBank) value).getId());
+                return Integer.toString(((AccountTypeBank) value).getId());
             } else {
                 return value.toString();
             }

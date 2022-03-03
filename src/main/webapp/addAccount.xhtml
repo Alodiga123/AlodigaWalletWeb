@@ -31,9 +31,9 @@
                                         <f:selectItems value="#{addAccountController.bankList}" var="bank" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu> 
                                     <p:outputLabel value="#{msg.typeAccount}" for="bank"/>
-                                    <p:selectOneMenu id="typeAccountBank" value="#{addAccountController.selectedAccountTypeBank}" converter="#{accountTypeBankConveter}" required="true">
+                                    <p:selectOneMenu id="typeAccountBank" value="#{addAccountController.selectedAccountTypeBank}" converter="#{accountTypeBankConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{addAccountController.accountTypeBankList}" />
+                                        <f:selectItems value="#{addAccountController.accountTypeBankList}" var="accountType" itemLabel="#{accountType.code}" />
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Numero de cuenta" for="numberAccountBank" />
                                     <p:inputText id="numberAccountBank" value="#{addAccountController.numberAccountBank}" required="false"/>
@@ -42,7 +42,7 @@
 
                             <div align="center">
                                 <p:panelGrid  columns="1" >
-                                    <p:commandButton value="#{msg.buttonSaveAddAccount}" icon="ui-icon-save" action="#{addAcountController.submit()}"/>
+                                    <p:commandButton value="#{msg.buttonSaveAddAccount}" icon="ui-icon-save" action="#{addAccountController.submit()}"/>
                                 </p:panelGrid>
                             </div>
                         </div>

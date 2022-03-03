@@ -13,6 +13,7 @@ import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
 import com.alodiga.wallet.common.ejb.UtilsEJB;
+import com.alodiga.wallet.common.enumeraciones.StatusAccountBankE;
 import com.alodiga.wallet.common.exception.GeneralException;
 import com.alodiga.wallet.common.exception.NullParameterException;
 import com.alodiga.wallet.common.exception.RegisterNotFoundException;
@@ -24,17 +25,21 @@ import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
 import com.alodiga.wallet.common.utils.EjbConstants;
-import com.alodiga.wallet.ws.AccountBank;
+import com.alodiga.wallet.common.model.AccountTypeBank;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CreditCardListResponse;
 import com.alodiga.wallet.ws.AccountTypeBankListResponse;
 import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
-import com.cms.commons.genericEJB.EJBRequest;
+import com.alodiga.wallet.common.genericEJB.EJBRequest;
+import com.alodiga.wallet.common.model.AccountBank;
+import com.alodiga.wallet.common.model.StatusAccountBank;
 import com.ericsson.alodiga.ws.PreguntaIdioma;
 import com.ericsson.alodiga.ws.Usuario;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -64,6 +69,8 @@ public class AddAccountController {
     private ResourceBundle msg;  
     private String numberAccountBank;
     private static BusinessPortalEJB businessPortalEJBProxy;
+    private AccountBank accountBank = null;
+    
     
 
     @PostConstruct
@@ -79,7 +86,10 @@ public class AddAccountController {
 
             //Se obtiene la lista de países
             countryList = businessPortalEJBProxy.getCountries();
-            
+
+            //Se obtiene la lista de tipos de cuentas bancarias
+            EJBRequest request = new EJBRequest(); 
+            accountTypeBankList = businessPortalEJBProxy.getAccountTypeBanks(request);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -95,14 +105,6 @@ public class AddAccountController {
         this.countryList = countryList;
     }
 
-    public Maw_bank[] getBankList2() {
-        return bankList2;
-    }
-
-    public void setBankList2(Maw_bank[] bankList) {
-        this.bankList2 = bankList2;
-    }
-
     public List<Maw_bank> getBankList() {
         return bankList;
     }
@@ -111,20 +113,20 @@ public class AddAccountController {
         this.bankList = bankList;
     }
 
+    public Maw_bank[] getBankList2() {
+        return bankList2;
+    }
+
+    public void setBankList2(Maw_bank[] bankList2) {
+        this.bankList2 = bankList2;
+    }
+
     public APIAlodigaWalletProxy getApiAlodigaWalletProxy() {
         return apiAlodigaWalletProxy;
     }
 
     public void setApiAlodigaWalletProxy(APIAlodigaWalletProxy apiAlodigaWalletProxy) {
         this.apiAlodigaWalletProxy = apiAlodigaWalletProxy;
-    }
-
-    public BusinessPortalEJB getBusinessPortalEJBProxy() {
-        return businessPortalEJBProxy;
-    }
-
-    public void setBusinessPortalEJBProxy(BusinessPortalEJB businessPortalEJBProxy) {
-        this.businessPortalEJBProxy = businessPortalEJBProxy;
     }
 
     public HttpSession getSession() {
@@ -143,17 +145,36 @@ public class AddAccountController {
         this.user = user;
     }
 
-    public Country getSelectedCountry() {
+    public static BusinessPortalEJB getBusinessPortalEJBProxy() {
+        return businessPortalEJBProxy;
+    }
+
+    public static void setBusinessPortalEJBProxy(BusinessPortalEJB businessPortalEJBProxy) {
+        AddAccountController.businessPortalEJBProxy = businessPortalEJBProxy;
+    }
+
+    public AccountBank getAccountBank() {
+        return accountBank;
+    }
+
+    public void setAccountBank(AccountBank accountBank) {
+        this.accountBank = accountBank;
+    }
+
+   
+
+      public Country getSelectedCountry() {
         return selectedCountry;
     }
 
     public void setSelectedCountry(Country selectedCountry) {
         this.selectedCountry = selectedCountry;
+        bankList.clear();
         try {
             if (selectedCountry != null) {
                 BankListResponse bankListResponse = apiAlodigaWalletProxy.getBankByCountryApp(String.valueOf(selectedCountry.getId()));
                 bankList2 = bankListResponse.getBanks();
-                for (Maw_bank b : bankList2) {
+                for (Maw_bank b: bankList2) {
                     bankList.add(b);
                 }
             }
@@ -161,6 +182,7 @@ public class AddAccountController {
             e.printStackTrace();
         }
     }
+
 
     public Bank getSelectedBank() {
         return selectedBank;
@@ -205,23 +227,36 @@ public class AddAccountController {
  
  
   public void submit() {
-//
-//        FacesContext context = FacesContext.getCurrentInstance();
-//        if (numberAccountBank != null) {
-//            try {
-//               accountBank = new AccountBank();
-//               accountBank.setAccountNumber(numberAccountBank);
-//               accountBank.setAccountTypeBankId(accountTypeBankId);
-//               
-//               accountBank = proxyUtilEJB.saveBank(accountBank);
-//
-//               if (numberAccountBank != null) {
-//                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Las respuestas del usuario se guardaron correctamente en la BD", null));
-//               }else{
-//                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Se presentó un problema al guardar los datos, por favor intente de nuevo", null));  
-//               }
-//            
-//            }
+               System.out.println("Entre");
+        if (numberAccountBank != null) {
+            try {
+               //Obtener el estatus ACTIVA de la cuenta bancaria
+               StatusAccountBank statusAccountBankActiva = businessPortalEJBProxy.loadStatusAccountBankById(StatusAccountBankE.ACTIVA.getId());
+
+               //Creando el objeto AccountBank
+               AccountBank accountBank = new AccountBank();
+               accountBank.setBankId(selectedBank);
+               accountBank.setAccountNumber(numberAccountBank);
+               accountBank.setAccountTypeBankId(selectedAccountTypeBank);
+               accountBank.setStatusAccountBankId(statusAccountBankActiva);
+               accountBank.setCreateDate(new Timestamp(new Date().getTime()));
+               accountBank.setUnifiedRegistryId(user.getUsuarioID());
+               //Guardar la cuenta bancaria en la BD
+               accountBank = businessPortalEJBProxy.saveAccountBank(accountBank);
+
+               if (numberAccountBank != null) {
+                  FacesContext context = FacesContext.getCurrentInstance();
+                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Las respuestas del usuario se guardaron correctamente en la BD", null));
+               }else{
+                  FacesContext context = FacesContext.getCurrentInstance();
+                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Se presentó un problema al guardar los datos, por favor intente de nuevo", null));  
+               }
+            
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Logger.getLogger(RechargeCardController.class.getName()).log(Level.SEVERE, null, ex);      
+            }
 
    }
+  }
 }
