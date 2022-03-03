@@ -258,7 +258,10 @@ public class ManualRechargeRequestController {
             //Se guarda la transacción de Recarga Manual en la BD de AlodigaWallet
             TransactionResponse transactionResponse = apiAlodigaWalletProxy.manualRecharge(selectedBank.getId(),user.getEmail(),transactionNumber,transactionAmount,selectedProduct.getId(),transactionConcept,Long.valueOf(documentTypeId),Long.valueOf(originApplicationId));
             if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
-               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualRechargeRequest.saveSuccesfull")));
+               TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedBank.getId(), Long.valueOf(documentTypeId), Long.valueOf(originApplicationId));
+               if (transactionApproveRequestResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualRechargeRequest.saveSuccesfull")));
+               } 
             }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DISABLED_TRANSACTION.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
             } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT.getCode())) {
@@ -279,7 +282,7 @@ public class ManualRechargeRequestController {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
             }
             
-            TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedBank.getId(), Long.MIN_VALUE, Long.MIN_VALUE);
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(ManualRechargeRequestController.class.getName()).log(Level.SEVERE, null, ex);      
