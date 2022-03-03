@@ -8,6 +8,8 @@ package com.alodiga.wallet.controllers.operationsCard;
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.enumeraciones.DocumentTypeE;
+import com.alodiga.wallet.common.enumeraciones.OriginAplicationE;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
@@ -18,6 +20,9 @@ import com.alodiga.wallet.common.utils.EjbConstants;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
+import com.alodiga.wallet.ws.TransactionApproveRequestResponse;
+import com.alodiga.wallet.ws.TransactionResponse;
+import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
 import com.ericsson.alodiga.ws.PreguntaIdioma;
 import com.ericsson.alodiga.ws.Usuario;
 import java.util.ArrayList;
@@ -28,6 +33,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -241,6 +247,45 @@ public class ManualRechargeRequestController {
 
     public void setSelectedProduct(Product selectedProduct) {
         this.selectedProduct = selectedProduct;
+    }
+    
+    public void sumit() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        int documentTypeId = DocumentTypeE.MRAR.getId();
+        int originApplicationId = OriginAplicationE.AWAWEB.getId();
+        
+        try {
+            //Se guarda la transacción de Recarga Manual en la BD de AlodigaWallet
+            TransactionResponse transactionResponse = apiAlodigaWalletProxy.manualRecharge(selectedBank.getId(),user.getEmail(),transactionNumber,transactionAmount,selectedProduct.getId(),transactionConcept,Long.valueOf(documentTypeId),Long.valueOf(originApplicationId));
+            if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualRechargeRequest.saveSuccesfull")));
+            }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DISABLED_TRANSACTION.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));      
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_QUANTITY_LIMIT_DIALY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null)); 
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT_DIALY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_QUANTITY_LIMIT_DIALY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT_MONTHLY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_QUANTITY_LIMIT_YEARLY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT_YEARLY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            }
+            
+            TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedBank.getId(), Long.MIN_VALUE, Long.MIN_VALUE);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ManualRechargeRequestController.class.getName()).log(Level.SEVERE, null, ex);      
+        }
+        
+        
     }
     
 }
