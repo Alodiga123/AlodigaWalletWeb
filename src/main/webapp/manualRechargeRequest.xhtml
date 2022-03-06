@@ -32,23 +32,20 @@
                                         <f:selectItems value="#{manualRechargeRequestController.bankList}" var="bank" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu>
 
-                                    <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
+                                    <!--<p:outputLabel value="#{msg.commonsProduct}" for="product"/>
                                     <p:selectOneMenu id="product" value="#{manualRechargeRequestController.selectedProduct}" converter="#{productConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{manualRechargeRequestController.productList}" var="product" itemLabel="#{product.name}"/>
-                                    </p:selectOneMenu>  
+                                        <f:selectItems value="#{manualRechargeRequestController.productList2}" var="product" itemLabel="#{product.name}"/>
+                                    </p:selectOneMenu> --> 
                                     
                                     <p:outputLabel value="#{msg.commonsTransactionNumber}" for="transactionNumber" />
                                     <p:inputText id="transactionNumber" value="#{manualRechargeRequestController.transactionNumber}" required="false"/>
-                                    <p:message for="transactionNumber"/>
                                     
                                     <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
                                     <p:inputNumber id="transactionAmount" value="#{manualRechargeRequestController.transactionAmount}" decimalPlaces="2" required="false"/>
-                                    <p:message for="transactionAmount"/>
                                     
                                     <p:outputLabel value="#{msg.commonsTransactionConcept}" for="transactionConcept" />
                                     <p:inputText id="transactionConcept" value="#{manualRechargeRequestController.transactionConcept}" required="false"/>
-                                    <p:message for="transactionConcept"/>
                                 </p:panelGrid>
                             </div>
 

@@ -5,9 +5,8 @@
  */
 package com.alodiga.wallet.converter;
 
-import com.alodiga.wallet.common.model.Bank;
+import com.alodiga.wallet.common.model.AccountTypeBank;
 import com.alodiga.wallet.controllers.operationsCard.AddAccountController;
-import com.alodiga.wallet.ws.Maw_bank;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -22,9 +21,10 @@ import javax.faces.convert.FacesConverter;
  *
  * @author jose
  */
-@ManagedBean(name = "bankConverter")
+
+@ManagedBean(name = "accountTypeBankConverter")
 @ViewScoped
-public class BankConverter implements Converter {
+public class AccountTypeBankConverter implements Converter {
     
     @ManagedProperty(value = "#{addAccountController}")
     private AddAccountController addAccountController;
@@ -35,9 +35,9 @@ public class BankConverter implements Converter {
             return "";
         }
         try {
-            return addAccountController.getBank(Integer.parseInt(submittedValue));
+            return addAccountController.getAccountTypeBank(Integer.parseInt(submittedValue));
         } catch (NumberFormatException ex) {
-            Logger.getLogger(BankConverter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AccountTypeBankConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return null;
@@ -48,14 +48,14 @@ public class BankConverter implements Converter {
         if (value == null || value.equals("")) {
             return "";
         } else {
-            if (value instanceof Maw_bank) {
-                return Long.toString(((Maw_bank) value).getId());
+            if (value instanceof AccountTypeBank) {
+                return Integer.toString(((AccountTypeBank) value).getId());
             } else {
                 return value.toString();
             }
 
         }
-    }
+    } 
 
     public AddAccountController getAddAccountController() {
         return addAccountController;
