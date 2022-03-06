@@ -1,6 +1,7 @@
 package com.alodiga.wallet.converter;
 
 import com.alodiga.wallet.common.model.Country;
+import com.alodiga.wallet.controllers.operationsCard.AddAccountController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -18,6 +19,9 @@ import javax.faces.convert.FacesConverter;
 @ManagedBean(name = "countryConverter")
 @ViewScoped
 public class CountryConverter implements Converter {
+    
+    @ManagedProperty(value = "#{addAccountController}")
+    private AddAccountController addAccountController;
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
@@ -25,10 +29,7 @@ public class CountryConverter implements Converter {
             return "";
         }
         try {
-            long idCountry = Long.parseLong(submittedValue);
-            Country country = new Country();
-            country.setId(idCountry);
-            return country;
+            return addAccountController.getCountry(Integer.parseInt(submittedValue));
         } catch (NumberFormatException ex) {
             Logger.getLogger(CountryConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -48,6 +49,14 @@ public class CountryConverter implements Converter {
             }
 
         }
+    }
+
+    public AddAccountController getAddAccountController() {
+        return addAccountController;
+    }
+
+    public void setAddAccountController(AddAccountController addAccountController) {
+        this.addAccountController = addAccountController;
     }
 
 }

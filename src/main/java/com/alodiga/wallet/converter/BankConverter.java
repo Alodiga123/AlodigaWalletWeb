@@ -6,9 +6,12 @@
 package com.alodiga.wallet.converter;
 
 import com.alodiga.wallet.common.model.Bank;
+import com.alodiga.wallet.controllers.operationsCard.AddAccountController;
+import com.alodiga.wallet.ws.Maw_bank;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -19,10 +22,12 @@ import javax.faces.convert.FacesConverter;
  *
  * @author jose
  */
-//@FacesConverter("bankConverter")
 @ManagedBean(name = "bankConverter")
 @ViewScoped
 public class BankConverter implements Converter {
+    
+    @ManagedProperty(value = "#{addAccountController}")
+    private AddAccountController addAccountController;
     
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
@@ -30,12 +35,9 @@ public class BankConverter implements Converter {
             return "";
         }
         try {
-            long idBank = Long.parseLong(submittedValue);
-            Bank bank = new Bank();
-            bank.setId(idBank);
-            return bank;
+            return addAccountController.getBank(Integer.parseInt(submittedValue));
         } catch (NumberFormatException ex) {
-            Logger.getLogger(CountryConverter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BankConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return null;
@@ -46,13 +48,21 @@ public class BankConverter implements Converter {
         if (value == null || value.equals("")) {
             return "";
         } else {
-            if (value instanceof Bank) {
-                return Long.toString(((Bank) value).getId());
+            if (value instanceof Maw_bank) {
+                return Long.toString(((Maw_bank) value).getId());
             } else {
                 return value.toString();
             }
 
         }
+    }
+
+    public AddAccountController getAddAccountController() {
+        return addAccountController;
+    }
+
+    public void setAddAccountController(AddAccountController addAccountController) {
+        this.addAccountController = addAccountController;
     }
     
 }

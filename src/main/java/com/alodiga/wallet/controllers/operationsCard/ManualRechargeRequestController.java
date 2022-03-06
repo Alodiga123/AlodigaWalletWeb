@@ -51,13 +51,14 @@ public class ManualRechargeRequestController {
     private List<Country> countryList = new ArrayList();
     private List<Maw_bank> bankList = new ArrayList();
     private Maw_bank[] bankList2;
-    private Product[] productList;
+    private com.alodiga.wallet.ws.Product[] productList;
+    private List<com.alodiga.wallet.ws.Product> productList2 = new ArrayList();
     private String transactionConcept;
     private Float transactionAmount;
     private String transactionNumber;
     private Country selectedCountry;
-    private Bank selectedBank;
-    private Product selectedProduct;
+    private Maw_bank selectedBank;
+    private com.alodiga.wallet.ws.Product selectedProduct;
     private static APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy;
     private static APIAlodigaWalletProxy apiAlodigaWalletProxy;
     private HttpSession session;
@@ -85,6 +86,9 @@ public class ManualRechargeRequestController {
             //Se obtiene la lista de productos del usuario
             productListResponse = apiAlodigaWalletProxy.getProductsByUserId(String.valueOf(user.getUsuarioID()));
             productList = productListResponse.getProducts();
+            for (com.alodiga.wallet.ws.Product p: productList) {
+                productList2.add(p);
+            }
         
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -124,11 +128,11 @@ public class ManualRechargeRequestController {
         ManualRechargeRequestController.businessPortalEJBProxy = businessPortalEJBProxy;
     }
 
-    public Product[] getProductList() {
+    public com.alodiga.wallet.ws.Product[] getProductList() {
         return productList;
     }
 
-    public void setProductList(Product[] productList) {
+    public void setProductList(com.alodiga.wallet.ws.Product[] productList) {
         this.productList = productList;
     }
 
@@ -220,6 +224,7 @@ public class ManualRechargeRequestController {
 
     public void setSelectedCountry(Country selectedCountry) {
         this.selectedCountry = selectedCountry;
+        bankList.clear();
         try {
             if (selectedCountry != null) {
                 BankListResponse bankListResponse = apiAlodigaWalletProxy.getBankByCountryApp(String.valueOf(selectedCountry.getId()));
@@ -233,20 +238,28 @@ public class ManualRechargeRequestController {
         }
     }
 
-    public Bank getSelectedBank() {
+    public Maw_bank getSelectedBank() {
         return selectedBank;
     }
 
-    public void setSelectedBank(Bank selectedBank) {
+    public void setSelectedBank(Maw_bank selectedBank) {
         this.selectedBank = selectedBank;
     }
 
-    public Product getSelectedProduct() {
+    public com.alodiga.wallet.ws.Product getSelectedProduct() {
         return selectedProduct;
     }
 
-    public void setSelectedProduct(Product selectedProduct) {
+    public void setSelectedProduct(com.alodiga.wallet.ws.Product selectedProduct) {
         this.selectedProduct = selectedProduct;
+    }
+
+    public List<com.alodiga.wallet.ws.Product> getProductList2() {
+        return productList2;
+    }
+
+    public void setProductList2(List<com.alodiga.wallet.ws.Product> productList2) {
+        this.productList2 = productList2;
     }
     
     public void sumit() {
@@ -280,9 +293,7 @@ public class ManualRechargeRequestController {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
             } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
-            }
-            
-            
+            }           
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(ManualRechargeRequestController.class.getName()).log(Level.SEVERE, null, ex);      

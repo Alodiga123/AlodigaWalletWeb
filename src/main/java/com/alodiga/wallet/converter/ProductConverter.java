@@ -5,7 +5,7 @@
  */
 package com.alodiga.wallet.converter;
 
-import com.alodiga.wallet.common.model.Product;
+import com.alodiga.wallet.ws.Product;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
