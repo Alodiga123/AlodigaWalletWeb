@@ -6,9 +6,11 @@
 package com.alodiga.wallet.converter;
 
 import com.alodiga.wallet.common.model.AccountTypeBank;
+import com.alodiga.wallet.controllers.operationsCard.AddAccountController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -24,16 +26,16 @@ import javax.faces.convert.FacesConverter;
 @ViewScoped
 public class AccountTypeBankConverter implements Converter {
     
+    @ManagedProperty(value = "#{addAccountController}")
+    private AddAccountController addAccountController;
+    
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
         if (submittedValue == null || submittedValue.equals("")) {
             return "";
         }
         try {
-            int idAccountTypeBank = Integer.valueOf(submittedValue);
-            AccountTypeBank accountTypeBank = new AccountTypeBank();
-            accountTypeBank.setId(idAccountTypeBank);
-            return accountTypeBank;
+            return addAccountController.getAccountTypeBank(Integer.parseInt(submittedValue));
         } catch (NumberFormatException ex) {
             Logger.getLogger(AccountTypeBankConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,5 +56,13 @@ public class AccountTypeBankConverter implements Converter {
 
         }
     } 
+
+    public AddAccountController getAddAccountController() {
+        return addAccountController;
+    }
+
+    public void setAddAccountController(AddAccountController addAccountController) {
+        this.addAccountController = addAccountController;
+    }
     
 }

@@ -30,10 +30,10 @@
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{addAccountController.bankList}" var="bank" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu> 
-                                    <p:outputLabel value="#{msg.typeAccount}" for="bank"/>
-                                    <p:selectOneMenu id="typeAccountBank" value="#{addAccountController.selectedAccountTypeBank}" converter="#{accountTypeBankConverter}" required="true">
+                                    <p:outputLabel value="#{msg.typeAccount}" for="accountTypeBank"/>
+                                    <p:selectOneMenu id="accountTypeBank" value="#{addAccountController.selectedAccountTypeBank}" converter="#{accountTypeBankConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{addAccountController.accountTypeBankList}" var="accountType" itemLabel="#{accountType.code}" />
+                                        <f:selectItems value="#{addAccountController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Numero de cuenta" for="numberAccountBank" />
                                     <p:inputText id="numberAccountBank" value="#{addAccountController.numberAccountBank}" required="false"/>

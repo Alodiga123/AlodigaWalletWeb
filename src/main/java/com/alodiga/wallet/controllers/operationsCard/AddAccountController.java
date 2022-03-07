@@ -52,7 +52,7 @@ public class AddAccountController {
     private List<Maw_bank> bankList = new ArrayList();
     private Maw_bank[] bankList2;
     private Country selectedCountry;
-    private Bank selectedBank;
+    private Maw_bank selectedBank;
     private AccountTypeBank selectedAccountTypeBank;
     private APIAlodigaWalletProxy apiAlodigaWalletProxy;
     private HttpSession session;
@@ -175,11 +175,11 @@ public class AddAccountController {
     }
 
 
-    public Bank getSelectedBank() {
+    public Maw_bank getSelectedBank() {
         return selectedBank;
     }
 
-    public void setSelectedBank(Bank selectedBank) {
+    public void setSelectedBank(Maw_bank selectedBank) {
         this.selectedBank = selectedBank;
     }
 
@@ -215,18 +215,51 @@ public class AddAccountController {
         this.msg = msg;
     }
 
+    public Country getCountry(int id) {
+        for (Country country : countryList) {
+            if (country.getId() == id) {
+                return country;
+            }
+        }
+        return null;
+    } 
+    
+    public Maw_bank getBank(int id) {
+        for (Maw_bank bank : bankList) {
+            if (bank.getId() == id) {
+                return bank;
+            }
+        }
+        return null;
+    }
+    
+    public AccountTypeBank getAccountTypeBank(int id) {
+        for (AccountTypeBank accountTypeBank : accountTypeBankList) {
+            if (accountTypeBank.getId() == id) {
+                return accountTypeBank;
+            }
+        }
+        return null;
+    } 
  
- 
-  public void submit() {
-               System.out.println("Entre");
+    public void submit() {
+       System.out.println("Entre");
         if (numberAccountBank != null) {
             try {
                //Obtener el estatus ACTIVA de la cuenta bancaria
                StatusAccountBank statusAccountBankActiva = businessPortalEJBProxy.loadStatusAccountBankById(StatusAccountBankE.ACTIVA.getId());
-
+               
+               //Crear el objeto Bank
+               Bank bank = new Bank();
+               bank.setAbaCode(selectedBank.getAbaCode());
+               bank.setCountryId(selectedCountry);
+               bank.setId(selectedBank.getId());
+               bank.setName(selectedBank.getName());
+               bank.setSwiftCode(selectedBank.getSwiftCode());
+               
                //Creando el objeto AccountBank
                AccountBank accountBank = new AccountBank();
-               accountBank.setBankId(selectedBank);
+               accountBank.setBankId(bank);
                accountBank.setAccountNumber(numberAccountBank);
                accountBank.setAccountTypeBankId(selectedAccountTypeBank);
                accountBank.setStatusAccountBankId(statusAccountBankActiva);
@@ -235,7 +268,7 @@ public class AddAccountController {
                //Guardar la cuenta bancaria en la BD
                accountBank = businessPortalEJBProxy.saveAccountBank(accountBank);
 
-               if (numberAccountBank != null) {
+               if (accountBank != null) {
                   FacesContext context = FacesContext.getCurrentInstance();
                   context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Las respuestas del usuario se guardaron correctamente en la BD", null));
                }else{
