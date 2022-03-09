@@ -20,23 +20,23 @@
                                 </f:facet>
                                 <p:panelGrid id="manualRechargeRequestInfoGrid" columns="2" >
                                     <p:outputLabel value="#{msg.commonsCountry}" for="country"/>
-                                    <p:selectOneMenu id="country" value="#{manualRechargeRequestController.selectedCountry}" converter="#{countryConverter}" required="true">
+                                    <p:selectOneMenu id="country" value="#{manualRechargeRequestController.selectedCountry}" converter="countryConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{manualRechargeRequestController.countryList}" var="country" itemLabel="#{country.name}"/>
                                         <p:ajax event="change" update="bank"/>
                                     </p:selectOneMenu>
                                     
                                     <p:outputLabel value="#{msg.commonsBank}" for="bank"/>
-                                    <p:selectOneMenu id="bank" value="#{manualRechargeRequestController.selectedBank}" converter="#{bankConverter}" required="true">
+                                    <p:selectOneMenu id="bank" value="#{manualRechargeRequestController.selectedBank}" converter="bankConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{manualRechargeRequestController.bankList}" var="bank" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu>
 
-                                    <!--<p:outputLabel value="#{msg.commonsProduct}" for="product"/>
-                                    <p:selectOneMenu id="product" value="#{manualRechargeRequestController.selectedProduct}" converter="#{productConverter}" required="true">
+                                    <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
+                                    <p:selectOneMenu id="product" value="#{manualRechargeRequestController.selectedProduct}" converter="productConverter">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{manualRechargeRequestController.productList2}" var="product" itemLabel="#{product.name}"/>
-                                    </p:selectOneMenu> --> 
+                                        <f:selectItems value="#{manualRechargeRequestController.productList}" var="product" itemLabel="#{product.name}"/>
+                                    </p:selectOneMenu>
                                     
                                     <p:outputLabel value="#{msg.commonsTransactionNumber}" for="transactionNumber" />
                                     <p:inputText id="transactionNumber" value="#{manualRechargeRequestController.transactionNumber}" required="false"/>
