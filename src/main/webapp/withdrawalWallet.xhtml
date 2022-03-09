@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">#{msg.titlecardWithdrawal}</ui:define>
+    <ui:define name="title">#{msg.titleWalletWithdrawal}</ui:define>
 
     <ui:define name="content">
 <h:form>
@@ -13,7 +13,7 @@
         <p:growl id="growl" sticky="true" showDetail="true"/>
 
         <p:wizard flowListener="#{withdrawalWalletController.onFlowProcess}">
-            <p:tab id="accountBank" title="#{msg.titleAddAccount}" >
+        <p:tab id="accountBank" title="#{msg.titleAddAccount}" >
                 <p:panel header="Bank Details">
                     <p:messages/>
                      <div class="ui-fluid">
@@ -27,23 +27,23 @@
                                 </f:facet>
                                 <p:panelGrid id="addAccountGrid" columns="2" >
                                     <p:outputLabel value="#{msg.commonsCountry}" for="country"/>
-                                    <p:selectOneMenu id="country" value="#{addAccountController.selectedCountry}" converter="#{countryConverter}" required="true">
+                                    <p:selectOneMenu id="country" value="#{withdrawalWalletController.selectedCountry}" converter="#{countryConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{addAccountController.countryList}" var="country" itemLabel="#{country.name}"/>
+                                        <f:selectItems value="#{withdrawalWalletController.countryList}" var="country" itemLabel="#{country.name}"/>
                                         <p:ajax event="change" update="bank"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="#{msg.commonsBank}" for="bank"/>
-                                    <p:selectOneMenu id="bank" value="#{addAccountController.selectedBank}" converter="#{bankConverter}" required="true">
+                                    <p:selectOneMenu id="bank" value="#{withdrawalWalletController.selectedBank}" converter="#{bankConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{addAccountController.bankList}" var="bank" itemLabel="#{bank.name}"/>
+                                        <f:selectItems value="#{withdrawalWalletController.bankList}" var="bank" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu> 
                                     <p:outputLabel value="#{msg.typeAccount}" for="accountTypeBank"/>
-                                    <p:selectOneMenu id="accountTypeBank" value="#{addAccountController.selectedAccountTypeBank}" converter="#{accountTypeBankConverter}" required="true">
+                                    <p:selectOneMenu id="accountTypeBank" value="#{withdrawalWalletController.selectedAccountTypeBank}" converter="#{accountTypeBankConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{addAccountController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
+                                        <f:selectItems value="#{withdrawalWalletController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Numero de cuenta" for="numberAccountBank" />
-                                    <p:inputText id="numberAccountBank" value="#{addAccountController.numberAccountBank}" required="false"/>
+                                    <p:inputText id="numberAccountBank" value="#{withdrawalWalletController.numberAccountBank}" required="false"/>
                                 </p:panelGrid>
                             </div>
 
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-                </p:panel>
+            </p:panel>
             </p:tab>
             <p:tab id="WalletWithdrawal" title="#{msg.titleWalletWithdrawal}">
                 <p:panel header="Wallet Details">
@@ -67,26 +67,20 @@
                             <div align="center">
                                 <h1>#{msg.titleWalletWithdrawal}</h1>
                                 <p:panelGrid id="cardWithdrawalGrid" columns="2" >
-                                    <p:outputLabel value="#{msg.commonsCountry}" for="country"/>
-                                    <p:selectOneMenu id="country1" value="#{cardWithdrawalController.selectedCountry}" converter="#{countryConverter}" required="true">
+                                    <p:outputLabel value="#{msg.commonsBank}" />
+                                    <p:selectOneMenu id="bank1" value="#{withdrawalWalletController.selectedUserBank}" required="true" converter="#{bankConverter}" >
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{cardWithdrawalController.countryList}" var="country" itemLabel="#{country.name}"/>
-                                        <p:ajax event="change" update="bank"/>
-                                    </p:selectOneMenu>
-                                    <p:outputLabel value="#{msg.commonsBank}" for="bank"/>
-                                    <p:selectOneMenu id="bank1" value="#{cardWithdrawalController.selectedBank}" converter="#{bankConverter}" required="true">
-                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{cardWithdrawalController.bankList}" var="bank" itemLabel="#{bank.name}"/>
+                                        <f:selectItems value="#{withdrawalWalletController.accountBankList}" itemLabel=""/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
-                                    <p:selectOneMenu id="product" value="#{cardWithdrawalController.selectedProduct}" converter="#{productConverter}" required="true">
+                                    <p:selectOneMenu id="product" value="#{withdrawalWalletController.selectedProduct}" converter="#{productConverter}" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{cardWithdrawalController.productList}" var="product" itemLabel="#{product.name}"/>
+                                        <f:selectItems value="#{withdrawalWalletController.productList}" var="product" itemLabel="#{product.name}"/>
                                     </p:selectOneMenu>  
                                     <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
-                                    <p:inputNumber id="transactionAmount" value="#{cardWithdrawalController.transactionAmount}" decimalPlaces="2" required="false"/>
+                                    <p:inputNumber id="transactionAmount" value="#{withdrawalWalletController.transactionAmount}" decimalPlaces="2" required="false"/>
                                     <p:outputLabel value="#{msg.commonsTransactionConcept}" for="transactionConcept" />
-                                    <p:inputText id="transactionConcept" value="#{cardWithdrawalController.transactionConcept}" required="false"/>
+                                    <p:inputText id="transactionConcept" value="#{withdrawalWalletController.transactionConcept}" required="false"/>
                                 </p:panelGrid>
                             </div>
 
