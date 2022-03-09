@@ -49,10 +49,9 @@ public class AddAccountController {
 
     private List<Country> countryList = new ArrayList();
     private List<AccountTypeBank> accountTypeBankList = new ArrayList();
-    private List<Maw_bank> bankList = new ArrayList();
-    private Maw_bank[] bankList2;
+    private List<Bank> bankList = new ArrayList();
     private Country selectedCountry;
-    private Maw_bank selectedBank;
+    private Bank selectedBank;
     private AccountTypeBank selectedAccountTypeBank;
     private APIAlodigaWalletProxy apiAlodigaWalletProxy;
     private HttpSession session;
@@ -61,6 +60,7 @@ public class AddAccountController {
     private String numberAccountBank;
     private static BusinessPortalEJB businessPortalEJBProxy;
     private AccountBank accountBank = null;
+    private static UtilsEJB utilsEJBProxy;
     
     
 
@@ -68,6 +68,7 @@ public class AddAccountController {
     public void init() {
         try {
             businessPortalEJBProxy = (BusinessPortalEJB) EJBServiceLocator.getInstance().get(EjbConstants.BUSINESS_PORTAL_EJB);            
+            utilsEJBProxy = (UtilsEJB) EJBServiceLocator.getInstance().get(EjbConstants.UTILS_EJB);
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
 
@@ -96,20 +97,36 @@ public class AddAccountController {
         this.countryList = countryList;
     }
 
-    public List<Maw_bank> getBankList() {
+    public List<AccountTypeBank> getAccountTypeBankList() {
+        return accountTypeBankList;
+    }
+
+    public void setAccountTypeBankList(List<AccountTypeBank> accountTypeBankList) {
+        this.accountTypeBankList = accountTypeBankList;
+    }
+
+    public List<Bank> getBankList() {
         return bankList;
     }
 
-    public void setBankList(List<Maw_bank> bankList) {
+    public void setBankList(List<Bank> bankList) {
         this.bankList = bankList;
     }
 
-    public Maw_bank[] getBankList2() {
-        return bankList2;
+    public Bank getSelectedBank() {
+        return selectedBank;
     }
 
-    public void setBankList2(Maw_bank[] bankList2) {
-        this.bankList2 = bankList2;
+    public void setSelectedBank(Bank selectedBank) {
+        this.selectedBank = selectedBank;
+    }
+
+    public AccountTypeBank getSelectedAccountTypeBank() {
+        return selectedAccountTypeBank;
+    }
+
+    public void setSelectedAccountTypeBank(AccountTypeBank selectedAccountTypeBank) {
+        this.selectedAccountTypeBank = selectedAccountTypeBank;
     }
 
     public APIAlodigaWalletProxy getApiAlodigaWalletProxy() {
@@ -136,6 +153,22 @@ public class AddAccountController {
         this.user = user;
     }
 
+    public ResourceBundle getMsg() {
+        return msg;
+    }
+
+    public void setMsg(ResourceBundle msg) {
+        this.msg = msg;
+    }
+
+    public String getNumberAccountBank() {
+        return numberAccountBank;
+    }
+
+    public void setNumberAccountBank(String numberAccountBank) {
+        this.numberAccountBank = numberAccountBank;
+    }
+
     public static BusinessPortalEJB getBusinessPortalEJBProxy() {
         return businessPortalEJBProxy;
     }
@@ -152,9 +185,7 @@ public class AddAccountController {
         this.accountBank = accountBank;
     }
 
-   
-
-      public Country getSelectedCountry() {
+    public Country getSelectedCountry() {
         return selectedCountry;
     }
 
@@ -163,85 +194,13 @@ public class AddAccountController {
         bankList.clear();
         try {
             if (selectedCountry != null) {
-                BankListResponse bankListResponse = apiAlodigaWalletProxy.getBankByCountryApp(String.valueOf(selectedCountry.getId()));
-                bankList2 = bankListResponse.getBanks();
-                for (Maw_bank b: bankList2) {
-                    bankList.add(b);
-                }
+                bankList = utilsEJBProxy.getBankByCountry(Long.valueOf(selectedCountry.getId()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public Maw_bank getSelectedBank() {
-        return selectedBank;
-    }
-
-    public void setSelectedBank(Maw_bank selectedBank) {
-        this.selectedBank = selectedBank;
-    }
-
-    public String getNumberAccountBank() {
-        return numberAccountBank;
-    }
-
-    public void setNumberAccountBank(String numberAccountBank) {
-        this.numberAccountBank = numberAccountBank;
-    }
-
-    public List<AccountTypeBank> getAccountTypeBankList() {
-        return accountTypeBankList;
-    }
-
-    public void setAccountTypeBankList(List<AccountTypeBank> accountTypeBankList) {
-        this.accountTypeBankList = accountTypeBankList;
-    }
-
-    public AccountTypeBank getSelectedAccountTypeBank() {
-        return selectedAccountTypeBank;
-    }
-
-    public void setSelectedAccountTypeBank(AccountTypeBank selectedAccountTypeBank) {
-        this.selectedAccountTypeBank = selectedAccountTypeBank;
-    }
-
-    public ResourceBundle getMsg() {
-        return msg;
-    }
-
-    public void setMsg(ResourceBundle msg) {
-        this.msg = msg;
-    }
-
-    public Country getCountry(int id) {
-        for (Country country : countryList) {
-            if (country.getId() == id) {
-                return country;
-            }
-        }
-        return null;
-    } 
-    
-    public Maw_bank getBank(int id) {
-        for (Maw_bank bank : bankList) {
-            if (bank.getId() == id) {
-                return bank;
-            }
-        }
-        return null;
-    }
-    
-    public AccountTypeBank getAccountTypeBank(int id) {
-        for (AccountTypeBank accountTypeBank : accountTypeBankList) {
-            if (accountTypeBank.getId() == id) {
-                return accountTypeBank;
-            }
-        }
-        return null;
-    } 
- 
     public void submit() {
        System.out.println("Entre");
         if (numberAccountBank != null) {
@@ -250,16 +209,16 @@ public class AddAccountController {
                StatusAccountBank statusAccountBankActiva = businessPortalEJBProxy.loadStatusAccountBankById(StatusAccountBankE.ACTIVA.getId());
                
                //Crear el objeto Bank
-               Bank bank = new Bank();
-               bank.setAbaCode(selectedBank.getAbaCode());
-               bank.setCountryId(selectedCountry);
-               bank.setId(selectedBank.getId());
-               bank.setName(selectedBank.getName());
-               bank.setSwiftCode(selectedBank.getSwiftCode());
+//               Bank bank = new Bank();
+//               bank.setAbaCode(selectedBank.getAbaCode());
+//               bank.setCountryId(selectedCountry);
+//               bank.setId(selectedBank.getId());
+//               bank.setName(selectedBank.getName());
+//               bank.setSwiftCode(selectedBank.getSwiftCode());
                
                //Creando el objeto AccountBank
                AccountBank accountBank = new AccountBank();
-               accountBank.setBankId(bank);
+               accountBank.setBankId(selectedBank);
                accountBank.setAccountNumber(numberAccountBank);
                accountBank.setAccountTypeBankId(selectedAccountTypeBank);
                accountBank.setStatusAccountBankId(statusAccountBankActiva);

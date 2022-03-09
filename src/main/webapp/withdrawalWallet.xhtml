@@ -13,7 +13,7 @@
         <p:growl id="growl" sticky="true" showDetail="true"/>
 
         <p:wizard flowListener="#{withdrawalWalletController.onFlowProcess}">
-        <p:tab id="accountBank" title="#{msg.titleAddAccount}" >
+<!--        <p:tab id="accountBank" title="#{msg.titleAddAccount}" >
                 <p:panel header="Bank Details">
                     <p:messages/>
                      <div class="ui-fluid">
@@ -57,7 +57,7 @@
                 </div>
             </div>
             </p:panel>
-            </p:tab>
+            </p:tab>-->
             <p:tab id="WalletWithdrawal" title="#{msg.titleWalletWithdrawal}">
                 <p:panel header="Wallet Details">
                     <div class="ui-fluid">
@@ -70,7 +70,7 @@
                                     <p:outputLabel value="#{msg.commonsBank}" />
                                     <p:selectOneMenu id="bank1" value="#{withdrawalWalletController.selectedUserBank}" required="true" converter="#{bankConverter}" >
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{withdrawalWalletController.accountBankList}" itemLabel=""/>
+                                        <f:selectItems value="#{withdrawalWalletController.accountBankList}" var="bank1" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
                                     <p:selectOneMenu id="product" value="#{withdrawalWalletController.selectedProduct}" converter="#{productConverter}" required="true">

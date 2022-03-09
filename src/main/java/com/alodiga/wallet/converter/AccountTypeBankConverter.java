@@ -5,7 +5,15 @@
  */
 package com.alodiga.wallet.converter;
 
+import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.ejb.UtilsEJB;
+import com.alodiga.wallet.common.exception.GeneralException;
+import com.alodiga.wallet.common.exception.NullParameterException;
+import com.alodiga.wallet.common.exception.RegisterNotFoundException;
+import com.alodiga.wallet.common.genericEJB.EJBRequest;
 import com.alodiga.wallet.common.model.AccountTypeBank;
+import com.alodiga.wallet.common.utils.EJBServiceLocator;
+import com.alodiga.wallet.common.utils.EjbConstants;
 import com.alodiga.wallet.controllers.operationsCard.AddAccountController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +30,9 @@ import javax.faces.convert.FacesConverter;
  * @author jose
  */
 
-@ManagedBean(name = "accountTypeBankConverter")
-@ViewScoped
+@FacesConverter("accountTypeBankConverter")
 public class AccountTypeBankConverter implements Converter {
-    
-    @ManagedProperty(value = "#{addAccountController}")
-    private AddAccountController addAccountController;
+    AccountTypeBank accountTypeBank = null;
     
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
@@ -35,12 +40,19 @@ public class AccountTypeBankConverter implements Converter {
             return "";
         }
         try {
-            return addAccountController.getAccountTypeBank(Integer.parseInt(submittedValue));
-        } catch (NumberFormatException ex) {
+           BusinessPortalEJB  businessPortalEJB = (BusinessPortalEJB) EJBServiceLocator.getInstance().get(EjbConstants.BUSINESS_PORTAL_EJB);
+           int accountTypeBankId = Integer.parseInt(submittedValue);
+           accountTypeBank = businessPortalEJB.loadAccountTypeBankById(accountTypeBankId); 
+        } catch (RegisterNotFoundException ex) {
+            Logger.getLogger(AccountTypeBankConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NullParameterException ex) {
+            Logger.getLogger(AccountTypeBankConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GeneralException ex) {
+            ex.printStackTrace();
             Logger.getLogger(AccountTypeBankConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return null;
+        return accountTypeBank;
     }
 
     @Override
@@ -56,13 +68,5 @@ public class AccountTypeBankConverter implements Converter {
 
         }
     } 
-
-    public AddAccountController getAddAccountController() {
-        return addAccountController;
-    }
-
-    public void setAddAccountController(AddAccountController addAccountController) {
-        this.addAccountController = addAccountController;
-    }
     
 }
