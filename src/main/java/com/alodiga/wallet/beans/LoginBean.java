@@ -43,10 +43,7 @@ public class LoginBean extends GenericController implements Serializable {
     private static final long serialVersionUID = 1L;
     private String uname;
     private String password;
-//    private BPUser userSession;
     private Map<String, String> profiles = null;
-//    private BPProfile profile;
-//    private UserData userData = null;
 
     private float discountRate = 0;
 
@@ -56,11 +53,8 @@ public class LoginBean extends GenericController implements Serializable {
 
     private Product businessProduct;
 
-//    private Map<BusinessServiceType, TransactionCommissionResponse> comissions = new HashMap();
-
     @PostConstruct
     public void init() {
-        //userData = new UserData();
         locale = "es";
 
     }
@@ -81,14 +75,6 @@ public class LoginBean extends GenericController implements Serializable {
         this.uname = uname;
     }
 
-//    public BPUser getUserSession() {
-//        return userSession;
-//    }
-//
-//    public void setUserSession(BPUser userSession) {
-//        this.userSession = userSession;
-//    }
-
     public float getBusinessPercentFee() {
         return businessPercentFee;
     }
@@ -104,43 +90,6 @@ public class LoginBean extends GenericController implements Serializable {
     public void setDiscountRate(float discountRate) {
         this.discountRate = discountRate;
     }
-
-//    public Map<String, String> getProfiles() {
-//        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//        HttpSession session = request.getSession(false);
-//        locale = (String) session.getAttribute("languaje");
-//        Long languageId;
-//        if (locale == null) {
-//            locale = FacesContext.getCurrentInstance().getViewRoot().getLocale().getLanguage();
-//        }
-//        if (locale.equals("en")) {
-//            languageId = 1L;
-//        } else {
-//            languageId = 2L;
-//        }
-//        profiles = new TreeMap<String, String>();
-//        try {
-//            List<BPProfile> profile1 = userData.getProfiles();
-//            for (BPProfile prof : profile1) {
-//                profiles.put(prof.getProfileDataByLanguageId(languageId).getAlias(), prof.getId().toString());
-//            }
-//        } catch (EmptyListException | GeneralException ex) {
-//            Logger.getLogger(LoginBean.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return profiles;
-//    }
-//
-//    public void setProfiles(Map<String, String> profiles) {
-//        this.profiles = profiles;
-//    }
-//
-//    public BPProfile getProfile() {
-//        return profile;
-//    }
-//
-//    public void setProfile(BPProfile profile) {
-//        this.profile = profile;
-//    }
 
     public String getLocale() {
         return locale;
@@ -181,7 +130,7 @@ public class LoginBean extends GenericController implements Serializable {
                     session.setAttribute("userId", respuestaUsuario.getDatosRespuesta().getUsuarioID());
                     session.setAttribute("countryId", respuestaUsuario.getDatosRespuesta().getDireccion().getPaisId());
                     session.setAttribute("zipCode", respuestaUsuario.getDatosRespuesta().getDireccion().getCodigoPostal());
-                    return "rechargeCard.xhtml?faces-redirect=true";
+                    return "manualRechargeRequest.xhtml?faces-redirect=true";
                 } else {
                     FacesContext.getCurrentInstance().addMessage(
                             null,
