@@ -102,6 +102,7 @@ public class WithdrawalWalletController {
     private String transactionNumber;
     private Country selectedCountry;
     private Bank selectedBank;
+    private AccountBank selectedUserBank;
     private Product selectedProduct;
     private APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy;
     private APIAlodigaWalletProxy apiAlodigaWalletProxy;
@@ -119,6 +120,8 @@ public class WithdrawalWalletController {
     private com.alodiga.wallet.ws.AccountBank[] accountBankList;
     private UtilsEJB proxyUtilEJB;
     public String onFlowProcess;
+    public boolean showTab;
+
    
 
     @PostConstruct
@@ -150,9 +153,9 @@ public class WithdrawalWalletController {
 
             accountBankListResponse = apiAlodigaWalletProxy.getAccountBankByUser(Long.valueOf(user.getUsuarioID()));
             accountBankList = accountBankListResponse.getAccountBanks();
-            if (accountBankList.length > 0) {
-
-            }
+//            if (accountBankList.length > 0) {
+//
+//            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -220,7 +223,7 @@ public class WithdrawalWalletController {
         return selectedCountry;
     }
 
-    public void setSelectedCountry(Country selectedCountry) {
+  public void setSelectedCountry(Country selectedCountry) {
         this.selectedCountry = selectedCountry;
         bankList.clear();
         try {
@@ -235,7 +238,6 @@ public class WithdrawalWalletController {
             e.printStackTrace();
         }
     }
-
 
     public Bank getSelectedBank() {
         return selectedBank;
@@ -381,8 +383,24 @@ public class WithdrawalWalletController {
         this.onFlowProcess = onFlowProcess;
     }
 
-    
+    public boolean showTab(){
+      boolean rendered = true;
+       if(accountBankList.length > 0){
+          rendered = false;
+        }
 
+       return rendered;
+     }
 
+    public AccountBank getSelectedUserBank() {
+        return selectedUserBank;
+    }
+
+    public void setSelectedUserBank(AccountBank selectedUserBank) {
+        this.selectedUserBank = selectedUserBank;
+    }
+
+ 
+  
 
 }
