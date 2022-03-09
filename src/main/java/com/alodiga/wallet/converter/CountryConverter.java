@@ -1,6 +1,14 @@
 package com.alodiga.wallet.converter;
 
+import com.alodiga.wallet.common.ejb.ProductEJB;
+import com.alodiga.wallet.common.ejb.UtilsEJB;
+import com.alodiga.wallet.common.exception.GeneralException;
+import com.alodiga.wallet.common.exception.NullParameterException;
+import com.alodiga.wallet.common.exception.RegisterNotFoundException;
+import com.alodiga.wallet.common.genericEJB.EJBRequest;
 import com.alodiga.wallet.common.model.Country;
+import com.alodiga.wallet.common.utils.EJBServiceLocator;
+import com.alodiga.wallet.common.utils.EjbConstants;
 import com.alodiga.wallet.controllers.operationsCard.AddAccountController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +24,9 @@ import javax.faces.convert.FacesConverter;
  *
  * @author jgomez
  */
-@ManagedBean(name = "countryConverter")
-@ViewScoped
+@FacesConverter("countryConverter")
 public class CountryConverter implements Converter {
-    
-    @ManagedProperty(value = "#{addAccountController}")
-    private AddAccountController addAccountController;
+    Country country = null;
 
     @Override
     public Object getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
@@ -29,12 +34,19 @@ public class CountryConverter implements Converter {
             return "";
         }
         try {
-            return addAccountController.getCountry(Integer.parseInt(submittedValue));
-        } catch (NumberFormatException ex) {
+            UtilsEJB  utilsEJB = (UtilsEJB) EJBServiceLocator.getInstance().get(EjbConstants.UTILS_EJB);
+            EJBRequest request = new EJBRequest();
+            request.setParam(Long.parseLong(submittedValue));
+            country = utilsEJB.loadCountry(request);
+        } catch (RegisterNotFoundException ex) {
+            Logger.getLogger(CountryConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NullParameterException ex) {
+            Logger.getLogger(CountryConverter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GeneralException ex) {
+            ex.printStackTrace();
             Logger.getLogger(CountryConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return null;
+        return country;
     }
 
     @Override
@@ -49,14 +61,6 @@ public class CountryConverter implements Converter {
             }
 
         }
-    }
-
-    public AddAccountController getAddAccountController() {
-        return addAccountController;
-    }
-
-    public void setAddAccountController(AddAccountController addAccountController) {
-        this.addAccountController = addAccountController;
     }
 
 }

@@ -18,6 +18,7 @@ package com.alodiga.wallet.view.file;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.AffiliationRequestResponse;
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,10 +29,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.FlowEvent;
 import org.primefaces.model.UploadedFile;
 
 @ManagedBean
-public class FileUploadView {
+public class FileUploadView implements Serializable{
 
     private UploadedFile documentIden;
     private UploadedFile profile;
@@ -41,6 +43,7 @@ public class FileUploadView {
     private String address;
     private Boolean tab = true;
     private int valiable;
+     private boolean skip;
 
     public void upload() {
 
@@ -144,6 +147,16 @@ public class FileUploadView {
 
     public void setValiable(int valiable) {
         this.valiable = valiable;
+    }
+    
+    public String onFlowProcess(FlowEvent event) {
+        if (skip) {
+            skip = false; //reset in case user goes back
+            return "confirm";
+        }
+        else {
+            return event.getNewStep();
+        }
     }
     
     

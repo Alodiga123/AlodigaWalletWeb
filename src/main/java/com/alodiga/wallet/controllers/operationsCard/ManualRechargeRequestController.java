@@ -5,28 +5,25 @@
  */
 package com.alodiga.wallet.controllers.operationsCard;
 
-import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.ejb.ProductEJB;
+import com.alodiga.wallet.common.ejb.UtilsEJB;
 import com.alodiga.wallet.common.enumeraciones.DocumentTypeE;
 import com.alodiga.wallet.common.enumeraciones.OriginAplicationE;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
-import com.alodiga.wallet.ws.Product;
+import com.alodiga.wallet.common.model.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
 import com.alodiga.wallet.common.utils.EjbConstants;
-import com.alodiga.wallet.ws.BankListResponse;
-import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
 import com.alodiga.wallet.ws.TransactionApproveRequestResponse;
 import com.alodiga.wallet.ws.TransactionResponse;
 import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
-import com.ericsson.alodiga.ws.PreguntaIdioma;
 import com.ericsson.alodiga.ws.Usuario;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -49,16 +46,14 @@ import javax.servlet.http.HttpSession;
 public class ManualRechargeRequestController {
 
     private List<Country> countryList = new ArrayList();
-    private List<Maw_bank> bankList = new ArrayList();
-    private Maw_bank[] bankList2;
-    private com.alodiga.wallet.ws.Product[] productList;
-    private List<com.alodiga.wallet.ws.Product> productList2 = new ArrayList();
+    private List<Bank> bankList = new ArrayList();
+    private List<Product> productList = new ArrayList();
     private String transactionConcept;
     private Float transactionAmount;
     private String transactionNumber;
     private Country selectedCountry;
-    private Maw_bank selectedBank;
-    private com.alodiga.wallet.ws.Product selectedProduct;
+    private Bank selectedBank;
+    private Product selectedProduct;
     private static APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy;
     private static APIAlodigaWalletProxy apiAlodigaWalletProxy;
     private HttpSession session;
@@ -66,12 +61,16 @@ public class ManualRechargeRequestController {
     private ProductResponse productResponse;
     private ResourceBundle msg;
     private static BusinessPortalEJB businessPortalEJBProxy;
+    private static ProductEJB productEJBProxy;
+    private static UtilsEJB utilsEJBProxy;
     private ProductListResponse productListResponse;
     
     @PostConstruct
     public void init() {
         try {
             businessPortalEJBProxy = (BusinessPortalEJB) EJBServiceLocator.getInstance().get(EjbConstants.BUSINESS_PORTAL_EJB);
+            productEJBProxy = (ProductEJB) EJBServiceLocator.getInstance().get(EjbConstants.PRODUCT_EJB);
+            utilsEJBProxy = (UtilsEJB) EJBServiceLocator.getInstance().get(EjbConstants.UTILS_EJB);
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
@@ -84,15 +83,27 @@ public class ManualRechargeRequestController {
             countryList = businessPortalEJBProxy.getCountries();
             
             //Se obtiene la lista de productos del usuario
-            productListResponse = apiAlodigaWalletProxy.getProductsByUserId(String.valueOf(user.getUsuarioID()));
-            productList = productListResponse.getProducts();
-            for (com.alodiga.wallet.ws.Product p: productList) {
-                productList2.add(p);
-            }
+            productList = productEJBProxy.getProductsByWalletUser(Long.valueOf(user.getUsuarioID()));
         
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(RechargeCardController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Country getSelectedCountry() {
+        return selectedCountry;
+    }
+
+    public void setSelectedCountry(Country selectedCountry) {
+        this.selectedCountry = selectedCountry;
+        bankList.clear();
+        try {
+            if (selectedCountry != null) {
+                bankList = utilsEJBProxy.getBankByCountry(Long.valueOf(selectedCountry.getId()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -104,47 +115,21 @@ public class ManualRechargeRequestController {
         this.countryList = countryList;
     }
 
-    public Maw_bank[] getBankList2() {
-        return bankList2;
-    }
-
-    public void setBankList2(Maw_bank[] bankList) {
-        this.bankList2 = bankList2;
-    }
-
-    public List<Maw_bank> getBankList() {
+    public List<Bank> getBankList() {
         return bankList;
     }
 
-    public void setBankList(List<Maw_bank> bankList) {
+    public void setBankList(List<Bank> bankList) {
         this.bankList = bankList;
     }
 
-    public static BusinessPortalEJB getBusinessPortalEJBProxy() {
-        return businessPortalEJBProxy;
-    }
-
-    public static void setBusinessPortalEJBProxy(BusinessPortalEJB businessPortalEJBProxy) {
-        ManualRechargeRequestController.businessPortalEJBProxy = businessPortalEJBProxy;
-    }
-
-    public com.alodiga.wallet.ws.Product[] getProductList() {
+    public List<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(com.alodiga.wallet.ws.Product[] productList) {
+    public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
-
-    public ProductListResponse getProductListResponse() {
-        return productListResponse;
-    }
-
-    public void setProductListResponse(ProductListResponse productListResponse) {
-        this.productListResponse = productListResponse;
-    }
-
-    
 
     public String getTransactionConcept() {
         return transactionConcept;
@@ -168,6 +153,22 @@ public class ManualRechargeRequestController {
 
     public void setTransactionNumber(String transactionNumber) {
         this.transactionNumber = transactionNumber;
+    }
+
+    public Bank getSelectedBank() {
+        return selectedBank;
+    }
+
+    public void setSelectedBank(Bank selectedBank) {
+        this.selectedBank = selectedBank;
+    }
+
+    public Product getSelectedProduct() {
+        return selectedProduct;
+    }
+
+    public void setSelectedProduct(Product selectedProduct) {
+        this.selectedProduct = selectedProduct;
     }
 
     public static APIAuthorizerCardManagementSystemProxy getApiAuthorizerCardManagementSystemProxy() {
@@ -218,51 +219,48 @@ public class ManualRechargeRequestController {
         this.msg = msg;
     }
 
-    public Country getSelectedCountry() {
-        return selectedCountry;
+    public static BusinessPortalEJB getBusinessPortalEJBProxy() {
+        return businessPortalEJBProxy;
     }
 
-    public void setSelectedCountry(Country selectedCountry) {
-        this.selectedCountry = selectedCountry;
-        bankList.clear();
-        try {
-            if (selectedCountry != null) {
-                BankListResponse bankListResponse = apiAlodigaWalletProxy.getBankByCountryApp(String.valueOf(selectedCountry.getId()));
-                bankList2 = bankListResponse.getBanks();
-                for (Maw_bank b: bankList2) {
-                    bankList.add(b);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void setBusinessPortalEJBProxy(BusinessPortalEJB businessPortalEJBProxy) {
+        ManualRechargeRequestController.businessPortalEJBProxy = businessPortalEJBProxy;
     }
 
-    public Maw_bank getSelectedBank() {
-        return selectedBank;
+    public static ProductEJB getProductEJBProxy() {
+        return productEJBProxy;
     }
 
-    public void setSelectedBank(Maw_bank selectedBank) {
-        this.selectedBank = selectedBank;
+    public static void setProductEJBProxy(ProductEJB productEJBProxy) {
+        ManualRechargeRequestController.productEJBProxy = productEJBProxy;
     }
 
-    public com.alodiga.wallet.ws.Product getSelectedProduct() {
-        return selectedProduct;
+    public static UtilsEJB getUtilsEJBProxy() {
+        return utilsEJBProxy;
     }
 
-    public void setSelectedProduct(com.alodiga.wallet.ws.Product selectedProduct) {
-        this.selectedProduct = selectedProduct;
+    public static void setUtilsEJBProxy(UtilsEJB utilsEJBProxy) {
+        ManualRechargeRequestController.utilsEJBProxy = utilsEJBProxy;
     }
 
-    public List<com.alodiga.wallet.ws.Product> getProductList2() {
-        return productList2;
+    public ProductListResponse getProductListResponse() {
+        return productListResponse;
     }
 
-    public void setProductList2(List<com.alodiga.wallet.ws.Product> productList2) {
-        this.productList2 = productList2;
+    public void setProductListResponse(ProductListResponse productListResponse) {
+        this.productListResponse = productListResponse;
     }
     
-    public void sumit() {
+    public Product getProduct(long id) {
+        for (Product product : productList) {
+            if (product.getId() == id) {
+                return product;
+            }
+        }
+        return null;
+    }
+    
+    public void submit() {
         FacesContext context = FacesContext.getCurrentInstance();
         int documentTypeId = DocumentTypeE.MRAR.getId();
         int originApplicationId = OriginAplicationE.AWAWEB.getId();
