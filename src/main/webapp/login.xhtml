@@ -34,21 +34,23 @@
                                 <div class="ui-g-12">
                                     <h:panelGroup styleClass="md-inputfield">
                                         <p:inputText id="username" value="#{loginBean.uname}"/>
-                                        <label>Usuario</label>
+                                        <label>#{msg.loginUsermane}</label>
+                                        <!--<label>usuario</label>-->
                                     </h:panelGroup>
                                 </div>
                                 <div class="ui-g-12">
                                     <h:panelGroup styleClass="md-inputfield">
                                         <p:password id="password" value="#{loginBean.password}"  feedback="false"/>
-                                        <label>Password</label>
+                                        <label>#{msg.loginPassword}</label>
+                                        <label>contraseña</label>
                                     </h:panelGroup>
                                 </div>
                                 <div class="ui-g-12">
-                                    <p:commandButton value="Ingresar" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}"  ajax="true"></p:commandButton>
-                                    <p:button outcome="/recover" value="Olvido su contraseña" icon="ui-icon-help" styleClass="secondary"/>
+                                    <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}"  ajax="true"></p:commandButton>
+                                    <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" styleClass="secondary"/>
                                 </div>
                                 <div class="ui-g-12">
-                                    <p:button onclick="window.open('/AlodigaWalletWebRegister-1.0//register.xhtml')" href="/AlodigaWalletWebRegister-1.0//register.xhtml" icon="ui-icon-edit" value="Afiliarse" />
+                                    <p:button onclick="window.open('/BusinessPortalRegister/register.xhtml')" href="/BusinessPortalRegister/register.xhtml" icon="ui-icon-edit" value="#{msg.loginAfiliate}" />
                                 </div>
 <!--                                <div class="ui-g-12">
                                     <p:selectOneMenu value="es" onchange="submit()" valueChangeListener="#{languajeBean.localityChanged}">
