@@ -58,7 +58,7 @@ public class AddAccountController {
     private Usuario user;
     private ResourceBundle msg;  
     private String numberAccountBank;
-    private static BusinessPortalEJB businessPortalEJBProxy;
+    static BusinessPortalEJB businessPortalEJBProxy;
     private AccountBank accountBank = null;
     private static UtilsEJB utilsEJBProxy;
     
@@ -189,7 +189,7 @@ public class AddAccountController {
         return selectedCountry;
     }
 
-    public void setSelectedCountry(Country selectedCountry) {
+     public void setSelectedCountry(Country selectedCountry) {
         this.selectedCountry = selectedCountry;
         bankList.clear();
         try {
@@ -202,19 +202,10 @@ public class AddAccountController {
     }
 
     public void submit() {
-       System.out.println("Entre");
         if (numberAccountBank != null) {
             try {
                //Obtener el estatus ACTIVA de la cuenta bancaria
                StatusAccountBank statusAccountBankActiva = businessPortalEJBProxy.loadStatusAccountBankById(StatusAccountBankE.ACTIVA.getId());
-               
-               //Crear el objeto Bank
-//               Bank bank = new Bank();
-//               bank.setAbaCode(selectedBank.getAbaCode());
-//               bank.setCountryId(selectedCountry);
-//               bank.setId(selectedBank.getId());
-//               bank.setName(selectedBank.getName());
-//               bank.setSwiftCode(selectedBank.getSwiftCode());
                
                //Creando el objeto AccountBank
                AccountBank accountBank = new AccountBank();
