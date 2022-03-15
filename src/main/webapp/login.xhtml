@@ -18,12 +18,10 @@
     </h:head>
     <h:body >
         <p:layout fullPage="true" style="border: none">
-            <p:layoutUnit position="north" size="80px" style="border: none">
-                <p:messages autoUpdate="true" id="msgs" showDetail="true" showSummary="true" />
-            </p:layoutUnit>
+            
             <p:layoutUnit position="center" style="border: none">
                 <f:view contentType="text/html" locale="es" id="fview" >
-
+                    <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
                     <h:form id="loginForm" >                        
                         <div class="card login-panel ui-fluid">
                             <div class="ui-g">
@@ -33,16 +31,14 @@
                                 </div>
                                 <div class="ui-g-12">
                                     <h:panelGroup styleClass="md-inputfield">
-                                        <p:inputText id="username" value="#{loginBean.uname}"/>
-                                        <label>#{msg.loginUsermane}</label>
-                                        <!--<label>usuario</label>-->
+                                        <p:inputText id="username" value="#{loginBean.uname}" required="true" requiredMessage="#{msg.emptyUsername}"/>
+                                        <label>#{msg.loginUsermane}</label>                                        
                                     </h:panelGroup>
                                 </div>
                                 <div class="ui-g-12">
                                     <h:panelGroup styleClass="md-inputfield">
-                                        <p:password id="password" value="#{loginBean.password}"  feedback="false"/>
-                                        <label>#{msg.loginPassword}</label>
-                                        <label>contraseña</label>
+                                        <p:password id="password" value="#{loginBean.password}"  feedback="false" required="true" requiredMessage="#{msg.emptyPassword}"/>
+                                        <label>#{msg.loginPassword}</label>                                        
                                     </h:panelGroup>
                                 </div>
                                 <div class="ui-g-12">
@@ -50,7 +46,7 @@
                                     <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" styleClass="secondary"/>
                                 </div>
                                 <div class="ui-g-12">
-                                    <p:button onclick="window.open('/BusinessPortalRegister/register.xhtml')" href="/BusinessPortalRegister/register.xhtml" icon="ui-icon-edit" value="#{msg.loginAfiliate}" />
+                                    <p:button onclick="window.open('/AlodigaWalletWebRegister/register.xhtml')" href="/BusinessPortalRegister/register.xhtml" icon="ui-icon-edit" value="#{msg.loginAfiliate}" />
                                 </div>
 <!--                                <div class="ui-g-12">
                                     <p:selectOneMenu value="es" onchange="submit()" valueChangeListener="#{languajeBean.localityChanged}">

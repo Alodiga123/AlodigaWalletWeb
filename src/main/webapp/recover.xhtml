@@ -18,7 +18,8 @@
     </h:head>
     <h:body styleClass="login-body" >
         <f:view contentType="text/html" locale="es" id="fview" >
-            <p:messages autoUpdate="true" id="msgs" showDetail="true" showSummary="true" />
+            
+            <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
             <h:form id="recoverForm" >
                 <div class="card login-panel ui-fluid">
                     <div class="ui-g">
