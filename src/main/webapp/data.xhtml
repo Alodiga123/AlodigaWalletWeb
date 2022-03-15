@@ -64,7 +64,7 @@
                     <div class="card">
                         <p:dataTable var="transaction" value="#{dtSelectionView.maw_transactions}" paginator="true" rows="10">
                             <f:facet name="header">
-                                <p>{msg.DataTableMsg}</p>
+                                <p title="#{msg.DataTableMsg}"/>
                                 
                             </f:facet>
                             <p:column headerText="Concept" sortBy="#{transaction.concept}">

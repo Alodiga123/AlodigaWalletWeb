@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Validar Documentos</ui:define>
+
+    <ui:define name="content">
+        <h:form id="transferWallet">
+           <f:view contentType="text/html" locale="es" id="fview" >
+            <!--<p:messages autoUpdate="true" id="msgs" showDetail="true" showSummary="true" />-->
+            <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
+            <div class="ui-fluid">
+                <p:panelGrid>
+                    <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{transferWalletController.onFlowProcess}">
+                        
+                        <p:tab id="productAndEmail">
+                            <p:panel header="#{msg.transferTitle}">                                    
+                                <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">                                                
+                                    <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
+                                    <p:selectOneMenu id="product" value="#{transferWalletController.selectedProduct}" converter="productConverter" required="true">
+                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
+                                        <f:selectItems value="#{transferWalletController.productList}" var="product" itemLabel="#{product.name}"/>
+                                    </p:selectOneMenu>
+                                </p:panelGrid> 
+                                <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                    <h:outputText value="#{msg.sendEmail}" />
+                                    <p:inputText id="email" value="#{transferWalletController.email}" required="true"/>
+                                </p:panelGrid>                        
+                            </p:panel>   
+                        </p:tab>
+                        <p:tab id="information">
+                            <p:panel header="#{msg.transferTitle}">
+                                
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    
+                                    <h:outputText value="#{msg.firstName}: "/>
+                                    <h:outputText value="#{transferWalletController.firstName}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.lastName}: "/>
+                                    <h:outputText value="#{transferWalletController.lastName}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.numberPhone}: "/>
+                                    <h:outputText value="#{transferWalletController.numberPhone}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.Destinate}: "/>
+                                    <h:outputText value="#{transferWalletController.destinate}" styleClass="outputLabel"/>
+                                </h:panelGrid>
+                                
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    
+                                    <h:outputText value="#{msg.mount}" />
+                                    <p:inputText id="mount" value="#{transferWalletController.mount}" required="true"/>
+                                    
+                                    <h:outputText value="#{msg.concept}" />
+                                    <p:inputText id="concept" value="#{transferWalletController.concept}" required="true"/>
+                                </h:panelGrid>
+
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="key">
+                            <p:panel header="#{msg.transferTitle}">
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                <h:outputText value="#{msg.keyOperations}" />
+                                <p:inputText id="keyOperations" value="#{transferWalletController.keyOperations}" />
+
+                            </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="confirmation">
+                            <p:panel header="#{msg.transferTitle}">
+                            <h:panelGrid columns="2" columnClasses="label, value">
+
+                                <h:outputText value="#{msg.firstName}: "/>
+                                    <h:outputText value="#{transferWalletController.firstName}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.lastName}: "/>
+                                    <h:outputText value="#{transferWalletController.lastName}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.numberPhone}: "/>
+                                    <h:outputText value="#{transferWalletController.numberPhone}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.Destinate}: "/>
+                                    <h:outputText value="#{transferWalletController.destinate}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.mount}: "/>
+                                    <h:outputText value="#{transferWalletController.mount}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.concept}: "/>
+                                    <h:outputText value="#{transferWalletController.concept}" styleClass="outputLabel"/>
+
+                            </h:panelGrid>
+                                </p:panel>
+                        </p:tab>
+                        <p:tab id="confirmationEnd">
+                            <p:panel header="#{msg.transferTitleSucces}">
+                                
+                            <h:panelGrid columns="2" columnClasses="label, value">
+
+                                <h:outputText value="#{msg.firstName}: "/>
+                                    <h:outputText value="#{transferWalletController.firstName}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.lastName}: "/>
+                                    <h:outputText value="#{transferWalletController.lastName}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.numberPhone}: "/>
+                                    <h:outputText value="#{transferWalletController.numberPhone}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.Destinate}: "/>
+                                    <h:outputText value="#{transferWalletController.destinate}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.mount}: "/>
+                                    <h:outputText value="#{transferWalletController.mount}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.concept}: "/>
+                                    <h:outputText value="#{transferWalletController.concept}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.TransactionId}: "/>
+                                    <h:outputText value="#{transferWalletController.idTranstaction}" styleClass="outputLabel"/>
+
+                            </h:panelGrid>
+                                </p:panel>
+                        </p:tab>
+                    </p:wizard>
+
+                </p:panelGrid>
+            </div>
+            </f:view>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

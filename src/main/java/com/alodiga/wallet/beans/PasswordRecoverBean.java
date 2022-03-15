@@ -66,7 +66,6 @@ public class PasswordRecoverBean extends GenericController implements Serializab
     public String recover() {
         APIRegistroUnificadoProxy proxy = new APIRegistroUnificadoProxy();
         Respuesta respuesta = new Respuesta();  
-        FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpSession session = request.getSession(false);
         try {
@@ -76,20 +75,28 @@ public class PasswordRecoverBean extends GenericController implements Serializab
             respuesta = proxy.cambiarCredencialAplicacionMovilEmailOrPhone("usuarioWS", "passwordWS", phone.toString(), pass);
             if (respuesta.getCodigoRespuesta().equals("00")) {
                 session.setAttribute("user", "");
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Cambio de contraseña correctamente"));
+                //context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Cambio de contraseña correctamente","" ));
+                addMessage(FacesMessage.SEVERITY_INFO, "Cambio de contraseña correctamente", "");                    
                 return "login.xhtml";
             } else {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al cambiar la contraseña", null));
+                addMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar la contraseña", "");                    
+                //context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al cambiar la contraseña", ""));
                 return "recover.xhtml";
             }
 
         } catch (Exception ex) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al cambiar la contraseña", null));
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error al cambiar la contraseña", "");                    
+            //context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al cambiar la contraseña", ""));
             return "recover.xhtml";
         }
 
     }
 
+    
+    public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(severity, summary, detail));
+    }
     public String cancel() {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpSession session = request.getSession(false);
