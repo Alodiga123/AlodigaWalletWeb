@@ -142,6 +142,7 @@ public class WithdrawalWalletController {
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
             productEJBProxy = (ProductEJB) EJBServiceLocator.getInstance().get(EjbConstants.PRODUCT_EJB);
 
+
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
@@ -363,20 +364,12 @@ public class WithdrawalWalletController {
 
   
 
-    public String getOnFlowProcess() {
-        return onFlowProcess;
-    }
-
-    public void setOnFlowProcess(String onFlowProcess) {
-        this.onFlowProcess = onFlowProcess;
-    }
-
     public boolean haveAccount(){
-      boolean rendered = true;
+      boolean answer = true;
        if( accountBankList == null || accountBankList.size() <= 0){
-          rendered = false;
+          answer = false;
         }
-       return rendered;
+       return answer;
      }
 
     public AccountBank getSelectedAccountBank() {
@@ -489,10 +482,10 @@ public class WithdrawalWalletController {
         int originApplicationId = OriginAplicationE.AWAWEB.getId();
         
         try {
-            //Se guarda la transacción de ÇRetiro Manual en la BD de AlodigaWallet
-            TransactionResponse transactionResponse = apiAlodigaWalletProxy.manualWithdrawals(selectedBankWithdrawal.getId(), transactionNumber, transactionAmount, selectedProduct.getId(), transactionNumber, Long.valueOf(documentTypeId),Long.valueOf(originApplicationId));
+            //Se guarda la transacción de Retiro Manual en la BD de AlodigaWallet
+            TransactionResponse transactionResponse = apiAlodigaWalletProxy.manualWithdrawals(selectedBankWithdrawal.getId(), user.getEmail(), transactionAmount, selectedProduct.getId(), transactionConcept, Long.valueOf(documentTypeId),Long.valueOf(originApplicationId));
             if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
-               TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedBank.getId(), Long.valueOf(documentTypeId), Long.valueOf(originApplicationId));
+               TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedAccountBank.getId(), Long.valueOf(documentTypeId), Long.valueOf(originApplicationId));
                if (transactionApproveRequestResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualWithdrawals.saveSuccesfull")));
                } 
@@ -517,7 +510,7 @@ public class WithdrawalWalletController {
             }           
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.getLogger(ManualRechargeRequestController.class.getName()).log(Level.SEVERE, null, ex);      
+            Logger.getLogger(WithdrawalWalletController.class.getName()).log(Level.SEVERE, null, ex);      
         }        
       }
 
