@@ -12,7 +12,7 @@
 
         <p:growl id="growl" sticky="true" showDetail="true"/>
 
-        <p:wizard flowListener="#{withdrawalWalletController.onFlowProcess}">
+        <p:wizard showNavBar="#{withdrawalWalletController.haveAccount()}">
             <p:tab id="accountBank" title="#{msg.titleAddAccount}" rendered="#{withdrawalWalletController.haveAccount()}" >
             <p:panel header="Bank Details">
                     <p:messages/>
@@ -43,7 +43,7 @@
                                         <f:selectItems value="#{withdrawalWalletController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
                                     </p:selectOneMenu>
                                     <p:outputLabel value="Numero de cuenta" for="numberAccountBank" />
-                                    <p:inputText id="numberAccountBank" value="#{withdrawalWalletController.numberAccountBank}" required="false"/>
+                                    <p:inputText id="numberAccountBank" value="#{withdrawalWalletController.numberAccountBank}" required="true"/>
                                 </p:panelGrid>
                             </div>
 
@@ -58,7 +58,7 @@
             </div>
             </p:panel>
             </p:tab>
-            <p:tab id="WalletWithdrawal" title="#{msg.titleWalletWithdrawal}">
+            <p:tab id="WalletWithdrawal" title="#{msg.titleWalletWithdrawal}" >
             <p:panel header="Wallet Details">
                     <div class="ui-fluid">
                 <div class="ui-g">
@@ -85,10 +85,11 @@
                                     <p:selectOneMenu id="accountBankWithdrawal" value="#{withdrawalWalletController.selectedAccountBank}" converter="accountBankConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{withdrawalWalletController.accountBankList}" var="accountBankWithdrawal" itemLabel="#{accountBankWithdrawal.accountNumber}"/>
+                                        <p:ajax event="change" update="accountBankType"/>
                                     </p:selectOneMenu>
                                    
                                     <p:outputLabel value="Tipo de Cuenta Bancaria" for="accountBankType" />
-                                    <p:inputText id="accountBankType" value="#{withdrawalWalletController.accountBankType}" required="false"/>
+                                    <p:inputText id="accountBankType" value="#{withdrawalWalletController.accountBankType}" required="false" disabled="false" />
                                     
                                     <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
                                     <p:selectOneMenu id="product" value="#{withdrawalWalletController.selectedProduct}" converter="productConverter" required="true">
@@ -97,15 +98,15 @@
                                     </p:selectOneMenu>  
                                  
                                     <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
-                                    <p:inputNumber id="transactionAmount" value="#{withdrawalWalletController.transactionAmount}" decimalPlaces="2" required="false"/>
+                                    <p:inputNumber id="transactionAmount" value="#{withdrawalWalletController.transactionAmount}" decimalPlaces="2" required="true"/>
                                     
                                     <p:outputLabel value="#{msg.commonsTransactionConcept}" for="transactionConcept" />
-                                    <p:inputText id="transactionConcept" value="#{withdrawalWalletController.transactionConcept}" required="false"/>
+                                    <p:inputText id="transactionConcept" value="#{withdrawalWalletController.transactionConcept}" required="true"/>
                                 </p:panelGrid>
                             </div>
                             <div align="center">
                                 <p:panelGrid  columns="1" >
-                                    <p:commandButton value="#{msg.buttonSaveWalletWithdrawal}" icon="ui-icon-save" action="#{cardWithdrawalController.submit()}"/>
+                                    <p:commandButton value="#{msg.buttonSaveWalletWithdrawal}" icon="ui-icon-save" action="#{withdrawalWalletController.submitWithdrawal()}"/>
                                 </p:panelGrid>
                             </div>
                         </div>
