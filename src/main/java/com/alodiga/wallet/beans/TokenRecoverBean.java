@@ -52,6 +52,11 @@ public class TokenRecoverBean extends GenericController implements Serializable 
         this.token = token;
     }  
     
+    public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(severity, summary, detail));
+    }
+    
     public String recover() {
         APIRegistroUnificadoProxy proxy = new APIRegistroUnificadoProxy();
         Respuesta respuesta = new Respuesta();
@@ -65,7 +70,7 @@ public class TokenRecoverBean extends GenericController implements Serializable 
                     session.setAttribute("user", "");          
                 return "passwordRecover.xhtml";           
         } catch (Exception ex) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al recuperar la contraseña", null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al recuperar la contraseña", ""));
             return "recover.xhtml";
         } 
     }

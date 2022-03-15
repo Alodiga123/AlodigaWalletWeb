@@ -117,21 +117,22 @@ public class RecoverBean extends GenericController implements Serializable {
             }     
             System.out.println("respuesta.getCodigoRespuesta() " + respuesta.getCodigoRespuesta());
             if (respuesta.getCodigoRespuesta().equals("00")) {
+                System.out.println("token " + respuesta.getDatosRespuesta());
                 HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
                     HttpSession session = request.getSession(false);                    
                     session.setAttribute("token", respuesta.getDatosRespuesta());
                     session.setAttribute("phoneOrEmail", emailAddress);
                     session.setAttribute("user", "");
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Se ha enviado una clave temporal"));                
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha enviado una clave temporal", ""));                
                 return "tokenRecover.xhtml";
             }else{
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al recuperar la contraseña", null));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al recuperar la contraseña", ""));
 
                 return "recover.xhtml"; 
             }
             
         } catch (Exception ex) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al recuperar la contraseña", null));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error al recuperar la contraseña", ""));
             return "recover.xhtml";
         } 
     }
