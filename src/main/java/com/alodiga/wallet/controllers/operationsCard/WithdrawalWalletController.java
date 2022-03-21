@@ -479,7 +479,7 @@ public class WithdrawalWalletController {
         public void submitWithdrawal() {
         FacesContext context = FacesContext.getCurrentInstance();
         int documentTypeId = DocumentTypeE.MWAR.getId();
-        int originApplicationId = OriginAplicationE.AWAWEB.getId();
+        int originApplicationId = OriginAplicationE.AWAAPP.getId();
         
         try {
             //Se guarda la transacción de Retiro Manual en la BD de AlodigaWallet
