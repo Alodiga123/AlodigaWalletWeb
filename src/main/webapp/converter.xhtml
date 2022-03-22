@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Validar Documentos</ui:define>
+
+    <ui:define name="content">
+        <h:form id="transferWallet">
+            <f:view contentType="text/html" locale="es" id="fview" >
+                <!--<p:messages autoUpdate="true" id="msgs" showDetail="true" showSummary="true" />-->
+                <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
+                <div class="ui-fluid">
+                    <p:panelGrid>
+                        <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{converterController.onFlowProcess}">
+
+                            <p:tab id="convertProduct">
+                                <p:panel header="#{msg.converTitle}">                                    
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">                                                
+                                        <p:outputLabel value="#{msg.productOrigin}" for="product"/>
+                                        <p:selectOneMenu id="product" value="#{converterController.selectedProduct}" converter="productConverter" required="true">
+                                            <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
+                                            <f:selectItems value="#{converterController.productList}" var="product" itemLabel="#{product.name}"/>
+                                            <p:ajax event="change" update="productDestinate"/>
+                                        </p:selectOneMenu>
+                                    </p:panelGrid> 
+
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">                                                
+                                        <p:outputLabel value="#{msg.productDestinate}" for="productDestinate"/>
+                                        <p:selectOneMenu id="productDestinate" value="#{converterController.selectedProductDestinate}" converter="productConverter" required="true">
+                                            <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
+                                            <f:selectItems value="#{converterController.productList}" var="product" itemLabel="#{product.name.concat(product.currentBalance)}"/>
+                                        </p:selectOneMenu>
+                                    </p:panelGrid>  
+
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">                                                
+
+                                        <h:outputText value="#{msg.mount}" />
+                                        <p:inputText id="mount" value="#{converterController.mount}" required="true"/>                                    
+
+                                    </p:panelGrid>
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">                                                
+                                        <h:outputText value="#{msg.converterIncludeCommission}" />
+                                        <p:selectBooleanCheckbox  id="includeComission" value="#{converterController.includeComission}" />
+                                    </p:panelGrid>
+                                </p:panel>   
+                            </p:tab>
+                            <p:tab id="informationConvert">
+                                <p:panel header="#{msg.converTitle}">
+
+                                    <h:panelGrid columns="2" columnClasses="label, value">
+
+                                        <h:outputText value="#{msg.isComissionAmount}: "/>
+                                        <h:outputText value="#{converterController.percentComission}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="#{msg.comission}: "/>
+                                        <h:outputText value="#{converterController.amountCommission}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="#{msg.rateComission}: "/>
+                                        <h:outputText value="#{converterController.valueCommission}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="#{msg.amountConverter}: "/>
+                                        <h:outputText value="#{converterController.mount}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{msg.totalDebit}: "/>
+                                        <h:outputText value="#{converterController.totalDebit}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{msg.amountConversion}: "/>
+                                        <h:outputText value="#{converterController.amountConversion}" styleClass="outputLabel"/>                                                                         
+                                        
+                                        
+                                        <h:outputText value="#{converterController.selectedProduct.name}: "/>
+                                        <h:outputText value="#{converterController.exchangeRateProductSource}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{converterController.selectedProductDestinate.name}: "/>
+                                        <h:outputText value="#{converterController.exchangeRateProductDestination}" styleClass="outputLabel"/>                                   
+                                        
+                                    </h:panelGrid>                           
+
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="key">
+                                <p:panel header="#{msg.transferTitle}">
+                                    <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                        <h:outputText value="#{msg.keyOperations}" />
+                                        <p:inputText id="keyOperations" value="#{converterController.keyOperations}" />
+
+                                    </p:panelGrid>
+                                </p:panel>
+                            </p:tab>
+                            <p:tab id="confirmation">
+                                <p:panel header="#{msg.transferTitle}">
+                                    <h:panelGrid columns="2" columnClasses="label, value">                                       
+
+                                         <h:outputText value="#{msg.TransactionId}: "/>
+                                         <h:outputText value="#{converterController.idTranstaction}" styleClass="outputLabel"/>
+                                         
+                                         <h:outputText value="#{msg.date}: "/>
+                                         <h:outputText value="#{converterController.date}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{msg.isComissionAmount}: "/>
+                                        <h:outputText value="#{converterController.percentComission}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="#{msg.comission}: "/>
+                                        <h:outputText value="#{converterController.amountCommission}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="#{msg.rateComission}: "/>
+                                        <h:outputText value="#{converterController.valueCommission}" styleClass="outputLabel"/>
+
+                                        <h:outputText value="#{msg.amountConverter}: "/>
+                                        <h:outputText value="#{converterController.mount}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{msg.totalDebit}: "/>
+                                        <h:outputText value="#{converterController.totalDebit}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{msg.amountConversion}: "/>
+                                        <h:outputText value="#{converterController.amountConversion}" styleClass="outputLabel"/>                                                                         
+                                        
+                                        
+                                        <h:outputText value="#{converterController.selectedProduct.name}: "/>
+                                        <h:outputText value="#{converterController.exchangeRateProductSource}" styleClass="outputLabel"/>
+                                        
+                                        <h:outputText value="#{converterController.selectedProductDestinate.name}: "/>
+                                        <h:outputText value="#{converterController.exchangeRateProductDestination}" styleClass="outputLabel"/>                                   
+                                        
+                                    
+
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:tab>                            
+                        </p:wizard>
+
+                    </p:panelGrid>
+                </div>
+            </f:view>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
