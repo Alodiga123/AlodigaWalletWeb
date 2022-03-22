@@ -4,6 +4,7 @@ import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.cms.ws.TransactionResponse;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.CardResponse;
+import com.cms.commons.enumeraciones.ChannelE;
 import com.cms.commons.enumeraciones.ResponseCodeE;
 import com.ericsson.alodiga.ws.Usuario;
 import java.rmi.RemoteException;
@@ -28,8 +29,7 @@ public class BlockedUpController {
     private CardResponse cardResponseWallet;
     private APIAlodigaWalletProxy apiAlodigaWalletProxy;
     private boolean blocked;
-    private String activated = "true";
-    private String changeBloked = null;
+    private boolean blockedUpCard;
 
     @PostConstruct
     public void init() {
@@ -37,7 +37,7 @@ public class BlockedUpController {
             //Se instancian las API del CMS Autorizador y AlodigaWallet
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
-            apiAuthorizerCardManagementSystemProxy.getValidateCard(cardNumber);
+            apiAuthorizerCardManagementSystemProxy.verifyStatusActiveCard(cardNumber);
 
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
@@ -47,6 +47,8 @@ public class BlockedUpController {
             cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
             cardNumber = cardResponseWallet.getCardNumber();
 
+            blockedUpCard = cardResponseWallet.getIndBlockedUp();
+
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(BlockedUpController.class.getName()).log(Level.SEVERE, null, ex);
@@ -54,41 +56,31 @@ public class BlockedUpController {
     }
 
     public boolean verifyCard() {
-        boolean activeCard = true;
+        blockedUpCard = true;
         try {
             cardResponseCMS = apiAuthorizerCardManagementSystemProxy.verifyStatusActiveCard(cardNumber);
             if (!cardResponseCMS.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
-                activeCard = false;
+                blockedUpCard = false;
             }
         } catch (RemoteException ex) {
             ex.printStackTrace();
             Logger.getLogger(BlockedUpController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return activeCard;
+        return blockedUpCard;
     }
-
-    public Boolean verifyBlockedCard() {
-    return cardResponseWallet.getIndBlockedUp();
-       
-    }
-
-//    public boolean verifyBlockedCard() {
-//       return cardResponseWallet.getIndBlockedUp();
-//    }
 
     public void changeBlocked() {
+        Long messageMiddlewareId = 1L;
+        int channelWallet = ChannelE.WALLET.getId();
+        Long transactioExternalId = 1L;
         try {
-            TransactionResponse changeBlockedResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(user.getNumberCard(), blocked?0:1 , Long.MAX_VALUE, Integer.MIN_VALUE, Long.MIN_VALUE);
+            TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(cardNumber,
+                    (blocked == true) ? 0 : 1, messageMiddlewareId, channelWallet, transactioExternalId);
 
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-    public void addMessage() {
-        String summary = blocked ? "Checked" : "Unchecked";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
     }
 
     public APIAuthorizerCardManagementSystemProxy getApiAuthorizerCardManagementSystemProxy() {
@@ -155,13 +147,14 @@ public class BlockedUpController {
         this.blocked = blocked;
     }
 
-    public String getActivated() {
-        return activated;
+ 
+
+    public boolean isBlockedUpCard() {
+        return blockedUpCard;
     }
 
-    public void setActivated(String activated) {
-        System.out.println("setActivated  " + activated);
-        this.activated = activated;
+    public void setBlockedUpCard(boolean blockedUpCard) {
+        this.blockedUpCard = blockedUpCard;
     }
 
 }

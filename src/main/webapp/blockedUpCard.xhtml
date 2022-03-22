@@ -3,7 +3,8 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <ui:define name="title">#{msg.titleWalletWithdrawal}</ui:define>
     <ui:define name="content">
@@ -11,22 +12,22 @@
 
             <p:growl id="growl" sticky="true" showDetail="true"/>
 
-            <p:panel id="verificationActivateCard" rendered="#{blockedUpController.verifyCard()}" >
+            <p:panel id="verification"  rendered="#{not blockedUpController.verifyCard()}">
                 <div align="center">
                     <h1>Su tarjeta debe ser activada</h1>
                     <p:commandButton type="button" value="Back" icon="pi pi-check" action="dashboard.xhtml?faces-redirect=true" />
                 </div>
             </p:panel>
-            <p:panel id="WalletWithdrawal" >
-                <div align="center">
-                    <h1>Bloquear o Desbloquear</h1>
-                    <p:panelGrid  columns="1" >
-                        <p:selectOneButton value="#{blockedUpController.blocked}" >
-                            <f:selectItem itemLabel="Activar" itemValue="true" rendered="#{blockedUpController.verifyBlockedCard() eq '1'}"/>
-                            <f:selectItem itemLabel="Desactivar" itemValue="false" rendered="#{blockedUpController.verifyBlockedCard()  eq '0'}"/>
-                            <p:ajax update="@this" />
-                        </p:selectOneButton>
-                    </p:panelGrid>
+             <p:panel id="verificationActivateCard">
+                 <div align="center">
+                 <c:if test="#{blockedUpController.blockedUpCard == true}">
+                     <h1>#{msg.unblocked}"</h1> 
+                <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" itemLabel="Yes"/>
+                </c:if>
+                <c:if test="#{blockedUpController.blockedUpCard == false}">
+                    <h1>#{msg.blocked}"</h1> 
+                 <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" itemLabel="Yes"/>
+                </c:if>
                 </div>
             </p:panel>
         </h:form>    
