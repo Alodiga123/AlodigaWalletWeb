@@ -98,24 +98,21 @@ public class LoginBean extends GenericController implements Serializable {
     public void setLocale(String locale) {
         this.locale = locale;
     }
+    
+    public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(severity, summary, detail));
+    }
 
     public String loginProject() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         
         APIRegistroUnificadoProxy proxy = new APIRegistroUnificadoProxy();
         RespuestaUsuario respuestaUsuario = new RespuestaUsuario();
         if (uname.isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, getStandarMessage("emptyField"),
-                            getStandarMessage("emptyFieldLogin")));
-            RequestContext.getCurrentInstance().scrollTo("username");
-
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error Usuario", "El campo usuario no puede estar vacío");                   
             uname = null;
         } else if (password.isEmpty()) {
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            getStandarMessage("emptyField"),
-                            getStandarMessage("emptyFieldPassword")));
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error Usuario", "El campo contraseña no puede estar vacío");
             password = null;
         } else {
             try {

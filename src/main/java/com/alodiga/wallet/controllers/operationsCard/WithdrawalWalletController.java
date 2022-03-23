@@ -17,15 +17,12 @@ import com.alodiga.wallet.common.model.AccountTypeBank;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
-import com.alodiga.wallet.ws.Product;
+import com.alodiga.wallet.common.model.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
 import com.alodiga.wallet.common.utils.EjbConstants;
 import com.alodiga.wallet.ws.BankListResponse;
-import com.alodiga.wallet.ws.Maw_bank;
-import com.alodiga.wallet.ws.ProductListResponse;
-import com.cms.commons.genericEJB.EJBRequest;
-import com.ericsson.alodiga.ws.PreguntaIdioma;
+import com.alodiga.wallet.common.genericEJB.EJBRequest;
 import com.ericsson.alodiga.ws.Usuario;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,8 +39,13 @@ import javax.servlet.http.HttpSession;
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.ejb.ProductEJB;
 import com.alodiga.wallet.common.ejb.UtilsEJB;
+import com.alodiga.wallet.common.enumeraciones.DocumentTypeE;
+import com.alodiga.wallet.common.enumeraciones.OriginAplicationE;
+import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
 import com.alodiga.wallet.common.enumeraciones.StatusAccountBankE;
+import com.alodiga.wallet.common.exception.EmptyListException;
 import com.alodiga.wallet.common.exception.GeneralException;
 import com.alodiga.wallet.common.exception.NullParameterException;
 import com.alodiga.wallet.common.exception.RegisterNotFoundException;
@@ -51,7 +53,6 @@ import com.alodiga.wallet.common.model.AccountTypeBank;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
-import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
 import com.alodiga.wallet.common.utils.EjbConstants;
@@ -59,11 +60,13 @@ import com.alodiga.wallet.common.model.AccountTypeBank;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CreditCardListResponse;
 import com.alodiga.wallet.ws.AccountTypeBankListResponse;
-import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
 import com.alodiga.wallet.common.model.AccountBank;
 import com.alodiga.wallet.common.model.StatusAccountBank;
+import static com.alodiga.wallet.controllers.operationsCard.AddAccountController.businessPortalEJBProxy;
 import com.alodiga.wallet.ws.AccountBankListResponse;
+import com.alodiga.wallet.ws.TransactionApproveRequestResponse;
+import com.alodiga.wallet.ws.TransactionResponse;
 import com.ericsson.alodiga.ws.PreguntaIdioma;
 import com.ericsson.alodiga.ws.Usuario;
 import java.sql.Timestamp;
@@ -89,19 +92,25 @@ import org.primefaces.context.RequestContext;
 import com.ericsson.alodiga.ws.RespuestaCodigoRandom;
 
 
+
 @ManagedBean(name = "withdrawalWalletController")
 @ViewScoped
 public class WithdrawalWalletController {
 
     private List<Country> countryList = new ArrayList();
-    private List<Maw_bank> bankList = new ArrayList();
-    private Maw_bank[] bankList2;
-    private Product[] productList;
+    private List<Bank> bankList = new ArrayList();
+    private List<Bank> bankListWithdrawal = new ArrayList();
+    private List<AccountBank> accountBankList = new ArrayList();
+    private List<Product> productList = new ArrayList();
     private String transactionConcept;
     private Float transactionAmount;
     private String transactionNumber;
+    private String accountBankType;
     private Country selectedCountry;
+    private Country selectedCountryWithdrawal;
     private Bank selectedBank;
+    private Bank selectedBankWithdrawal;
+    private AccountBank selectedAccountBank;
     private Product selectedProduct;
     private APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy;
     private APIAlodigaWalletProxy apiAlodigaWalletProxy;
@@ -116,26 +125,30 @@ public class WithdrawalWalletController {
     private AccountTypeBank selectedAccountTypeBank;
     private String numberAccountBank;
     private AccountBank accountBank = null;
-    private com.alodiga.wallet.ws.AccountBank[] accountBankList;
     private UtilsEJB proxyUtilEJB;
     public String onFlowProcess;
+    private UtilsEJB utilsEJBProxy;
+    private static ProductEJB productEJBProxy;
+    
    
-
     @PostConstruct
     public void init() {
         try {
 
             businessPortalEJBProxy = (BusinessPortalEJB) EJBServiceLocator.getInstance().get(EjbConstants.BUSINESS_PORTAL_EJB);
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
+            utilsEJBProxy = (UtilsEJB) EJBServiceLocator.getInstance().get(EjbConstants.UTILS_EJB);
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
+            productEJBProxy = (ProductEJB) EJBServiceLocator.getInstance().get(EjbConstants.PRODUCT_EJB);
 
 
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
 
-         
+            EJBRequest request = new EJBRequest();  
+            accountTypeBankList = businessPortalEJBProxy.getAccountTypeBanks(request); 
 
             //Se obtiene la lista de países
             countryList = businessPortalEJBProxy.getCountries();
@@ -144,15 +157,9 @@ public class WithdrawalWalletController {
 //            accountBankByUser = proxyUtilEJB.getAccountBankByUser();
 
             //Se obtiene la lista de productos del usuario
-            productListResponse = apiAlodigaWalletProxy.getProductsByUserId(String.valueOf(user.getUsuarioID()));
-            productList = productListResponse.getProducts();
+            productList = productEJBProxy.getProductsByWalletUser(Long.valueOf(user.getUsuarioID()));
              //Se obtiene la lista de bancos por usuario
 
-            accountBankListResponse = apiAlodigaWalletProxy.getAccountBankByUser(Long.valueOf(user.getUsuarioID()));
-            accountBankList = accountBankListResponse.getAccountBanks();
-            if (accountBankList.length > 0) {
-
-            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -168,29 +175,23 @@ public class WithdrawalWalletController {
         this.countryList = countryList;
     }
 
-    public List<Maw_bank> getBankList() {
-        return bankList;
-    }
-
-    public void setBankList(List<Maw_bank> bankList) {
-        this.bankList = bankList;
-    }
-
-    public Maw_bank[] getBankList2() {
-        return bankList2;
-    }
-
-    public void setBankList2(Maw_bank[] bankList2) {
-        this.bankList2 = bankList2;
-    }
-
-    public Product[] getProductList() {
+    public List<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(Product[] productList) {
+    public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
+
+    public static ProductEJB getProductEJBProxy() {
+        return productEJBProxy;
+    }
+
+    public static void setProductEJBProxy(ProductEJB productEJBProxy) {
+        WithdrawalWalletController.productEJBProxy = productEJBProxy;
+    }
+
+    
 
     public String getTransactionConcept() {
         return transactionConcept;
@@ -220,22 +221,18 @@ public class WithdrawalWalletController {
         return selectedCountry;
     }
 
-    public void setSelectedCountry(Country selectedCountry) {
+  public void setSelectedCountry(Country selectedCountry) throws EmptyListException {
         this.selectedCountry = selectedCountry;
         bankList.clear();
         try {
             if (selectedCountry != null) {
-                BankListResponse bankListResponse = apiAlodigaWalletProxy.getBankByCountryApp(String.valueOf(selectedCountry.getId()));
-                bankList2 = bankListResponse.getBanks();
-                for (Maw_bank b: bankList2) {
-                    bankList.add(b);
-                }
+                bankList = utilsEJBProxy.getBankByCountry(Long.valueOf(selectedCountry.getId()));
             }
+         
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     public Bank getSelectedBank() {
         return selectedBank;
@@ -365,24 +362,176 @@ public class WithdrawalWalletController {
         this.proxyUtilEJB = proxyUtilEJB;
     }
 
-    public com.alodiga.wallet.ws.AccountBank[] getAccountBankList() {
+  
+
+    public boolean haveAccount(){
+      boolean answer = true;
+       if( accountBankList == null || accountBankList.size() <= 0){
+          answer = false;
+        }
+       return answer;
+     }
+
+    public AccountBank getSelectedAccountBank() {
+        return selectedAccountBank;
+    }
+
+    public void setSelectedAccountBank(AccountBank selectedAccountBank) {
+        this.selectedAccountBank = selectedAccountBank;
+        this.accountBankType = selectedAccountBank.getAccountTypeBankId().getDescription();
+    }
+
+
+   
+    public List<Bank> getBankList() {
+        return bankList;
+    }
+
+    public void setBankList(List<Bank> bankList) {
+        this.bankList = bankList;
+    }
+
+    public UtilsEJB getUtilsEJBProxy() {
+        return utilsEJBProxy;
+    }
+
+    public void setUtilsEJBProxy(UtilsEJB utilsEJBProxy) {
+        this.utilsEJBProxy = utilsEJBProxy;
+    }
+
+    public List<Bank> getBankListWithdrawal() {
+        return bankListWithdrawal;
+    }
+
+    public void setBankListWithdrawal(List<Bank> bankListWithdrawal) {
+        this.bankListWithdrawal = bankListWithdrawal;
+    }
+
+    public List<AccountBank> getAccountBankList() {
         return accountBankList;
     }
 
-    public void setAccountBankList(com.alodiga.wallet.ws.AccountBank[] accountBankList) {
+    public void setAccountBankList(List<AccountBank> accountBankList) {
         this.accountBankList = accountBankList;
     }
 
-    public String getOnFlowProcess() {
-        return onFlowProcess;
+    public String getAccountBankType() {
+        return accountBankType;
     }
 
-    public void setOnFlowProcess(String onFlowProcess) {
-        this.onFlowProcess = onFlowProcess;
+    public void setAccountBankType(String accountBankType) {
+        this.accountBankType = accountBankType;
     }
 
+ 
+
+
+    public Country getSelectedCountryWithdrawal() {
+        return selectedCountryWithdrawal;
+    }
+
+    public void setSelectedCountryWithdrawal(Country selectedCountryWithdrawal) {
+        this.selectedCountryWithdrawal = selectedCountryWithdrawal;
+        bankListWithdrawal.clear();
+        try {
+            if (selectedCountryWithdrawal != null) {
+                bankListWithdrawal = utilsEJBProxy.getBankByCountry(Long.valueOf(selectedCountryWithdrawal.getId()));
+            }
+         
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        public void submit() {
+//cambiar el nombre del campo por objeto
+        if (numberAccountBank != null) {
+            try {
+               //Obtener el estatus ACTIVA de la cuenta bancaria
+               StatusAccountBank statusAccountBankActiva = businessPortalEJBProxy.loadStatusAccountBankById(StatusAccountBankE.ACTIVA.getId());
+               
+               //Creando el objeto AccountBank
+               AccountBank accountBank = new AccountBank();
+               accountBank.setBankId(selectedBank);
+               accountBank.setAccountNumber(numberAccountBank);
+               accountBank.setAccountTypeBankId(selectedAccountTypeBank);
+               accountBank.setStatusAccountBankId(statusAccountBankActiva);
+               accountBank.setCreateDate(new Timestamp(new Date().getTime()));
+               accountBank.setUnifiedRegistryId(user.getUsuarioID());
+               //Guardar la cuenta bancaria en la BD
+               accountBank = businessPortalEJBProxy.saveAccountBank(accountBank);
+
+               if (accountBank != null) {
+                  FacesContext context = FacesContext.getCurrentInstance();
+                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Las respuestas del usuario se guardaron correctamente en la BD", null));
+               }else{
+                  FacesContext context = FacesContext.getCurrentInstance();
+                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Se presentó un problema al guardar los datos, por favor intente de nuevo", null));  
+               }
+            
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Logger.getLogger(RechargeCardController.class.getName()).log(Level.SEVERE, null, ex);      
+            }
+
+   }
+  }
     
+        public void submitWithdrawal() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        int documentTypeId = DocumentTypeE.MWAR.getId();
+        int originApplicationId = OriginAplicationE.AWAAPP.getId();
+        
+        try {
+            //Se guarda la transacción de Retiro Manual en la BD de AlodigaWallet
+            TransactionResponse transactionResponse = apiAlodigaWalletProxy.manualWithdrawals(selectedBankWithdrawal.getId(), user.getEmail(), transactionAmount, selectedProduct.getId(), transactionConcept, Long.valueOf(documentTypeId),Long.valueOf(originApplicationId));
+            if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+               TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedAccountBank.getId(), Long.valueOf(documentTypeId), Long.valueOf(originApplicationId));
+               if (transactionApproveRequestResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualWithdrawals.saveSuccesfull")));
+               } 
+            }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DISABLED_TRANSACTION.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));      
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_QUANTITY_LIMIT_DIALY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null)); 
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT_DIALY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_QUANTITY_LIMIT_DIALY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT_MONTHLY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_QUANTITY_LIMIT_YEARLY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.TRANSACTION_AMOUNT_LIMIT_YEARLY.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  
+            }           
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Logger.getLogger(WithdrawalWalletController.class.getName()).log(Level.SEVERE, null, ex);      
+        }        
+      }
 
+    public Bank getSelectedBankWithdrawal() {
+        return selectedBankWithdrawal;
+    }
+
+    public void setSelectedBankWithdrawal(Bank selectedBankWithdrawal) {
+        this.selectedBankWithdrawal = selectedBankWithdrawal;
+        accountBankList.clear();
+        try {
+            if (selectedBankWithdrawal != null) {
+               accountBankList = utilsEJBProxy.getAccountBankByBankByUser(selectedBankWithdrawal.getId(),Long.valueOf(user.getUsuarioID()));
+            }
+         
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+
+    }
 
 
 }

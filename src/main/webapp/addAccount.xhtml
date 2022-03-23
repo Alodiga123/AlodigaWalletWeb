@@ -20,18 +20,18 @@
                                 </f:facet>
                                 <p:panelGrid id="addAccountGrid" columns="2" >
                                     <p:outputLabel value="#{msg.commonsCountry}" for="country"/>
-                                    <p:selectOneMenu id="country" value="#{addAccountController.selectedCountry}" converter="#{countryConverter}" required="true">
+                                    <p:selectOneMenu id="country" value="#{addAccountController.selectedCountry}" converter="countryConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{addAccountController.countryList}" var="country" itemLabel="#{country.name}"/>
                                         <p:ajax event="change" update="bank"/>
                                     </p:selectOneMenu>
                                     <p:outputLabel value="#{msg.commonsBank}" for="bank"/>
-                                    <p:selectOneMenu id="bank" value="#{addAccountController.selectedBank}" converter="#{bankConverter}" required="true">
+                                    <p:selectOneMenu id="bank" value="#{addAccountController.selectedBank}" converter="bankConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{addAccountController.bankList}" var="bank" itemLabel="#{bank.name}"/>
                                     </p:selectOneMenu> 
                                     <p:outputLabel value="#{msg.typeAccount}" for="accountTypeBank"/>
-                                    <p:selectOneMenu id="accountTypeBank" value="#{addAccountController.selectedAccountTypeBank}" converter="#{accountTypeBankConverter}" required="true">
+                                    <p:selectOneMenu id="accountTypeBank" value="#{addAccountController.selectedAccountTypeBank}" converter="accountTypeBankConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{addAccountController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
                                     </p:selectOneMenu>
