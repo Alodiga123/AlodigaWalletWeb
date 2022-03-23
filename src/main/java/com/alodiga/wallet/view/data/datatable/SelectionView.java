@@ -65,6 +65,8 @@ public class SelectionView implements Serializable {
                         new FacesMessage(FacesMessage.SEVERITY_WARN,
                                 "No se pudo obtener la lista",
                                 "Intente nuevamente"));
+        } catch (Exception ex) {
+            
         }
     }
 
