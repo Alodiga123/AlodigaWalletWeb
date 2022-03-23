@@ -9,9 +9,7 @@
     <ui:define name="title">#{msg.titleWalletWithdrawal}</ui:define>
     <ui:define name="content">
         <h:form>
-
-            <p:growl id="growl" sticky="true" showDetail="true"/>
-
+            <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
             <p:panel id="verification"  rendered="#{not blockedUpController.verifyCard()}">
                 <div align="center">
                     <h1>Su tarjeta debe ser activada</h1>
@@ -20,12 +18,12 @@
             </p:panel>
              <p:panel id="verificationActivateCard">
                  <div align="center">
-                 <c:if test="#{blockedUpController.blockedUpCard == true}">
-                     <h1>#{msg.unblocked}"</h1> 
+                <c:if test="#{blockedUpController.blockedUpCard == true}">
+                     <h1>#{msg.unblocked}</h1> 
                 <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" itemLabel="Yes"/>
                 </c:if>
                 <c:if test="#{blockedUpController.blockedUpCard == false}">
-                    <h1>#{msg.blocked}"</h1> 
+                    <h1>#{msg.blocked}</h1> 
                  <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" itemLabel="Yes"/>
                 </c:if>
                 </div>
