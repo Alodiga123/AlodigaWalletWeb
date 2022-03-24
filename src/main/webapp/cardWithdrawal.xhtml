@@ -5,55 +5,51 @@
                 xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/template.xhtml">
 
-    <ui:define name="title">#{msg.titlecardWithdrawal}</ui:define>
-
+    <ui:define name="title">Retirar de la tarjeta</ui:define>
     <ui:define name="content">
-        <h:form id="cadWithdrawalForm" >
-            <div class="ui-fluid">
-                <div class="ui-g">
-                    <div class="ui-g-12">
-                        <div class="card card-w-title">
-                            <div align="center">
-                                <h1>#{msg.titlecardWithdrawal}</h1>
-                                <f:facet name="header">
-                                    <p:messages id="messages"  autoUpdate="true" closable="true" />
-                                </f:facet>
-                                <p:panelGrid id="cardWithdrawalGrid" columns="2" >
-                                    <p:outputLabel value="#{msg.commonsCountry}" for="country"/>
-                                    <p:selectOneMenu id="country" value="#{cardWithdrawalController.selectedCountry}" converter="#{countryConverter}" required="true">
-                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{cardWithdrawalController.countryList}" var="country" itemLabel="#{country.name}"/>
-                                        <p:ajax event="change" update="bank"/>
-                                    </p:selectOneMenu>
-                                    <p:outputLabel value="#{msg.commonsBank}" for="bank"/>
-                                    <p:selectOneMenu id="bank" value="#{cardWithdrawalController.selectedBank}" converter="#{bankConverter}" required="true">
-                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{cardWithdrawalController.bankList}" var="bank" itemLabel="#{bank.name}"/>
-                                    </p:selectOneMenu>
-                                    <p:outputLabel value="Add Account" />
-                                    <p:commandButton id="btnBank" value="Add Account" icon="ui-icon-sign-out" ajax="true" action="addAccount.xhtml?redirect=true"/>
-                                    <p:outputLabel value="#{msg.commonsProduct}" for="product"/>
-                                    <p:selectOneMenu id="product" value="#{cardWithdrawalController.selectedProduct}" converter="#{productConverter}" required="true">
-                                        <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
-                                        <f:selectItems value="#{cardWithdrawalController.productList}" var="product" itemLabel="#{product.name}"/>
-                                    </p:selectOneMenu>  
-                                    <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
-                                    <p:inputNumber id="transactionAmount" value="#{cardWithdrawalController.transactionAmount}" decimalPlaces="2" required="false"/>
-                                    <p:outputLabel value="#{msg.commonsTransactionConcept}" for="transactionConcept" />
-                                    <p:inputText id="transactionConcept" value="#{cardWithdrawalController.transactionConcept}" required="false"/>
-                                </p:panelGrid>
-                            </div>
+    <h:form>
+        <p:growl id="growl" sticky="true" showDetail="true"/>
 
-                            <div align="center">
-                                <p:panelGrid  columns="1" >
-                                    <p:commandButton value="#{msg.buttonSavecardWithdrawal}" icon="ui-icon-save" action="#{cardWithdrawalController.submit()}"/>
-                                </p:panelGrid>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </h:form>    
+      <p:wizard >
+          <p:tab id="cardWithdrawal" title="#{msg.cardWithdrawal}">
+                <p:panel header="Card Withdrawal Information">
+                    <h:panelGrid columns="2" columnClasses="label, value">
+                     <p:outputLabel value="#{msg.sourceProduct}" for="sourceProduct" />
+                     <p:inputText id="sourceProduct" value="#{cardWithdrawalController.sourceProduct}" required="false"/>
+                     <p:outputLabel value="Introduza el monto a pagar de la Tajeta Prepagada" for="accountBankNumber" />
+                     <p:inputText id="accountBankNumber" value="#{cardWithdrawalController.cardNumber}" required="false" disabled="false" />
+                     <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
+                     <p:inputNumber id="transactionAmount" value="#{cardWithdrawalController.transactionAmount}" decimalPlaces="2" required="true"/>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+
+          <p:tab id="specialOpsKey" title="#{msg.specialOpsKey}">
+                <p:panel header="#{msg.transferTitle}">
+                 <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <h:outputText value="#{msg.keyOperations}" />
+                    <p:inputText id="keyOperations" value="#{cardWithdrawalController.keyOperations}" />
+                 </p:panelGrid>
+                </p:panel>
+            </p:tab>
+
+          <p:tab id="confirmation" title="#{msg.confirm}">
+                <p:panel header="Confirm">
+                    <h:panelGrid columns="2" columnClasses="label, value">
+                        
+                     <h:outputText value="#{msg.sourceProduct}" />
+                     <h:outputText value="#{cardWithdrawalController.sourceProduct}" styleClass="outputLabel"/>
+                     
+                     <h:outputText value="Tarjeta Prepagada: "/>
+                     <h:outputText value="#{cardWithdrawalController.cardNumber}" styleClass="outputLabel"/>
+                     
+                     <h:outputText value="#{msg.commonsTransactionAmount}" />
+                     <h:outputText value="#{cardWithdrawalController.transactionAmount}" styleClass="outputLabel"/>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+        </p:wizard> 
+     </h:form>  
     </ui:define>
 
 </ui:composition>
