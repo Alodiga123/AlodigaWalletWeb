@@ -164,11 +164,13 @@ public class BlockedUpController {
             TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(cardNumber,
                     (blockedUpCard == true) ? 0 : 1, messageMiddlewareId, channelWallet, transactioExternalId);
              //Mensajes
-               if (transactionResponse.getCodigoRespuesta().equals(com.alodiga.wallet.common.enumeraciones.ResponseCodeE.SUCCESS.getCode())) {
-                   addMessage(FacesMessage.SEVERITY_INFO, "La operacion de la tarjeta se realizó correctamente", "");
-            }else if (transactionResponse.getCodigoRespuesta().equals(com.alodiga.wallet.common.enumeraciones.ResponseCodeE.BLOCKED_USER.getCode())) {
-              addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Bloqueada", "");
-              }else if (transactionResponse.getCodigoRespuesta().equals(com.alodiga.wallet.common.enumeraciones.ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
+                   addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Desbloqueada", "" );
+            }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
+                   addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Bloqueada", "" );
+              }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.CARD_NOT_EXISTS.getCode())) {
+              addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta no existe", ResponseCodeE.CARD_NOT_EXISTS.getMessage());
+              }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
                addMessage(FacesMessage.SEVERITY_INFO, "No se completo la transaccion", "");      
             }
             }catch (Exception ex) {
