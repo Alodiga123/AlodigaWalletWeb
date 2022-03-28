@@ -10,12 +10,12 @@
     <h:form>
         <p:growl id="growl" sticky="true" showDetail="true"/>
 
-      <p:wizard >
+      <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{cardWithdrawalController.onFlowProcess}">
           <p:tab id="cardWithdrawal" title="#{msg.cardWithdrawal}">
                 <p:panel header="Card Withdrawal Information">
                     <h:panelGrid columns="2" columnClasses="label, value">
-                     <p:outputLabel value="#{msg.sourceProduct}" for="sourceProduct" />
-                     <p:inputText id="sourceProduct" value="#{cardWithdrawalController.sourceProduct}" required="false"/>
+                     <p:outputLabel value="#{msg.sourceProduct}" for="sourceProduct"/>
+                     <p:inputText id="sourceProduct" value="#{cardWithdrawalController.sourceProduct}" required="false" disabled="true" />
                      <p:outputLabel value="Introduza el monto a pagar de la Tajeta Prepagada" for="accountBankNumber" />
                      <p:inputText id="accountBankNumber" value="#{cardWithdrawalController.cardNumber}" required="false" disabled="false" />
                      <p:outputLabel value="#{msg.commonsTransactionAmount}" for="transactionAmount" />
@@ -24,7 +24,7 @@
                 </p:panel>
             </p:tab>
 
-          <p:tab id="specialOpsKey" title="#{msg.specialOpsKey}">
+          <p:tab id="key" title="#{msg.specialOpsKey}">
                 <p:panel header="#{msg.transferTitle}">
                  <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
                     <h:outputText value="#{msg.keyOperations}" />
@@ -45,6 +45,7 @@
                      
                      <h:outputText value="#{msg.commonsTransactionAmount}" />
                      <h:outputText value="#{cardWithdrawalController.transactionAmount}" styleClass="outputLabel"/>
+                     <p:commandButton value="#{msg.confirm}" icon="ui-icon-save" action="#{cardWithdrawalController.submit()}"/>
                     </h:panelGrid>
                 </p:panel>
             </p:tab>
