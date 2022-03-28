@@ -12,6 +12,7 @@ package com.alodiga.wallet.controllers.operationsCard;
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.exception.KeyLongException;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
@@ -19,25 +20,39 @@ import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
 import com.alodiga.wallet.common.utils.EjbConstants;
+import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CardResponse;
 import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
+import com.alodiga.cms.ws.TransactionResponse;
 import com.cms.commons.genericEJB.EJBRequest;
+import com.ericsson.alodiga.ws.APIRegistroUnificadoProxy;
 import com.ericsson.alodiga.ws.PreguntaIdioma;
+import com.ericsson.alodiga.ws.RespuestaUsuario;
 import com.ericsson.alodiga.ws.Usuario;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import org.primefaces.event.FlowEvent;
+import com.cms.commons.enumeraciones.ChannelE;
 
 @ManagedBean(name = "cardWithdrawalController")
 @ViewScoped
@@ -65,6 +80,9 @@ public class CardWithdrawalController {
     private String sourceProduct;
     private String keyOperations;
     private APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy1;
+    private String idTranstaction; 
+    private String date;
+
 
     @PostConstruct
     public void init() {
@@ -74,7 +92,7 @@ public class CardWithdrawalController {
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
-
+           
 
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
@@ -265,6 +283,107 @@ public class CardWithdrawalController {
         this.keyOperations = keyOperations;
     }
 
-    
+    public APIAuthorizerCardManagementSystemProxy getApiAuthorizerCardManagementSystemProxy1() {
+        return apiAuthorizerCardManagementSystemProxy1;
+    }
 
+    public void setApiAuthorizerCardManagementSystemProxy1(APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy1) {
+        this.apiAuthorizerCardManagementSystemProxy1 = apiAuthorizerCardManagementSystemProxy1;
+    }
+
+    public String getIdTranstaction() {
+        return idTranstaction;
+    }
+
+    public void setIdTranstaction(String idTranstaction) {
+        this.idTranstaction = idTranstaction;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+   
+    public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(severity, summary, detail));
+    }
+
+    public String onFlowProcess(FlowEvent event) {
+//        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
+        RespuestaUsuario respUser = new RespuestaUsuario();
+        APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
+        switch (event.getOldStep()) {
+            case "key": {
+                 Long messageMiddlewareId = 1L;
+                 int channelWallet = ChannelE.WALLET.getId();
+                 Long transactioExternalId = 1L;
+                try {
+                    String pass = S3cur1ty3Cryt3r.aloDesencript(keyOperations, "1nt3r4xt3l3ph0ny", null, "DESede", "0123456789ABCDEF");
+                    respUser = unificadoProxy.validarPin("usuarioWS", "passwordWS", user.getUsuarioID(), pass);
+
+                    if (respUser.getCodigoRespuesta().equals("00")) {
+                        System.out.println("paso validacion pin" + respUser.getCodigoRespuesta());
+                     
+//                        com.alodiga.cms.ws.TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, idTranstaction, transactioExternalId, channelWallet);
+//                        idTranstaction = transactionResponse.getTransactionSequence();
+//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+//                        Calendar calendar = Calendar.getInstance();
+//                        Date dateF =  calendar.getTime();                       
+//                        date = sdf.format(dateF);
+//                        addMessage(FacesMessage.SEVERITY_INFO, "Transaccion correcta", "");
+                    } else {
+                        addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                        return "cardWithdrawal";
+                    }
+
+
+                } catch (NoSuchAlgorithmException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "cardWithdrawal";
+                } catch (IllegalBlockSizeException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "cardWithdrawal";
+                } catch (NoSuchPaddingException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "cardWithdrawal";
+                } catch (BadPaddingException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "cardWithdrawal";
+                } catch (KeyLongException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "cardWithdrawal";
+                } catch (Exception e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "cardWithdrawal";
+                }
+
+            }
+
+            break;
+            case "confirmation": {
+                
+             
+            }
+            
+        }
+        return event.getNewStep();
+
+    }
+
+   public void submit(){
+   try{ Long messageMiddlewareId = 1L;
+    int channelWallet = ChannelE.WALLET.getId();
+    Long transactioExternalId = 1L;
+       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, idTranstaction, transactioExternalId, channelWallet);
+     }catch (Exception ex) {
+            ex.printStackTrace();
+            Logger.getLogger(CardWithdrawalController.class.getName()).log(Level.SEVERE, null, ex);      
+        }
+     }
+        
 }
