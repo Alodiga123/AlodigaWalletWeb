@@ -53,6 +53,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 import org.primefaces.event.FlowEvent;
 import com.cms.commons.enumeraciones.ChannelE;
+import com.alodiga.wallet.utils.Utils;
+
+
 
 @ManagedBean(name = "cardWithdrawalController")
 @ViewScoped
@@ -82,7 +85,8 @@ public class CardWithdrawalController {
     private APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy1;
     private String idTranstaction; 
     private String date;
-
+    private Utils utils;
+    public String transformCardNumber = "";
 
     @PostConstruct
     public void init() {
@@ -106,8 +110,9 @@ public class CardWithdrawalController {
              //Se obtiene la tarjeta del usuario  
             cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
             cardNumber = cardResponseWallet.getCardNumber();
-            
-           
+
+            utils = new Utils();
+            transformCardNumber = utils.transformCardNumber(cardNumber);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -313,6 +318,23 @@ public class CardWithdrawalController {
                 addMessage(null, new FacesMessage(severity, summary, detail));
     }
 
+    public Utils getUtils() {
+        return utils;
+    }
+
+    public void setUtils(Utils utils) {
+        this.utils = utils;
+    }
+
+    public String getTransformCardNumber() {
+        return transformCardNumber;
+    }
+
+    public void setTransformCardNumber(String transformCardNumber) {
+        this.transformCardNumber = transformCardNumber;
+    }
+
+   
     public String onFlowProcess(FlowEvent event) {
 //        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
         RespuestaUsuario respUser = new RespuestaUsuario();
@@ -328,38 +350,30 @@ public class CardWithdrawalController {
 
                     if (respUser.getCodigoRespuesta().equals("00")) {
                         System.out.println("paso validacion pin" + respUser.getCodigoRespuesta());
-                     
-//                        com.alodiga.cms.ws.TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, idTranstaction, transactioExternalId, channelWallet);
-//                        idTranstaction = transactionResponse.getTransactionSequence();
-//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-//                        Calendar calendar = Calendar.getInstance();
-//                        Date dateF =  calendar.getTime();                       
-//                        date = sdf.format(dateF);
-//                        addMessage(FacesMessage.SEVERITY_INFO, "Transaccion correcta", "");
                     } else {
                         addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                        return "cardWithdrawal";
+                        return "key";
                     }
 
 
                 } catch (NoSuchAlgorithmException e) {
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                    return "cardWithdrawal";
+                    return "key";
                 } catch (IllegalBlockSizeException e) {
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                    return "cardWithdrawal";
+                    return "key";
                 } catch (NoSuchPaddingException e) {
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                    return "cardWithdrawal";
+                    return "key";
                 } catch (BadPaddingException e) {
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                    return "cardWithdrawal";
+                    return "key";
                 } catch (KeyLongException e) {
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                    return "cardWithdrawal";
+                    return "key";
                 } catch (Exception e) {
                     addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
-                    return "cardWithdrawal";
+                    return "key";
                 }
 
             }
@@ -376,14 +390,17 @@ public class CardWithdrawalController {
     }
 
    public void submit(){
-   try{ Long messageMiddlewareId = 1L;
-    int channelWallet = ChannelE.WALLET.getId();
-    Long transactioExternalId = 1L;
-       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, idTranstaction, transactioExternalId, channelWallet);
-     }catch (Exception ex) {
+      Long messageMiddlewareId = 1L;
+      int channelWallet = ChannelE.WALLET.getId();
+      Long transactioExternalId = 1L;
+      int countryAcquirerId = 862;
+
+      try{
+       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, "Retiro", transactioExternalId, countryAcquirerId);
+            
+        } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.getLogger(CardWithdrawalController.class.getName()).log(Level.SEVERE, null, ex);      
-        }
+            Logger.getLogger(CardWithdrawalController.class.getName()).log(Level.SEVERE, null, ex);
+       } 
      }
-        
 }
