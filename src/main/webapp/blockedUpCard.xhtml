@@ -20,11 +20,15 @@
                  <div align="center">
                 <c:if test="#{blockedUpController.blockedUpCard == true}">
                      <h1>#{msg.unblocked}</h1> 
-                <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" itemLabel="Yes"/>
+                <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" />
+                <p></p>
+                <p></p>
                 </c:if>
                 <c:if test="#{blockedUpController.blockedUpCard == false}">
                     <h1>#{msg.blocked}</h1> 
-                 <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" itemLabel="Yes"/>
+                 <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" />
+                 <p></p>
+                 <p></p>
                 </c:if>
                 </div>
             </p:panel>

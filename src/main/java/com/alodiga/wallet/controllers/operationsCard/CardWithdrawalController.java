@@ -1,17 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.alodiga.wallet.controllers.operationsCard;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
+import com.alodiga.cms.ws.TransactionResponse;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
+import com.alodiga.wallet.common.exception.KeyLongException;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
@@ -19,36 +13,52 @@ import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
 import com.alodiga.wallet.common.utils.EjbConstants;
+import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.alodiga.wallet.ws.BankListResponse;
+import com.alodiga.wallet.ws.CardResponse;
 import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
 import com.cms.commons.genericEJB.EJBRequest;
+import com.ericsson.alodiga.ws.APIRegistroUnificadoProxy;
 import com.ericsson.alodiga.ws.PreguntaIdioma;
+import com.ericsson.alodiga.ws.RespuestaUsuario;
 import com.ericsson.alodiga.ws.Usuario;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import org.primefaces.event.FlowEvent;
+import com.cms.commons.enumeraciones.ChannelE;
+import com.alodiga.wallet.utils.Utils;
+
+
 
 @ManagedBean(name = "cardWithdrawalController")
 @ViewScoped
 public class CardWithdrawalController {
 
     private List<Country> countryList = new ArrayList();
-    private List<Maw_bank> bankList = new ArrayList();
-    private Maw_bank[] bankList2;
     private Product[] productList;
     private String transactionConcept;
     private Float transactionAmount;
     private String transactionNumber;
+    private String accountBankNumber;
     private Country selectedCountry;
     private Bank selectedBank;
     private Product selectedProduct;
@@ -60,7 +70,15 @@ public class CardWithdrawalController {
     private ResourceBundle msg;
     private BusinessPortalEJB businessPortalEJBProxy;
     private ProductListResponse productListResponse;
-   
+    private CardResponse cardResponseWallet;
+    public String cardNumber;
+    private String sourceProduct;
+    private String keyOperations;
+    private APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy1;
+    private String idTranstaction; 
+    private String date;
+    private Utils utils;
+    public String transformCardNumber = "";
 
     @PostConstruct
     public void init() {
@@ -70,20 +88,23 @@ public class CardWithdrawalController {
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
-
+           
 
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
 
-         
+              //Se obtiene el producto por defecto asociado a la billetera
+            productResponse = apiAlodigaWalletProxy.getProductPrepaidCardByUser(Long.valueOf(user.getUsuarioID()));
+            String productName = productResponse.getResponse().getName();
+            this.sourceProduct = productName;
+            
+             //Se obtiene la tarjeta del usuario  
+            cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
+            cardNumber = cardResponseWallet.getCardNumber();
 
-            //Se obtiene la lista de países
-            countryList = businessPortalEJBProxy.getCountries();
-
-            //Se obtiene la lista de productos del usuario
-            productListResponse = apiAlodigaWalletProxy.getProductsByUserId(String.valueOf(user.getUsuarioID()));
-            productList = productListResponse.getProducts();
+            utils = new Utils();
+            transformCardNumber = utils.transformCardNumber(cardNumber);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -99,37 +120,12 @@ public class CardWithdrawalController {
         this.countryList = countryList;
     }
 
-    public Maw_bank[] getBankList2() {
-        return bankList2;
-    }
-
-    public void setBankList2(Maw_bank[] bankList) {
-        this.bankList2 = bankList2;
-    }
-
-    public List<Maw_bank> getBankList() {
-        return bankList;
-    }
-
-    public void setBankList(List<Maw_bank> bankList) {
-        this.bankList = bankList;
-    }
-
-   
     public Product[] getProductList() {
         return productList;
     }
 
     public void setProductList(Product[] productList) {
         this.productList = productList;
-    }
-
-    public ProductListResponse getProductListResponse() {
-        return productListResponse;
-    }
-
-    public void setProductListResponse(ProductListResponse productListResponse) {
-        this.productListResponse = productListResponse;
     }
 
     public String getTransactionConcept() {
@@ -156,6 +152,30 @@ public class CardWithdrawalController {
         this.transactionNumber = transactionNumber;
     }
 
+    public Country getSelectedCountry() {
+        return selectedCountry;
+    }
+
+    public void setSelectedCountry(Country selectedCountry) {
+        this.selectedCountry = selectedCountry;
+    }
+
+    public Bank getSelectedBank() {
+        return selectedBank;
+    }
+
+    public void setSelectedBank(Bank selectedBank) {
+        this.selectedBank = selectedBank;
+    }
+
+    public Product getSelectedProduct() {
+        return selectedProduct;
+    }
+
+    public void setSelectedProduct(Product selectedProduct) {
+        this.selectedProduct = selectedProduct;
+    }
+
     public APIAuthorizerCardManagementSystemProxy getApiAuthorizerCardManagementSystemProxy() {
         return apiAuthorizerCardManagementSystemProxy;
     }
@@ -170,14 +190,6 @@ public class CardWithdrawalController {
 
     public void setApiAlodigaWalletProxy(APIAlodigaWalletProxy apiAlodigaWalletProxy) {
         this.apiAlodigaWalletProxy = apiAlodigaWalletProxy;
-    }
-
-    public BusinessPortalEJB getBusinessPortalEJBProxy() {
-        return businessPortalEJBProxy;
-    }
-
-    public void setBusinessPortalEJBProxy(BusinessPortalEJB businessPortalEJBProxy) {
-        this.businessPortalEJBProxy = businessPortalEJBProxy;
     }
 
     public HttpSession getSession() {
@@ -212,43 +224,184 @@ public class CardWithdrawalController {
         this.msg = msg;
     }
 
-    public Country getSelectedCountry() {
-        return selectedCountry;
+    public BusinessPortalEJB getBusinessPortalEJBProxy() {
+        return businessPortalEJBProxy;
     }
 
-    public void setSelectedCountry(Country selectedCountry) {
-        this.selectedCountry = selectedCountry;
-        try {
-            if (selectedCountry != null) {
-                BankListResponse bankListResponse = apiAlodigaWalletProxy.getBankByCountryApp(String.valueOf(selectedCountry.getId()));
-                bankList2 = bankListResponse.getBanks();
-                for (Maw_bank b : bankList2) {
-                    bankList.add(b);
+    public void setBusinessPortalEJBProxy(BusinessPortalEJB businessPortalEJBProxy) {
+        this.businessPortalEJBProxy = businessPortalEJBProxy;
+    }
+
+    public ProductListResponse getProductListResponse() {
+        return productListResponse;
+    }
+
+    public void setProductListResponse(ProductListResponse productListResponse) {
+        this.productListResponse = productListResponse;
+    }
+
+    public CardResponse getCardResponseWallet() {
+        return cardResponseWallet;
+    }
+
+    public void setCardResponseWallet(CardResponse cardResponseWallet) {
+        this.cardResponseWallet = cardResponseWallet;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getAccountBankNumber() {
+        return accountBankNumber;
+    }
+
+    public void setAccountBankNumber(String accountBankNumber) {
+        this.accountBankNumber = accountBankNumber;
+    }
+
+    public String getSourceProduct() {
+        return sourceProduct;
+    }
+
+    public void setSourceProduct(String sourceProduct) {
+        this.sourceProduct = sourceProduct;
+    }
+
+    public String getKeyOperations() {
+        return keyOperations;
+    }
+
+    public void setKeyOperations(String keyOperations) {
+        this.keyOperations = keyOperations;
+    }
+
+    public APIAuthorizerCardManagementSystemProxy getApiAuthorizerCardManagementSystemProxy1() {
+        return apiAuthorizerCardManagementSystemProxy1;
+    }
+
+    public void setApiAuthorizerCardManagementSystemProxy1(APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy1) {
+        this.apiAuthorizerCardManagementSystemProxy1 = apiAuthorizerCardManagementSystemProxy1;
+    }
+
+    public String getIdTranstaction() {
+        return idTranstaction;
+    }
+
+    public void setIdTranstaction(String idTranstaction) {
+        this.idTranstaction = idTranstaction;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+   
+    public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(severity, summary, detail));
+    }
+
+    public Utils getUtils() {
+        return utils;
+    }
+
+    public void setUtils(Utils utils) {
+        this.utils = utils;
+    }
+
+    public String getTransformCardNumber() {
+        return transformCardNumber;
+    }
+
+    public void setTransformCardNumber(String transformCardNumber) {
+        this.transformCardNumber = transformCardNumber;
+    }
+
+   
+    public String onFlowProcess(FlowEvent event) {
+//        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
+        RespuestaUsuario respUser = new RespuestaUsuario();
+        APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
+        switch (event.getOldStep()) {
+            case "key": {
+                
+                try {
+                    String pass = S3cur1ty3Cryt3r.aloDesencript(keyOperations, "1nt3r4xt3l3ph0ny", null, "DESede", "0123456789ABCDEF");
+                    respUser = unificadoProxy.validarPin("usuarioWS", "passwordWS", user.getUsuarioID(), pass);
+
+                    if (respUser.getCodigoRespuesta().equals("00")) {
+                        System.out.println("paso validacion pin" + respUser.getCodigoRespuesta());
+                    } else {
+                        addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                        return "key";
+                    }
+
+
+                } catch (NoSuchAlgorithmException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (IllegalBlockSizeException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (NoSuchPaddingException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (BadPaddingException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (KeyLongException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (Exception e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
                 }
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            break;
+            case "confirmation": {
+                
+             
+            }
+            
         }
-    }
-
-    public Bank getSelectedBank() {
-        return selectedBank;
-    }
-
-    public void setSelectedBank(Bank selectedBank) {
-        this.selectedBank = selectedBank;
-    }
-
-    public Product getSelectedProduct() {
-        return selectedProduct;
-    }
-
-    public void setSelectedProduct(Product selectedProduct) {
-        this.selectedProduct = selectedProduct;
-    }
-
-    public void submit() {
+        return event.getNewStep();
 
     }
 
+   public void submit(){
+      Long messageMiddlewareId = 1L;
+      int channelWallet = ChannelE.WALLET.getId();
+      Long transactioExternalId = 1L;
+      int countryAcquirerId = 862;
+      FacesContext context = FacesContext.getCurrentInstance();
+      try{
+       
+       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, "Retiro", transactioExternalId, countryAcquirerId);
+        if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("CarWithdrawalRequestSaveSuccesfull"))); 
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+//        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.USER_HAS_NOT_BALANCE.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        }
+       }catch (Exception ex) {
+            ex.printStackTrace();
+            Logger.getLogger(CardWithdrawalController.class.getName()).log(Level.SEVERE, null, ex);
+       } 
+     }
 }
