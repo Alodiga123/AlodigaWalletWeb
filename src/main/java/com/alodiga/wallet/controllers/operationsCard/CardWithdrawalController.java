@@ -1,17 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.alodiga.wallet.controllers.operationsCard;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
+import com.alodiga.cms.ws.TransactionResponse;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
+import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
 import com.alodiga.wallet.common.exception.KeyLongException;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
@@ -25,7 +18,6 @@ import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CardResponse;
 import com.alodiga.wallet.ws.Maw_bank;
 import com.alodiga.wallet.ws.ProductListResponse;
-import com.alodiga.cms.ws.TransactionResponse;
 import com.cms.commons.genericEJB.EJBRequest;
 import com.ericsson.alodiga.ws.APIRegistroUnificadoProxy;
 import com.ericsson.alodiga.ws.PreguntaIdioma;
@@ -79,7 +71,7 @@ public class CardWithdrawalController {
     private BusinessPortalEJB businessPortalEJBProxy;
     private ProductListResponse productListResponse;
     private CardResponse cardResponseWallet;
-    public String cardNumber = "";
+    public String cardNumber;
     private String sourceProduct;
     private String keyOperations;
     private APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy1;
@@ -341,9 +333,7 @@ public class CardWithdrawalController {
         APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
         switch (event.getOldStep()) {
             case "key": {
-                 Long messageMiddlewareId = 1L;
-                 int channelWallet = ChannelE.WALLET.getId();
-                 Long transactioExternalId = 1L;
+                
                 try {
                     String pass = S3cur1ty3Cryt3r.aloDesencript(keyOperations, "1nt3r4xt3l3ph0ny", null, "DESede", "0123456789ABCDEF");
                     respUser = unificadoProxy.validarPin("usuarioWS", "passwordWS", user.getUsuarioID(), pass);
@@ -394,11 +384,22 @@ public class CardWithdrawalController {
       int channelWallet = ChannelE.WALLET.getId();
       Long transactioExternalId = 1L;
       int countryAcquirerId = 862;
-
+      FacesContext context = FacesContext.getCurrentInstance();
       try{
+       
        TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, "Retiro", transactioExternalId, countryAcquirerId);
-            
-        } catch (Exception ex) {
+        if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("CarWithdrawalRequestSaveSuccesfull"))); 
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+//        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.USER_HAS_NOT_BALANCE.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        }
+       }catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(CardWithdrawalController.class.getName()).log(Level.SEVERE, null, ex);
        } 
