@@ -18,13 +18,22 @@ import com.alodiga.wallet.ws.Card;
 import com.alodiga.wallet.ws.CardResponse;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.cms.ws.TransactionResponse;
+import com.alodiga.wallet.common.exception.KeyLongException;
+import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.cms.commons.enumeraciones.ChannelE;
 import com.cms.commons.enumeraciones.ResponseCodeE;
+import com.ericsson.alodiga.ws.APIRegistroUnificadoProxy;
+import com.ericsson.alodiga.ws.RespuestaUsuario;
+import java.security.NoSuchAlgorithmException;
 import javax.faces.bean.ManagedProperty;
 import javax.servlet.http.HttpSession;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FlowEvent;
 
 
 /**
@@ -36,9 +45,11 @@ import org.primefaces.context.RequestContext;
 public class TransferBetweenCardsController {
 
     private String sourceCard;
+    private String destinationCard;
     private Float transferAmount;
     private String transferConcept;
     private String emailDestinationCard;
+    private String keyOperations;
     private static APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy;
     private static APIAlodigaWalletProxy apiAlodigaWalletProxy;
     public String cardNumber = "";
@@ -113,6 +124,22 @@ public class TransferBetweenCardsController {
         this.cardNumber = cardNumber;
     }
 
+    public String getDestinationCard() {
+        return destinationCard;
+    }
+
+    public void setDestinationCard(String destinationCard) {
+        this.destinationCard = destinationCard;
+    }
+
+    public String getKeyOperations() {
+        return keyOperations;
+    }
+
+    public void setKeyOperations(String keyOperations) {
+        this.keyOperations = keyOperations;
+    }
+
     public CardResponse getCardResponseWallet() {
         return cardResponseWallet;
     }
@@ -175,6 +202,74 @@ public class TransferBetweenCardsController {
 
     public static void setApiAuthorizerCardManagementSystemProxy(APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy) {
         TransferBetweenCardsController.apiAuthorizerCardManagementSystemProxy = apiAuthorizerCardManagementSystemProxy;
+    }
+    
+    public void addMessage(FacesMessage.Severity severity, String summary, String detail) {
+        FacesContext.getCurrentInstance().
+                addMessage(null, new FacesMessage(severity, summary, detail));
+    }
+    
+    public void searchDestinationCard() {
+        try {
+            //Se obtiene la tarjeta de destino
+            cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(emailDestinationCard);
+            destinationCard = cardResponseWallet.getCardNumber();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        
+        
+    }
+    
+    public String onFlowProcess(FlowEvent event) {
+        RespuestaUsuario respUser = new RespuestaUsuario();
+        APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
+        switch (event.getOldStep()) {
+            case "transferBetweenCardsData": {
+                
+
+            }
+            
+            case "key": { 
+                try {
+                    String pass = S3cur1ty3Cryt3r.aloDesencript(keyOperations, "1nt3r4xt3l3ph0ny", null, "DESede", "0123456789ABCDEF");
+                    respUser = unificadoProxy.validarPin("usuarioWS", "passwordWS", user.getUsuarioID(), pass);
+
+                    if (!respUser.getCodigoRespuesta().equals("00")) {
+                        FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_ERROR, msg.getString("applicationTitle"), msg.getString("keyOperationsInvalid")));
+                        return "key";
+                    }
+                } catch (NoSuchAlgorithmException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (IllegalBlockSizeException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (NoSuchPaddingException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (BadPaddingException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (KeyLongException e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                } catch (Exception e) {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "Error Validar", "No se pudo validar el pin");
+                    return "key";
+                }
+
+            }
+
+            break;
+            case "confirmation": {
+                
+             
+            }
+            
+        }
+        return event.getNewStep();
+
     }
     
     

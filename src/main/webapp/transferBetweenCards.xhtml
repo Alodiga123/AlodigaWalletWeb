@@ -23,8 +23,19 @@
                                     <p:outputLabel value="#{msg.emailDestinationCard}" for="emailDestinationCard" />
                                     <p:inputText id="emailDestinationCard" value="#{transferBetweenCardsController.emailDestinationCard}" required="false"/>
                                     <p:message for="emailDestinationCard"/>
+                                    
+                                    <p:commandButton value="#{msg.searchDestinationCard}" icon="ui-icon-save" action="#{transferBetweenCardsController.searchDestinationCard()}"/>
                                 </h:panelGrid>                      
                             </p:panel>   
+                        </p:tab>
+                        
+                        <p:tab id="key" title="#{msg.specialOpsKey}">
+                            <p:panel header="#{msg.titleTransferBetweenCards}">
+                             <p:panelGrid columns="3" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <h:outputText value="#{msg.keyOperations}" />
+                                <p:inputText id="keyOperations" value="#{cardWithdrawalController.keyOperations}" />
+                             </p:panelGrid>
+                            </p:panel>
                         </p:tab>
                         <!--<p:tab id="information">
                             <p:panel header="#{msg.transferTitle}">
