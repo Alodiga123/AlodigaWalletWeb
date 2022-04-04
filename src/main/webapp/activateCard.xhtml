@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Retirar de la tarjeta</ui:define>
+    <ui:define name="content">
+    <h:form>
+        <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
+
+      <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{cardWithdrawalController.onFlowProcess}">
+          <p:tab id="ActiveCard" title="#{msg.activeCard}">
+              
+                <p:panel header="#{msg.informationToActivateTheCard}">
+                    <h:panelGrid columns="2" columnClasses="label, value">
+                        <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.user.nombre} #{activateCardController.user.apellido}" />
+                     <br></br>
+                     <p:outputLabel value="#{msg.cardNumber} #{activateCardController.transformCardNumber}"/>
+                      <br></br>
+                      <br></br>
+                      <br></br>
+                     <h3>#{msg.securityQuestions}</h3>
+                     <br></br>
+                     <p:outputLabel value="#{msg.cardholderDocumentNumber}"/>
+                     <p:inputNumber id="transactionAmount" value="#{activateCardController.transactionAmount}" decimalPlaces="2" required="true"/>
+                    </h:panelGrid>
+                </p:panel>
+              
+            </p:tab>
+
+          <p:tab id="key" title="#{msg.specialOpsKey}">
+                <p:panel header="#{msg.transferTitle}">
+                 <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <h:outputText value="#{msg.keyOperations}" />
+                    <p:inputText id="keyOperations" value="#{cardWithdrawalController.keyOperations}" />
+                 </p:panelGrid>
+                </p:panel>
+            </p:tab>
+
+          <p:tab id="confirmation" title="#{msg.confirm}">
+                <p:panel header="Confirm">
+                    <h:panelGrid columns="2" columnClasses="label, value">
+                        
+                     <h:outputText value="#{msg.sourceProduct}" />
+                     <h:outputText value="#{cardWithdrawalController.sourceProduct}" styleClass="outputLabel"/>
+                     
+                     <h:outputText value="Tarjeta Prepagada: "/>
+                     <h:outputText value="#{cardWithdrawalController.transformCardNumber}" styleClass="outputLabel"/>
+                     
+                     <h:outputText value="#{msg.commonsTransactionAmount}" />
+                     <h:outputText value="#{cardWithdrawalController.transactionAmount}" styleClass="outputLabel"/>
+                     <p:commandButton value="#{msg.confirm}" icon="ui-icon-save" action="#{cardWithdrawalController.submit()}"/>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+        </p:wizard> 
+     </h:form>  
+    </ui:define>
+
+</ui:composition>
