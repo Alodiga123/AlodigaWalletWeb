@@ -389,14 +389,12 @@ public class CardWithdrawalController {
        
        TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, "Retiro", transactioExternalId, countryAcquirerId);
         if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
-                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("CarWithdrawalRequestSaveSuccesfull"))); 
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
-               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
 //        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.USER_HAS_NOT_BALANCE.getCode())) {
-               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
-        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
         }
        }catch (Exception ex) {
