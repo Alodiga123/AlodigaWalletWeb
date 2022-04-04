@@ -17,19 +17,21 @@
                 </div>
             </p:panel>
              <p:panel id="verificationActivateCard">
-                 <div align="center">
+                <div align="center">
                 <c:if test="#{blockedUpController.blockedUpCard == true}">
                      <h1>#{msg.unblocked}</h1> 
-                <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" />
-                <p></p>
-                <p></p>
                 </c:if>
                 <c:if test="#{blockedUpController.blockedUpCard == false}">
                     <h1>#{msg.blocked}</h1> 
-                 <p:selectBooleanCheckbox value="#{blockedUpController.changeBlocked()}" />
-                 <p></p>
-                 <p></p>
                 </c:if>
+                <p:selectOneRadio id="radioBlocked" value="#{blockedUpController.radioBlocked}">
+                    <f:selectItem itemLabel="#{msg.blockedYes}" itemValue="true" />  
+                    <f:selectItem itemLabel="#{msg.blockedNo}" itemValue="false" /> 
+                </p:selectOneRadio> 
+                <br/>
+                <p:commandButton value="#{msg.buttonSaveBlockedCard}" icon="ui-icon-save" action="#{blockedUpController.changeBlocked()}"/>    
+                <br/>
+                <br/>
                 </div>
             </p:panel>
         </h:form>    

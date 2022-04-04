@@ -37,6 +37,7 @@ public class BlockedUpController {
     private boolean activeCard;
     private boolean blockedUpCard;
     private ResourceBundle msg;
+    private boolean radioBlocked;
 
     @PostConstruct
     public void init() {
@@ -135,6 +136,22 @@ public class BlockedUpController {
         this.blockedUpCard = blockedUpCard;
     }
 
+    public ResourceBundle getMsg() {
+        return msg;
+    }
+
+    public void setMsg(ResourceBundle msg) {
+        this.msg = msg;
+    }
+
+    public boolean isRadioBlocked() {
+        return radioBlocked;
+    }
+
+    public void setRadioBlocked(boolean radioBlocked) {
+        this.radioBlocked = radioBlocked;
+    }
+
     public boolean verifyCard() {
         activeCard = true;
         try {
@@ -154,30 +171,34 @@ public class BlockedUpController {
                addMessage(null, new FacesMessage(severity, summary, detail));
    }
 
-    public void changeBlocked() {
+    public String changeBlocked() {
         FacesContext context = FacesContext.getCurrentInstance();
         Long messageMiddlewareId = 1L;
         int channelWallet = ChannelE.WALLET.getId();
         Long transactioExternalId = 1L;
-        try {
-            //Se bloquea o desbloquea la tarjeta
-            TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(cardNumber,
+        
+        //Se bloquea o desbloquea la tarjeta
+        if (radioBlocked == true) {
+            try {
+                TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(cardNumber,
                     (blockedUpCard == true) ? 0 : 1, messageMiddlewareId, channelWallet, transactioExternalId);
-             //Mensajes
-               if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
-                   addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Desbloqueada", "" );
-            }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
+                if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
+                    addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Desbloqueada", "" );
+                }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
                    addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Bloqueada", "" );
-              }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.CARD_NOT_EXISTS.getCode())) {
-              addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta no existe", ResponseCodeE.CARD_NOT_EXISTS.getMessage());
-              }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
-               addMessage(FacesMessage.SEVERITY_INFO, "No se completo la transaccion", "");      
-            }
-            }catch (Exception ex) {
-            ex.printStackTrace();
-            Logger.getLogger(BlockedUpController.class.getName()).log(Level.SEVERE, null, ex);      
+                }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.CARD_NOT_EXISTS.getCode())) {
+                   addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta no existe", ResponseCodeE.CARD_NOT_EXISTS.getMessage());
+                }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+                   addMessage(FacesMessage.SEVERITY_INFO, "No se completo la transaccion", "");      
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Logger.getLogger(BlockedUpController.class.getName()).log(Level.SEVERE, null, ex); 
+            }     
+        } else {
+            return "data.xhtml?faces-redirect=true";
         }
-       
+        return null;
       }
          
     }
