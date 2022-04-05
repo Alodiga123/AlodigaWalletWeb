@@ -219,11 +219,9 @@ public class AddAccountController {
                accountBank = businessPortalEJBProxy.saveAccountBank(accountBank);
 
                if (accountBank != null) {
-                  FacesContext context = FacesContext.getCurrentInstance();
-                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Las respuestas del usuario se guardaron correctamente en la BD", null));
+                 FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
                }else{
-                  FacesContext context = FacesContext.getCurrentInstance();
-                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Se presentó un problema al guardar los datos, por favor intente de nuevo", null));  
+                  FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed"))); 
                }
             
             } catch (Exception ex) {
