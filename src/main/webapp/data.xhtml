@@ -3,89 +3,210 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                template="/WEB-INF/template.xhtml">
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="head">
+        <script type="text/javascript">
+            //<![CDATA[
+            function skinChart() {
+                this.cfg.shadow = false;
+                this.cfg.title = '';
+                this.cfg.seriesColors = ['#FFC107', '#03A9F4'];
+                this.cfg.grid = {
+                    background: '#ffffff',
+                    borderColor: '#ffffff',
+                    gridLineColor: '#EEEEEE',
+                    shadow: false
+                };
+                this.cfg.axesDefaults = {
+                    rendererOptions: {
+                        textColor: '#212121'
+                    }
+                };
+                this.cfg.seriesDefaults = {
+                    shadow: false,
+                    lineWidth: 1,
+                    markerOptions: {
+                        shadow: false,
+                        size: 7,
+                        style: 'circle'
+                    }
+                }
+            }
+            //]]>  
+        </script>
+        <style type="text/css">
+            .cars-datalist .text-column p:last-child{
+                color:#757575;
+            }
+
+            .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            .cars-datalist .car-item button {
+                float: right;
+            }
+
+            .cars-datalist ul {
+                margin: 0;
+                padding: 0;
+            }
+
+            .ui-car-display td:last-child {
+                font-weight: 700;
+            }
+
+            @media (max-width:640px) {
+                .cars-datalist .text-column {
+                    text-align: center;
+                }
+            }
+            .card.colorbox {
+                box-shadow: none;
+                -webkit-box-shadow: none;
+                -moz-box-shadow: none;
+                background-color: black;
                 
-<ui:define name="head">
-    <style type="text/css">
-        .cars-datalist .text-column p:last-child{
-            color:#757575;
-        }
-        
-        .cars-datalist .car-item i, .cars-datalist .car-item .car-details {
-            display: inline-block;
-            vertical-align: middle;
-        }
-        
-        .cars-datalist .car-item button {
-            float: right;
-        }
-        
-        .cars-datalist ul {
-            margin: 0;
-            padding: 0;
-        }
-        
-        .ui-car-display td:last-child {
-            font-weight: 700;
-        }
-    
-    @media (max-width:640px) {
-        .cars-datalist .text-column {
-            text-align: center;
-        }
-    }
-    </style>
-</ui:define>
-                
+            }
+
+        </style>
+    </ui:define>
+
     <ui:define name="title">Data</ui:define>
 
     <ui:define name="content">
-        <h:form id="form">
-            
-            <div class="layout-breadcrumb">
-                    <p:tabMenu activeIndex="#{param.i}">
-                            <p:menuitem value="#{msg.tableWallet}" outcome="/data" icon="ui-icon-star">
-                                <f:param name="i" value="0" />
-                            </p:menuitem>
-                            <p:menuitem value="#{msg.tableCard}" outcome="/data" icon="ui-icon-search">
-                                <f:param name="i" value="1" />
-                            </p:menuitem>
-                            <p:menuitem value="#{msg.tableOperations}" outcome="/data" icon="ui-icon-insert-drive-file">
-                                <f:param name="i" value="2" />
-                            </p:menuitem>
-                            <p:menuitem value="#{msg.tableSecurity}" outcome="/data" icon="ui-icon-help-outline">
-                                <f:param name="i" value="3" />
-                            </p:menuitem>
-                            <p:menuitem value="#{msg.tableLogout}" outcome="/data" icon="ui-icon-person">
-                                <f:param name="i" value="4" />
-                            </p:menuitem>
-                        </p:tabMenu>
 
-                    <div class="card">
-                        <p:dataTable var="transaction" value="#{dtSelectionView.maw_transactions}" paginator="true" rows="10">
+        <h:form id="form">
+
+
+            <div class="layout-breadcrumb">
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="#{msg.tableWallet}" outcome="/data">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableCard}" outcome="/data">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableOperations}" outcome="/data">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableSecurity}" outcome="/data">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="#{dtSelectionView.userName}" style="font: bold">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>              
+                    <p:menuitem value="#{msg.myProfile}">
+                        <f:param name="i" value="5" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableLogout}" outcome="/data">
+                        <f:param name="i" value="6" />
+                    </p:menuitem>
+                </p:tabMenu>
+            </div>   
+
+            <div class="card">
+
+
+                <div class="ui-g">
+
+                    <div class="ui-g-4">
+                        <div class="ui-g card colorbox colorbox-1">
+                            <div class="ui-g-4">
+                                <i class="material-icons md-48" style="color:whitesmoke;font-size:50px">account_balance_wallet</i>
+                            </div>
+                            <div class="ui-g-4">
+                                <span class="colorbox-name" style="color: whitesmoke;font-size: 20px;margin-top: 10px">Gestionar Billetera</span>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g card colorbox colorbox-1">
+                            <div class="ui-g-4">
+                                <i class="material-icons md-48" style="color: whitesmoke;font-size:50px">credit_card</i>
+                            </div>
+                            <div class="ui-g-4">
+                                <span class="colorbox-name" style="color: whitesmoke;font-size: 20px">Gestionar Tarjeta</span>                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g card colorbox colorbox-1" style="height:105px">
+                            <div class="ui-g-4">
+                                <i class="material-icons md-48" style="color: whitesmoke;font-size:50px">settings</i>
+                            </div>
+                            <div class="ui-g-4" style="margin-top: 15px">
+                                <span class="colorbox-name" style="color: whitesmoke;font-size: 20px" align="center">Operaciones</span>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g">
+                    <div class="ui-g-6" style="width: ">
+                        <p:dataList value="#{dtSelectionView.respuestaListadoProductos}" var="products" 
+                                    type="unordered" itemType="none" paginator="true" rows="3" styleClass="products-datalist">
                             <f:facet name="header">
-                                <p title="#{msg.DataTableMsg}"/>
-                                
+                                #{msg.commonsProduct}
                             </f:facet>
-                            <p:column headerText="Concept" sortBy="#{transaction.concept}">
+                            <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">                                
+                                <div class="car-details">
+                                    <p>#{products.nombreProducto}</p>
+                                    <p style="color:#757575" >#{products.saldoActual} - #{products.simbolo}</p>
+                                </div>
+
+                            </div>
+                        </p:dataList>
+                    </div>
+                    <div class="ui-g-12">
+                        <p:dataTable var="transaction"  value="#{dtSelectionView.maw_transactions}" paginator="true" rows="2" styleClass="products-datalist">
+                            <f:facet name="header">
+                                #{msg.DataTableMsg}
+                            </f:facet>
+                            <p:column headerText="#{msg.concept}" sortBy="#{transaction.concept}">
                                 <h:outputText value="#{transaction.concept}" />
                             </p:column>
-                            
-                            <p:column headerText="Amount" sortBy="#{transaction.amount}">
+
+                            <p:column headerText="#{msg.mount}" sortBy="#{transaction.amount}">
                                 <h:outputText value="#{transaction.amount}" />
                             </p:column>
-                            
-                            
-                            <p:column headerText="DestinationUser" sortBy="#{transaction.destinationUser}">
+
+
+                            <p:column headerText="#{msg.DestinationUser}" sortBy="#{transaction.destinationUser}">
                                 <h:outputText value="#{transaction.destinationUser}" />
                             </p:column>
+                            
+                            <p:column headerText="#{msg.transactionType}" sortBy="#{transaction.transactionTypeId.value}">
+                                <h:outputText style="text-align: center" value="#{msg.convertion}" rendered="#{transaction.transactionType == '4'}" />
+
+                                <h:outputText style="text-align: center" value="#{msg.recharge}" rendered="#{transaction.transactionType == '1'}" />
+                                <h:outputText style="text-align: center" value="#{msg.payment}" rendered="#{transaction.transactionType == '2'}" />
+                                <h:outputText style="text-align: center" value="#{msg.transfer}" rendered="#{transaction.transactionType == '3'}" />
+                                <h:outputText style="text-align: center" value="#{msg.withdrawalsManual}" rendered="#{transaction.transactionType == '5'}" />
+                                <h:outputText style="text-align: center" value="#{msg.manualRecharge}" rendered="#{transaction.transactionType == '6'}" />
+                                <h:outputText style="text-align: center" value="#{msg.rechargeTopUp}" rendered="#{transaction.transactionType == '7'}" />
+                                <h:outputText style="text-align: center" value="#{msg.transferCard}" rendered="#{transaction.transactionType == '8'}" />
+                                <h:outputText style="text-align: center" value="#{msg.withdrawals}" rendered="#{transaction.transactionType == '13'}" />
+                            </p:column>
+
+                            <p:column headerText="+/-" sortBy="#{transaction.transactionType}">                            
+
+                                <h:outputText style="text-align: center" value="+" rendered="#{transaction.transactionType == '1' or transaction.transactionType == '2' 
+                                                                    or transaction.transactionType == '24' or transaction.transactionType == '7'}" />
+
+                                <h:outputText style="text-align: center" value="-" rendered="#{transaction.transactionType == '3' or transaction.transactionType == '4'
+                                                                    or transaction.transactionType == '5' or transaction.transactionType == '6' or transaction.transactionType == '27'}" />   
+                            </p:column>
+                            
                         </p:dataTable>
                     </div>
-                
-              
+                </div>
+
             </div>
         </h:form>
-        
+
     </ui:define>
 
 </ui:composition>
