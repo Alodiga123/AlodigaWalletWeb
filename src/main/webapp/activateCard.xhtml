@@ -11,15 +11,20 @@
         <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
 
       <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{cardWithdrawalController.onFlowProcess}">
-          <p:tab id="cardWithdrawal" title="#{msg.cardWithdrawal}">
+          <p:tab id="ActiveCard" title="#{msg.activeCard}">
               
-                <p:panel header="Card Withdrawal Information">
+                <p:panel header="#{msg.informationToActivateTheCard}">
                     <h:panelGrid columns="2" columnClasses="label, value">
-                     <p:outputLabel value="#{msg.sourceProduct} : #{cardWithdrawalController.sourceProduct}" />
-                     <p></p>
-                     <p:outputLabel value="#{msg.cardWithdrawalWallet} #{cardWithdrawalController.transformCardNumber}"/>
-                     <p></p>
-                     <p:inputNumber id="transactionAmount" value="#{cardWithdrawalController.transactionAmount}" decimalPlaces="2" required="true"/>
+                        <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.user.nombre} #{activateCardController.user.apellido}" />
+                     <br></br>
+                     <p:outputLabel value="#{msg.cardNumber} #{activateCardController.transformCardNumber}"/>
+                      <br></br>
+                      <br></br>
+                      <br></br>
+                     <h3>#{msg.securityQuestions}</h3>
+                     <br></br>
+                     <p:outputLabel value="#{msg.cardholderDocumentNumber}"/>
+                     <p:inputNumber id="transactionAmount" value="#{activateCardController.transactionAmount}" decimalPlaces="2" required="true"/>
                     </h:panelGrid>
                 </p:panel>
               

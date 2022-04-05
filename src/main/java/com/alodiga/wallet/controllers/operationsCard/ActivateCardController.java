@@ -4,7 +4,7 @@ import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.cms.ws.TransactionResponse;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
-import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
+import com.cms.commons.enumeraciones.ResponseCodeE;
 import com.alodiga.wallet.common.exception.KeyLongException;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
@@ -46,12 +46,13 @@ import javax.servlet.http.HttpSession;
 import org.primefaces.event.FlowEvent;
 import com.cms.commons.enumeraciones.ChannelE;
 import com.alodiga.wallet.utils.Utils;
+import com.alodiga.wallet.ws.PersonResponse;
 
 
 
-@ManagedBean(name = "cardWithdrawalController")
+@ManagedBean(name = "activateCardController")
 @ViewScoped
-public class CardWithdrawalController {
+public class ActivateCardController {
 
     private List<Country> countryList = new ArrayList();
     private Product[] productList;
@@ -70,7 +71,7 @@ public class CardWithdrawalController {
     private ResourceBundle msg;
     private BusinessPortalEJB businessPortalEJBProxy;
     private ProductListResponse productListResponse;
-    private CardResponse cardResponseWallet;
+    private PersonResponse personResponse;
     public String cardNumber;
     private String sourceProduct;
     private String keyOperations;
@@ -78,7 +79,8 @@ public class CardWithdrawalController {
     private String idTranstaction; 
     private String date;
     private Utils utils;
-    public String transformCardNumber = "";
+    public String transformCardNumber;
+    private CardResponse cardResponseWallet;
 
     @PostConstruct
     public void init() {
@@ -98,6 +100,9 @@ public class CardWithdrawalController {
             productResponse = apiAlodigaWalletProxy.getProductPrepaidCardByUser(Long.valueOf(user.getUsuarioID()));
             String productName = productResponse.getResponse().getName();
             this.sourceProduct = productName;
+            
+             //Se obtiene el nombre del usuario  
+            personResponse = apiAlodigaWalletProxy.getPersonByEmail(user.getEmail());
             
              //Se obtiene la tarjeta del usuario  
             cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
@@ -240,13 +245,15 @@ public class CardWithdrawalController {
         this.productListResponse = productListResponse;
     }
 
-    public CardResponse getCardResponseWallet() {
-        return cardResponseWallet;
+    public PersonResponse getPersonResponse() {
+        return personResponse;
     }
 
-    public void setCardResponseWallet(CardResponse cardResponseWallet) {
-        this.cardResponseWallet = cardResponseWallet;
+    public void setPersonResponse(PersonResponse personResponse) {
+        this.personResponse = personResponse;
     }
+
+
 
     public String getCardNumber() {
         return cardNumber;
@@ -326,7 +333,15 @@ public class CardWithdrawalController {
         this.transformCardNumber = transformCardNumber;
     }
 
-   
+    public CardResponse getCardResponseWallet() {
+        return cardResponseWallet;
+    }
+
+    public void setCardResponseWallet(CardResponse cardResponseWallet) {
+        this.cardResponseWallet = cardResponseWallet;
+    }
+
+    
     public String onFlowProcess(FlowEvent event) {
 //        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
         RespuestaUsuario respUser = new RespuestaUsuario();
@@ -392,7 +407,7 @@ public class CardWithdrawalController {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
                FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
-//        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
+        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.USER_HAS_NOT_BALANCE.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
