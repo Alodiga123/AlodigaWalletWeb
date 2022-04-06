@@ -84,7 +84,7 @@ public class converterController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            Logger.getLogger(RechargeCardController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(converterController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

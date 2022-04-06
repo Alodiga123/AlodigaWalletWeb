@@ -30,6 +30,8 @@ import com.alodiga.wallet.service.CarService;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.Maw_transaction;
 import com.alodiga.wallet.ws.TransactionListResponse;
+import com.ericsson.alodiga.ws.RespuestaListadoProducto;
+import com.ericsson.alodiga.ws.Usuario;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +46,10 @@ public class SelectionView implements Serializable {
 
     
     private List<Maw_transaction> maw_transactions;
+    private Usuario user;
+    private String userName;
+    private List<RespuestaListadoProducto> respuestaListadoProductos;
+    
 
     @PostConstruct
     public void init() {
@@ -53,10 +59,11 @@ public class SelectionView implements Serializable {
             HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
             HttpSession session = request.getSession(false);
             Object userId= session.getAttribute("userId");
-            
+            user = (Usuario) session.getAttribute("user");
+            userName = user.getNombre().concat(user.getApellido());
             TransactionListResponse transactionListResponse = proxy.getTransactionsByUserIdApp(userId.toString(), "50");
             maw_transactions = Arrays.asList(transactionListResponse.getTransactions());
-            
+            respuestaListadoProductos = Arrays.asList(user.getRespuestaListadoProductos());
             
         } catch (RemoteException ex) {
             ex.printStackTrace();
@@ -78,6 +85,33 @@ public class SelectionView implements Serializable {
     public void setMaw_transactions(List<Maw_transaction> maw_transactions) {
         this.maw_transactions = maw_transactions;
     }
+
+    public Usuario getUser() {
+        return user;
+    }
+
+    public void setUser(Usuario user) {
+        this.user = user;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public List<RespuestaListadoProducto> getRespuestaListadoProductos() {
+        return respuestaListadoProductos;
+    }
+
+    public void setRespuestaListadoProductos(List<RespuestaListadoProducto> respuestaListadoProductos) {
+        this.respuestaListadoProductos = respuestaListadoProductos;
+    }
+    
+    
+    
     
     
     

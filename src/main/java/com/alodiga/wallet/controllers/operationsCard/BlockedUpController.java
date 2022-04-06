@@ -12,6 +12,7 @@ import com.alodiga.wallet.ws.TransactionApproveRequestResponse;
 import com.ericsson.alodiga.ws.Usuario;
 import static com.sun.faces.facelets.util.Path.context;
 import java.rmi.RemoteException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +47,7 @@ public class BlockedUpController {
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             apiAuthorizerCardManagementSystemProxy.verifyStatusActiveCard(cardNumber);
-
+            msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
@@ -182,14 +183,14 @@ public class BlockedUpController {
             try {
                 TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(cardNumber,
                     (blockedUpCard == true) ? 0 : 1, messageMiddlewareId, channelWallet, transactioExternalId);
-                if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
-                    addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Desbloqueada", "" );
-                }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) || blockedUpCard == true)  {
-                   addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta Bloqueada", "" );
+                if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) && blockedUpCard == true)  {
+                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("lockedcard")));
+                }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) && blockedUpCard == false)  {
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("unlockedcard")));
                 }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.CARD_NOT_EXISTS.getCode())) {
-                   addMessage(FacesMessage.SEVERITY_INFO, "Tarjeta no existe", ResponseCodeE.CARD_NOT_EXISTS.getMessage());
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("cardDoesNotExist")));
                 }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
-                   addMessage(FacesMessage.SEVERITY_INFO, "No se completo la transaccion", "");      
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
