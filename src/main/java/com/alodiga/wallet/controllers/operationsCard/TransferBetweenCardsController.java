@@ -38,7 +38,7 @@ import org.primefaces.event.FlowEvent;
 
 /**
  *
- * @author henry
+ * @author Jesús Gómez
  */
 @ManagedBean(name = "transferBetweenCardsController")
 @ViewScoped
@@ -50,6 +50,8 @@ public class TransferBetweenCardsController {
     private String transferConcept;
     private String emailDestinationCard;
     private String keyOperations;
+    private String cardHolder;
+    private String numberPhone;
     private static APIAuthorizerCardManagementSystemProxy apiAuthorizerCardManagementSystemProxy;
     private static APIAlodigaWalletProxy apiAlodigaWalletProxy;
     public String cardNumber = "";
@@ -140,6 +142,22 @@ public class TransferBetweenCardsController {
         this.keyOperations = keyOperations;
     }
 
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
+    }
+
+    public String getNumberPhone() {
+        return numberPhone;
+    }
+
+    public void setNumberPhone(String numberPhone) {
+        this.numberPhone = numberPhone;
+    }
+
     public CardResponse getCardResponseWallet() {
         return cardResponseWallet;
     }
@@ -209,25 +227,21 @@ public class TransferBetweenCardsController {
                 addMessage(null, new FacesMessage(severity, summary, detail));
     }
     
-    public void searchDestinationCard() {
-        try {
-            //Se obtiene la tarjeta de destino
-            cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(emailDestinationCard);
-            destinationCard = cardResponseWallet.getCardNumber();
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        
-        
-    }
-    
     public String onFlowProcess(FlowEvent event) {
         RespuestaUsuario respUser = new RespuestaUsuario();
         APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
         switch (event.getOldStep()) {
-            case "transferBetweenCardsData": {
-                
-
+            case "data": { 
+                try {
+                    //Se obtiene la tarjeta de destino
+                    cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(emailDestinationCard);
+                    destinationCard = cardResponseWallet.getCardNumber();
+                    cardHolder = cardResponseWallet.getCardHolder();
+                    numberPhone = cardResponseWallet.getNumberPhone();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                return "verification";
             }
             
             case "key": { 
