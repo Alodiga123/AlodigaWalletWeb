@@ -357,45 +357,4 @@ public class TransferWalletController {
 
     }
 
-//    public void submit() {
-//       System.out.println("Entre");
-//        if (numberAccountBank != null) {
-//            try {
-//               //Obtener el estatus ACTIVA de la cuenta bancaria
-//               StatusAccountBank statusAccountBankActiva = businessPortalEJBProxy.loadStatusAccountBankById(StatusAccountBankE.ACTIVA.getId());
-//               
-//               //Crear el objeto Bank
-//               Bank bank = new Bank();
-//               bank.setAbaCode(selectedBank.getAbaCode());
-//               bank.setCountryId(selectedCountry);
-//               bank.setId(selectedBank.getId());
-//               bank.setName(selectedBank.getName());
-//               bank.setSwiftCode(selectedBank.getSwiftCode());
-//               
-//               //Creando el objeto AccountBank
-//               AccountBank accountBank = new AccountBank();
-//               accountBank.setBankId(bank);
-//               accountBank.setAccountNumber(numberAccountBank);
-//               accountBank.setAccountTypeBankId(selectedAccountTypeBank);
-//               accountBank.setStatusAccountBankId(statusAccountBankActiva);
-//               accountBank.setCreateDate(new Timestamp(new Date().getTime()));
-//               accountBank.setUnifiedRegistryId(user.getUsuarioID());
-//               //Guardar la cuenta bancaria en la BD
-//               accountBank = businessPortalEJBProxy.saveAccountBank(accountBank);
-//
-//               if (accountBank != null) {
-//                  FacesContext context = FacesContext.getCurrentInstance();
-//                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Las respuestas del usuario se guardaron correctamente en la BD", null));
-//               }else{
-//                  FacesContext context = FacesContext.getCurrentInstance();
-//                  context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Se presentó un problema al guardar los datos, por favor intente de nuevo", null));  
-//               }
-//            
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//                Logger.getLogger(RechargeCardController.class.getName()).log(Level.SEVERE, null, ex);      
-//            }
-//
-//   }
-//  }
 }
