@@ -111,7 +111,12 @@ public class SelectionView implements Serializable {
     }
     
     
-    
+    public String logout() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpSession session = request.getSession(false);
+        session.invalidate();
+        return "login.xhtml";
+    }
     
     
     
