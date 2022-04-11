@@ -14,18 +14,29 @@
           <p:tab id="ActiveCard" title="#{msg.activeCard}">
               
                 <p:panel header="#{msg.informationToActivateTheCard}">
+                    <div align="center"  > 
                     <h:panelGrid columns="2" columnClasses="label, value">
-                        <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.user.nombre} #{activateCardController.user.apellido}" />
+                        <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.user.nombre} #{activateCardController.user.apellido} #{msg.cardNumber} #{activateCardController.transformCardNumber}" />
                      <br></br>
-                     <p:outputLabel value="#{msg.cardNumber} #{activateCardController.transformCardNumber}"/>
-                      <br></br>
-                      <br></br>
-                      <br></br>
-                     <h3>#{msg.securityQuestions}</h3>
+                     <br></br>
+                     <p:outputLabel value="#{msg.securityQuestionHeader}"/>
                      <br></br>
                      <p:outputLabel value="#{msg.cardholderDocumentNumber}"/>
-                     <p:inputNumber id="transactionAmount" value="#{activateCardController.transactionAmount}" decimalPlaces="2" required="true"/>
-                    </h:panelGrid>
+                     <p:inputNumber id="Document" value="#{activateCardController.documentNumber}" required="true"/>
+                     <p:outputLabel value="#{msg.dateofExpiry}"/>
+                     <p:calendar />
+                     <p:outputLabel value="#{msg.dateOfBirth}"/>
+                     <p:calendar/>
+                     <p:outputLabel value="#{msg.email}"/>
+                     <p:inputText id="email1"  value="#{activateCardController.email}"/>
+                     <p:outputLabel value=#{msg.phoneNumber}/>
+                     <p:inputNumber value="#{activateCardController.phone}" id="phone"  required="true" maxlength="12"/>
+                     <p:outputLabel value="#{msg.securityCode}" />
+                     <p:inputNumber value="#{activateCardController.cvv}" id="cvv" required="true" maxlength="12" decimalPlaces="0"/>
+                     <p:outputLabel value="Pregunta de Seguridad"/>
+                     <p:inputText id="answer" />
+                     </h:panelGrid>
+                     </div>
                 </p:panel>
               
             </p:tab>
