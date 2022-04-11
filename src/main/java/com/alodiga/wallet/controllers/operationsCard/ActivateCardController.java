@@ -47,6 +47,8 @@ import org.primefaces.event.FlowEvent;
 import com.cms.commons.enumeraciones.ChannelE;
 import com.alodiga.wallet.utils.Utils;
 import com.alodiga.wallet.ws.PersonResponse;
+import com.cms.commons.models.Card;
+
 
 
 
@@ -81,6 +83,12 @@ public class ActivateCardController {
     private Utils utils;
     public String transformCardNumber;
     private CardResponse cardResponseWallet;
+    private String expirationDate;
+    private Card card = null;
+    private String email;
+    private String phone;
+    private String cvv;
+    private String documentNumber;
 
     @PostConstruct
     public void init() {
@@ -110,6 +118,11 @@ public class ActivateCardController {
 
             utils = new Utils();
             transformCardNumber = utils.transformCardNumber(cardNumber);
+            
+            //se Obtiene la fecha de expiracion de la tarjeta
+            SimpleDateFormat format = new SimpleDateFormat("MMyy");
+            expirationDate = format.format(card.getExpirationDate());
+         
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -341,6 +354,57 @@ public class ActivateCardController {
         this.cardResponseWallet = cardResponseWallet;
     }
 
+    public String getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getCvv() {
+        return cvv;
+    }
+
+    public void setCvv(String cvv) {
+        this.cvv = cvv;
+    }
+
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(String documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+   
+  
+    
     
     public String onFlowProcess(FlowEvent event) {
 //        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
