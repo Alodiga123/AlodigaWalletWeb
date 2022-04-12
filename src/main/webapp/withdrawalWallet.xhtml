@@ -40,7 +40,7 @@
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{withdrawalWalletController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
                                     </p:selectOneMenu>
-                                    <p:outputLabel value="Numero de cuenta" for="numberAccountBank" />
+                                    <p:outputLabel value="#{msg.numberAccountBank}" for="numberAccountBank" />
                                     <p:inputText id="numberAccountBank" value="#{withdrawalWalletController.numberAccountBank}" required="true"/>
                                 </p:panelGrid>
                             </div>
@@ -79,14 +79,14 @@
                                         <p:ajax event="change" update="accountBankWithdrawal"/>
                                     </p:selectOneMenu> 
                                     
-                                    <p:outputLabel value="Cuenta Asociada" for="accountBankWithdrawal" />
+                                    <p:outputLabel value="#{msg.associatedAccount}" for="accountBankWithdrawal" />
                                     <p:selectOneMenu id="accountBankWithdrawal" value="#{withdrawalWalletController.selectedAccountBank}" converter="accountBankConverter" required="true">
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{withdrawalWalletController.accountBankList}" var="accountBankWithdrawal" itemLabel="#{accountBankWithdrawal.accountNumber}"/>
                                         <p:ajax event="change" update="accountBankType"/>
                                     </p:selectOneMenu>
                                    
-                                    <p:outputLabel value="Tipo de Cuenta Bancaria" for="accountBankType" />
+                                    <p:outputLabel value="#{msg.typeAccount}" for="accountBankType" />
                                     <p:inputText id="accountBankType" value="#{withdrawalWalletController.accountBankType}" required="false" disabled="false" />
                                     
                                     <p:outputLabel value="#{msg.commonsProduct}" for="product"/>

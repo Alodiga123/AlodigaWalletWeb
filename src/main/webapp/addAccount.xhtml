@@ -36,7 +36,7 @@
                                         <f:selectItem itemLabel="#{msg.SelectOne}" noSelectionOption="true" itemDisabled="true"/>
                                         <f:selectItems value="#{addAccountController.accountTypeBankList}" var="accountTypeBank" itemLabel="#{accountTypeBank.description}" />
                                     </p:selectOneMenu>
-                                    <p:outputLabel value="Numero de cuenta" for="numberAccountBank" />
+                                    <p:outputLabel value="#{msg.numberAccountBank}" for="numberAccountBank" />
                                     <p:inputText id="numberAccountBank" value="#{addAccountController.numberAccountBank}" required="false"/>
                                 </p:panelGrid>
                             </div>
