@@ -102,7 +102,7 @@
                     <p:menuitem value="#{msg.myProfile}">
                         <f:param name="i" value="5" />
                     </p:menuitem>
-                    <p:menuitem value="#{msg.tableLogout}" outcome="/data">
+                    <p:menuitem value="#{msg.tableLogout}" outcome="/login">
                         <f:param name="i" value="6" />
                     </p:menuitem>
                 </p:tabMenu>
@@ -145,23 +145,24 @@
                     </div>
                 </div>
                 <div class="ui-g">
-                    <div class="ui-g-6" style="width: ">
+                    <div class="ui-g-3">
                         <p:dataList value="#{dtSelectionView.respuestaListadoProductos}" var="products" 
-                                    type="unordered" itemType="none" paginator="true" rows="3" styleClass="products-datalist">
+                                    type="unordered" itemType="none" paginator="false" rows="3" styleClass="product-list-item">
                             <f:facet name="header">
-                                #{msg.commonsProduct}
+                                #{msg.commonsProductList}
                             </f:facet>
-                            <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">                                
-                                <div class="car-details">
-                                    <p>#{products.nombreProducto}</p>
-                                    <p style="color:#757575" >#{products.saldoActual} - #{products.simbolo}</p>
+                            <div class="product-list-detail">
+                                <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">                                
+                                    <div class="product-list-detail">
+                                        <div><p>#{products.nombreProducto}</p></div>
+                                        <div><p style="color:#757575" >#{products.saldoActual} - #{products.simbolo}</p></div>
+                                    </div>
                                 </div>
-
                             </div>
                         </p:dataList>
                     </div>
                     <div class="ui-g-12">
-                        <p:dataTable var="transaction"  value="#{dtSelectionView.maw_transactions}" paginator="true" rows="2" styleClass="products-datalist">
+                        <p:dataTable var="transaction"  value="#{dtSelectionView.maw_transactions}" paginator="true" rows="6" styleClass="products-datalist">
                             <f:facet name="header">
                                 #{msg.DataTableMsg}
                             </f:facet>
