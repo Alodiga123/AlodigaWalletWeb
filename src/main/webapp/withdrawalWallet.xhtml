@@ -9,9 +9,7 @@
 
     <ui:define name="content">
 <h:form>
-
-        <p:growl id="growl" sticky="true" showDetail="true"/>
-
+        <p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/>
         <p:wizard showNavBar="#{withdrawalWalletController.haveAccount()}">
             <p:tab id="accountBank" title="#{msg.titleAddAccount}" rendered="#{withdrawalWalletController.haveAccount()}" >
             <p:panel header="Bank Details">

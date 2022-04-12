@@ -184,9 +184,9 @@ public class BlockedUpController {
                 TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.blockedUpCard(cardNumber,
                     (blockedUpCard == true) ? 0 : 1, messageMiddlewareId, channelWallet, transactioExternalId);
                 if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) && blockedUpCard == true)  {
-                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("lockedcard")));
+                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("unlockedcard")));
                 }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode()) && blockedUpCard == false)  {
-                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("unlockedcard")));
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("lockedcard")));
                 }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.CARD_NOT_EXISTS.getCode())) {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("cardDoesNotExist")));
                 }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {

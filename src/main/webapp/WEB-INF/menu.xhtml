@@ -49,7 +49,8 @@
                     
                     <pu:menu widgetVar="me">
                         
-                        <p:menuitem id="um_dashboard" value="Dashboard" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:menuitem id="um_dashboard" value="Dashboard PM" icon="&#xE871;" outcome="/dashboard"/>
+                        <p:menuitem id="um_dashboard2" value="Dashboard Billetera" icon="&#xE871;" outcome="/data"/>
                         <p:submenu id="themes" label="Themes" icon="palette">
                             <p:menuitem value="Indigo - Pink" icon="brush" actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false" />
                             <p:menuitem value="Brown - Green" icon="brush" actionListener="#{guestPreferences.setTheme('brown')}" ajax="false" />
@@ -92,10 +93,21 @@
                             <p:menuitem id="um_404" value="404 Page" icon="error_outline" outcome="/404" />
                             <p:menuitem id="um_access" value="Access Denied Page" icon="security" outcome="/access" />
                         </p:submenu>
-                        <p:submenu id="um_operation" label="Operations" icon="get_app">
-                            <p:menuitem id="operations" value="Agregar Cuenta" icon="ui-icon-sign-out" outcome="/addAccount" />
-                            <p:menuitem id="transfer" value="Transferencia de billetera" icon="ui-icon-sign-out" outcome="/transfertWallet" />
-                            <p:menuitem id="converter" value="Convertir" icon="ui-icon-sign-out" outcome="/converter" />
+                        <p:submenu id="um_wallet" label="Billetera" icon="get_app">
+                            <p:menuitem id="manualRecharge" value="Recarga Manual" icon="menu" outcome="/manualRechargeRequest" />
+                            <p:menuitem id="manualWithdrawal" value="Retiro Manual" icon="menu" outcome="/withdrawalWallet" />
+                            <p:menuitem id="productConverter" value="Convertir" icon="menu" outcome="/converter" />
+                            <p:menuitem id="transfer" value="Transferencia billetera" icon="menu" outcome="/transfertWallet" />
+                        </p:submenu>
+                        <p:submenu id="um_card" label="Tarjetas" icon="get_app">
+                            <p:menuitem id="cardRequest" value="Solicitar Tarjeta" icon="menu" url="http://tarjetas.alodiga.com:8080/"/>
+                            <p:menuitem id="cardBlocked" value="Desbloquear/Bloquear Tarjeta" icon="menu" outcome="/blockedUpCard"/>
+                            <p:menuitem id="cardRecharge" value="Recargar Tarjeta" icon="menu" outcome="/rechargeCard"/>
+                            <p:menuitem id="cardWithdrawal" value="Retiro Tarjeta" icon="menu" outcome="/cardWithdrawal"/>
+                            <p:menuitem id="cardBetweenCard" value="Transferencia entre Tarjetas" icon="menu" outcome="/transferBetweenCards"/>
+                        </p:submenu>
+                        <p:submenu id="um_operation" label="Operaciones" icon="get_app">
+                            <p:menuitem id="operations" value="Agregar Cuenta" icon="menu" outcome="/addAccount" />
                         </p:submenu>
                         <p:submenu id="um_hierarchy" label="Menu Hierarchy" icon="menu">
                             <p:submenu id="um_sm1" label="Submenu 1" icon="subject">
