@@ -5,64 +5,46 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
-        <f:facet name="first" >
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
-            <meta name="apple-mobile-web-app-capable" content="yes" />
-        </f:facet>
         <title>#{msg.title}</title>
-        <h:outputScript name="js/ripple.js" library="ultima-layout" />
-        <h:outputScript name="js/layout.js" library="ultima-layout" />
-
+        <h1><p align="center">Iniciar Sesión en Billetera Web</p></h1>
     </h:head>
     <h:body >
-        <p:layout fullPage="true" style="border: none">
-            
-            <p:layoutUnit position="center" style="border: none">
-                <f:view contentType="text/html" locale="es" id="fview" >
-                    <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
-                    <h:form id="loginForm" >                        
-                        <div class="card login-panel ui-fluid">
-                            <div class="ui-g">
-                                <div class="ui-g-12">
-                                    <p:graphicImage name="images/splasss.png" library="ultima-layout" />
-                                    <!--<p:graphicImage name="images/img-alodiga-logo.png" library="ultima-layout" />-->
-                                </div>
-                                <div class="ui-g-12">
-                                    <h:panelGroup styleClass="md-inputfield">
-                                        <p:inputText id="username" value="#{loginBean.uname}" required="true" requiredMessage="#{msg.emptyUsername}"/>
-                                        <label>#{msg.loginUsermane}</label>                                        
-                                    </h:panelGroup>
-                                </div>
-                                <div class="ui-g-12">
-                                    <h:panelGroup styleClass="md-inputfield">
-                                        <p:password id="password" value="#{loginBean.password}"  feedback="false" required="true" requiredMessage="#{msg.emptyPassword}"/>
-                                        <label>#{msg.loginPassword}</label>                                        
-                                    </h:panelGroup>
-                                </div>
-                                <div class="ui-g-12">
-                                    <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}"  ajax="true"></p:commandButton>
-                                    <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" styleClass="secondary"/>
-                                </div>
-                                <div class="ui-g-12">
-                                    <p:button onclick="window.open('/AlodigaWalletWebRegister-1.0/')" href="/AlodigaWalletWebRegister-1.0/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" />
-                                </div>
-<!--                                <div class="ui-g-12">
-                                    <p:selectOneMenu value="es" onchange="submit()" valueChangeListener="#{languajeBean.localityChanged}">
-                                        <f:selectItem itemLabel="Español" itemValue="es"/>
-                                        <f:selectItem itemLabel="English" itemValue="en"/>
-                                    </p:selectOneMenu>
-                                </div>-->
-                            </div>  
+        <f:view contentType="text/html" locale="es" id="fview" >
+            <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
+            <h:form id="loginForm" >                        
+                <div class="card login-panel ui-fluid">
+                    <div class="ui-g">
+                        <div class="ui-g-12">
+                            <p:graphicImage name="images/splasss.png" library="ultima-layout" />
+                            <!--<p:graphicImage name="images/img-alodiga-logo.png" library="ultima-layout" />-->
                         </div>
+                        <div class="ui-g-12">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:inputText id="username" value="#{loginBean.uname}" required="true" requiredMessage="#{msg.emptyUsername}"/>
+                                <label>#{msg.loginUsermane}</label>                                        
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12">
+                            <h:panelGroup styleClass="md-inputfield">
+                                <p:password id="password" value="#{loginBean.password}"  feedback="false" required="true" requiredMessage="#{msg.emptyPassword}"/>
+                                <label>#{msg.loginPassword}</label>                                        
+                            </h:panelGroup>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}"  ajax="true"></p:commandButton>
+                            <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" styleClass="secondary"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <p:button onclick="window.open('/AlodigaWalletWebRegister-1.0/')" href="/AlodigaWalletWebRegister-1.0/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" />
+                        </div>
+                    </div>  
+                </div>
 
-                    </h:form>
+            </h:form>
 
                     <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
                     <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
                 </f:view>
-            </p:layoutUnit>
             <p:layoutUnit position="south" style="border: none">
                 <div  style="color: #757575; text-align: center;">
                     #{msg.copyright}
@@ -71,7 +53,5 @@
                     <p:graphicImage name="images/icon-visa.png" library="ultima-layout" />
                 </div>
             </p:layoutUnit>
-
-        </p:layout>
     </h:body>
 </html>

@@ -82,6 +82,31 @@
         <h:form id="form">
 
 
+            <div class="layout-breadcrumb">
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="#{msg.tableWallet}" outcome="/data">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableCard}" outcome="/data">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableOperations}" outcome="/data">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableSecurity}" outcome="/data">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="#{dtSelectionView.userName}" style="font: bold">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>              
+                    <p:menuitem value="#{msg.myProfile}">
+                        <f:param name="i" value="5" />
+                    </p:menuitem>
+                    <p:menuitem value="#{msg.tableLogout}" outcome="/login">
+                        <f:param name="i" value="6" />
+                    </p:menuitem>
+                </p:tabMenu>
+            </div>   
 
             <div class="card">
 
@@ -157,19 +182,31 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="ui-g">
-                <div class="ui-g-6" style="width: ">
-                    <p:dataList value="#{dtSelectionView.respuestaListadoProductos}" var="products" 
-                                type="unordered" itemType="none" paginator="true" rows="3" styleClass="products-datalist">
-                        <f:facet name="header">
-                            #{msg.commonsProduct}
-                        </f:facet>
-                        <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">                                
-                            <div class="car-details">
-                                <p>#{products.nombreProducto}</p>
-                                <p style="color:#757575" >#{products.saldoActual} - #{products.simbolo}</p>
+                <div class="ui-g">
+                    <div class="ui-g-3">
+                        <p:dataList value="#{dtSelectionView.respuestaListadoProductos}" var="products" 
+                                    type="unordered" itemType="none" paginator="false" rows="3" styleClass="product-list-item">
+                            <f:facet name="header">
+                                #{msg.commonsProductList}
+                            </f:facet>
+                            <div class="product-list-detail">
+                                <div style="border-bottom: 1px solid #bdbdbd" class="clearfix car-item">                                
+                                    <div class="product-list-detail">
+                                        <div><p>#{products.nombreProducto}</p></div>
+                                        <div><p style="color:#757575" >#{products.saldoActual} - #{products.simbolo}</p></div>
+                                    </div>
+                                </div>
                             </div>
+                        </p:dataList>
+                    </div>
+                    <div class="ui-g-12">
+                        <p:dataTable var="transaction"  value="#{dtSelectionView.maw_transactions}" paginator="true" rows="6" styleClass="products-datalist">
+                            <f:facet name="header">
+                                #{msg.DataTableMsg}
+                            </f:facet>
+                            <p:column headerText="#{msg.concept}" sortBy="#{transaction.concept}">
+                                <h:outputText value="#{transaction.concept}" />
+                            </p:column>
 
                         </div>
                     </p:dataList>
