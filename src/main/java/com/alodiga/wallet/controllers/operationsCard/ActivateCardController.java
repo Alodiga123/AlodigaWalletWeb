@@ -89,6 +89,8 @@ public class ActivateCardController {
     private String phone;
     private String cvv;
     private String documentNumber;
+    private String securityQuestions;
+    private Date dateOfBirth;
 
     @PostConstruct
     public void init() {
@@ -402,7 +404,23 @@ public class ActivateCardController {
         this.documentNumber = documentNumber;
     }
 
-   
+    public String getSecurityQuestions() {
+        return securityQuestions;
+    }
+
+    public void setSecurityQuestions(String securityQuestions) {
+        this.securityQuestions = securityQuestions;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    
   
     
     
