@@ -70,14 +70,9 @@ public class TransferWalletController {
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
-//            for(int i=0 ; i<user.getRespuestaListadoProductos().length;i++){
-//                listadoProductos.add((user.getRespuestaListadoProductos()[i]));
-//            }
 
             //Se obtiene la lista de productos del usuario
             productList = productEJBProxy.getProductsByWalletUser(Long.valueOf(user.getUsuarioID()));
-                    
-            
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(RechargeCardController.class.getName()).log(Level.SEVERE, null, ex);

@@ -6,68 +6,120 @@
                 template="/WEB-INF/template.xhtml">
 
     <ui:define name="title">msg.titleTransferBetweenCards</ui:define>
+
     <ui:define name="content">
         <h:form id="transferBetweenCards">
+           <f:view contentType="text/html" locale="es" id="fview" >
             <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
-                <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}" showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{transferBetweenCardsController.onFlowProcess}">
-                    <p:tab id="data" title="#{msg.titleTransferBetweenCards}">
-                        <p:panel header="#{msg.titleTransferBetweenCards}">                                    
-                            <h:panelGrid columns="3" columnClasses="label, value">
-                                <p:outputLabel value="#{msg.commonsSourceCard}" for="sourceCard" />
+            <div class="ui-fluid">
+                <p:panelGrid>
+                    <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{transferBetweenCardsController.onFlowProcess}">
+                        <p:tab id="data">
+                            <p:panel header="#{msg.titleTransferBetweenCards}">                                  
+                                <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">                                                
+                                    <p:outputLabel value="#{msg.commonsSourceCard}" for="sourceCard" />
                                 <p:inputText id="sourceCard" value="#{transferBetweenCardsController.sourceCard}" required="false"/>
-                                <p:message for="sourceCard"/>
 
                                 <p:outputLabel value="#{msg.emailDestinationCard}" for="emailDestinationCard" />
                                 <p:inputText id="emailDestinationCard" value="#{transferBetweenCardsController.emailDestinationCard}" required="false"/>
-                                <p:message for="emailDestinationCard"/>
-                            </h:panelGrid>                      
-                        </p:panel>   
-                    </p:tab>
+                                </p:panelGrid>                        
+                            </p:panel>   
+                        </p:tab>
+                        <p:tab id="information">
+                            <p:panel header="#{msg.titleTransferBetweenCards}">
+                                
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    
+                                    <h:outputText value="#{msg.commonsCardHolder}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.cardHolder}" styleClass="outputLabel"/>
 
-                    <p:tab id="verification" title="#{msg.titleTransferBetweenCards}">
-                        <p:panel header="#{msg.transferTitle}">
+                                    <h:outputText value="#{msg.commonsNumberPhone}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.numberPhone}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.commonsSourceCard}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.sourceCard}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.Destinate}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.destinationCard}" styleClass="outputLabel"/>
+                                </h:panelGrid>
+                                
+                                <h:panelGrid columns="2" columnClasses="label, value">
+                                    
+                                    <h:outputText value="#{msg.commonsTransferAmount}" />
+                                    <p:inputText id="transferAmount" value="#{transferBetweenCardsController.transferAmount}" required="true"/>
+                                    
+                                    <h:outputText value="#{msg.commonsTransactionConcept}" />
+                                    <p:inputText id="concept" value="#{transferBetweenCardsController.concept}" required="true"/>
+                                </h:panelGrid>
+
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="key">
+                            <p:panel header="#{msg.transferTitle}">
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+
+                                <h:outputText value="#{msg.keyOperations}" />
+                                <p:inputText id="keyOperations" value="#{transferBetweenCardsController.keyOperations}" />
+
+                            </p:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="confirmation">
+                            <p:panel header="#{msg.transferTitle}">
+                                <h:panelGrid columns="2" columnClasses="label, value">
+
+                                    <h:outputText value="#{msg.commonsCardHolder}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.cardHolder}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.commonsNumberPhone}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.numberPhone}" styleClass="outputLabel"/>
+
+                                    <h:outputText value="#{msg.commonsSourceCard}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.sourceCard}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.Destinate}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.destinationCard}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.commonsTransferAmount}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.transferAmount}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.commonsTransactionConcept}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.concept}" styleClass="outputLabel"/>
+
+                                </h:panelGrid>
+                            </p:panel>
+                        </p:tab>
+                        <p:tab id="confirmationEnd">
+                            <p:panel header="#{msg.transferTitleSucces}">
+                                
                             <h:panelGrid columns="2" columnClasses="label, value">
-                                
-                                <p:row style="color:#FF039BE5;">
-                                    <h3 >Información de tarjeta destino</h3>
-                                </p:row>
-                                <br/>
-                                
+
                                 <h:outputText value="#{msg.commonsCardHolder}: "/>
-                                <h:outputText value="#{transferBetweenCardsController.cardHolder}" styleClass="outputLabel"/>
+                                    <h:outputText value="#{transferBetweenCardsController.cardHolder}" styleClass="outputLabel"/>
 
-                                <h:outputText value="#{msg.commonsNumberPhone}: "/>
-                                <h:outputText value="#{transferBetweenCardsController.numberPhone}" styleClass="outputLabel"/>
+                                    <h:outputText value="#{msg.commonsNumberPhone}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.numberPhone}" styleClass="outputLabel"/>
 
-                                <h:outputText value="#{msg.commonsSourceCard}: "/>
-                                <h:outputText value="#{transferBetweenCardsController.sourceCard}" styleClass="outputLabel"/>
+                                    <h:outputText value="#{msg.commonsSourceCard}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.sourceCard}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.Destinate}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.destinationCard}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.commonsTransferAmount}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.transferAmount}" styleClass="outputLabel"/>
+                                    
+                                    <h:outputText value="#{msg.commonsTransactionConcept}: "/>
+                                    <h:outputText value="#{transferBetweenCardsController.concept}" styleClass="outputLabel"/>
 
-                                <h:outputText value="#{msg.commonsDestinationCard}: "/>
-                                <h:outputText value="#{transferBetweenCardsController.destinationCard}" styleClass="outputLabel"/>
-                                
-                                <p:row style="color:#FF039BE5;">
-                                    <h3 >Complete la información del pago</h3>
-                                </p:row>
-                                <br/>
-
-                                <h:outputText value="#{msg.commonsTransferAmount}" />
-                                <p:inputNumber id="transferAmount" value="#{transferBetweenCardsController.transferAmount}" decimalPlaces="2" required="true"/>
-                               
-                                <h:outputText value="#{msg.commonsTransactionConcept}" />
-                                <p:inputText id="transactionConcept" value="#{transferBetweenCardsController.transactionConcept}" required="true"/>
                             </h:panelGrid>
-                        </p:panel>
-                    </p:tab>
+                                </p:panel>
+                        </p:tab>
+                    </p:wizard>
 
-                    <p:tab id="key" title="#{msg.titleTransferBetweenCards}">
-                        <p:panel header="#{msg.titleTransferBetweenCards}">
-                         <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
-                            <h:outputText value="#{msg.keyOperations}" />
-                            <p:inputText id="keyOperations" value="#{cardWithdrawalController.keyOperations}" />
-                         </p:panelGrid>
-                        </p:panel>
-                    </p:tab>
-                </p:wizard>
+                </p:panelGrid>
+            </div>
+            </f:view>
         </h:form>
     </ui:define>
 

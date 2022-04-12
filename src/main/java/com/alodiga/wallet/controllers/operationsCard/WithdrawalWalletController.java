@@ -153,9 +153,6 @@ public class WithdrawalWalletController {
             //Se obtiene la lista de países
             countryList = businessPortalEJBProxy.getCountries();
 
-            //Se obtiene la lista de bancos por usuario
-//            accountBankByUser = proxyUtilEJB.getAccountBankByUser();
-
             //Se obtiene la lista de productos del usuario
             productList = productEJBProxy.getProductsByWalletUser(Long.valueOf(user.getUsuarioID()));
              //Se obtiene la lista de bancos por usuario
@@ -487,7 +484,7 @@ public class WithdrawalWalletController {
             if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
                TransactionApproveRequestResponse transactionApproveRequestResponse = apiAlodigaWalletProxy.saveTransactionApproveRequest(Long.valueOf(user.getUsuarioID()), selectedProduct.getId(), Long.parseLong(transactionResponse.getIdTransaction()), selectedAccountBank.getId(), Long.valueOf(documentTypeId), Long.valueOf(originApplicationId));
                if (transactionApproveRequestResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
-                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualWithdrawals.saveSuccesfull")));
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("manualWithdrawalsSaveSuccesfull")));
                } 
             }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DISABLED_TRANSACTION.getCode())) {
                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));  

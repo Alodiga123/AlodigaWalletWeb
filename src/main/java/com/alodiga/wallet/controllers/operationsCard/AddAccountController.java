@@ -219,9 +219,9 @@ public class AddAccountController {
                accountBank = businessPortalEJBProxy.saveAccountBank(accountBank);
 
                if (accountBank != null) {
-                 FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
+                 FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("addBankAccountSaveSuccesfull")));
                }else{
-                  FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed"))); 
+                  FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("addBankAccountSaveError"))); 
                }
             
             } catch (Exception ex) {
