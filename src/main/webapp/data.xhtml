@@ -69,7 +69,7 @@
                 -webkit-box-shadow: none;
                 -moz-box-shadow: none;
                 background-color: black;
-                
+
             }
 
         </style>
@@ -110,37 +110,75 @@
 
             <div class="card">
 
+                <p:menubar>
+                    <p:submenu label="#{msg.tableWallet}" >                                
+                        <p:menuitem value="#{msg.manualRecharge}" outcome="/manualRechargeRequest"/>                                
+                        <p:menuitem value="#{msg.rechargeWallet}" outcome="/rechargeCard" />
+                        <p:menuitem value="#{msg.withdrawals}" outcome="/withdrawalWallet"/>
+                        <p:menuitem value="#{msg.convertion}" outcome="/converter"/>
+                    </p:submenu>
 
-                <div class="ui-g">
+                    <p:submenu label="#{msg.tableCard}" >
+                        <p:menuitem value="#{msg.cardApplication}" outcome="/data"/>                                
+                        <p:menuitem value="#{msg.activateAndDesactivateCard}" outcome="/activateCard" />
+                        <p:menuitem value="#{msg.rechargeCardHeader}" outcome="/rechargeCard"/>
+                        <p:menuitem value="#{msg.cardWithdrawal}" outcome="/data"/>
+                    </p:submenu>
 
-                    <div class="ui-g-4">
-                        <div class="ui-g card colorbox colorbox-1">
-                            <div class="ui-g-4">
-                                <i class="material-icons md-48" style="color:whitesmoke;font-size:50px">account_balance_wallet</i>
-                            </div>
-                            <div class="ui-g-4">
-                                <span class="colorbox-name" style="color: whitesmoke;font-size: 20px;margin-top: 10px">Gestionar Billetera</span>                                
-                            </div>
+                    <p:submenu label="#{msg.tableOperations}" >
+                        <p:menuitem value="#{msg.transferWallet}" outcome="/transfertWallet"/>                                
+                        <p:menuitem value="#{msg.transferCard}" outcome="/transferBetweenCards" />                        
+                    </p:submenu>
+
+                    <p:submenu label="#{msg.tableSecurity}" >
+                        <p:menuitem value="#{msg.securityPin}" outcome="/data"/>                                
+                        <p:menuitem value="#{msg.password}" outcome="/data"/>
+                        <p:menuitem value="#{msg.securityQuestions}" outcome="/data" />                        
+                    </p:submenu>
+
+                    <p:menuitem value="#{dtSelectionView.userName}" /> 
+
+                    <p:submenu label="#{msg.myProfile}" >
+                        
+                    </p:submenu>
+
+                    <p:menuitem value="#{msg.tableLogout}" action="#{dtSelectionView.logout}" />
+
+                </p:menubar>
+            </div>   
+
+
+
+
+            <div class="ui-g">
+
+                <div class="ui-g-4">
+                    <div class="ui-g card colorbox colorbox-1">
+                        <div class="ui-g-4">
+                            <i class="material-icons md-48" style="color:whitesmoke;font-size:50px">account_balance_wallet</i>
+                        </div>
+                        <div class="ui-g-4">
+                            <span class="colorbox-name" style="color: whitesmoke;font-size: 20px;margin-top: 10px">Gestionar Billetera</span>                                
                         </div>
                     </div>
-                    <div class="ui-g-4">
-                        <div class="ui-g card colorbox colorbox-1">
-                            <div class="ui-g-4">
-                                <i class="material-icons md-48" style="color: whitesmoke;font-size:50px">credit_card</i>
-                            </div>
-                            <div class="ui-g-4">
-                                <span class="colorbox-name" style="color: whitesmoke;font-size: 20px">Gestionar Tarjeta</span>                                
-                            </div>
+                </div>
+                <div class="ui-g-4">
+                    <div class="ui-g card colorbox colorbox-1">
+                        <div class="ui-g-4">
+                            <i class="material-icons md-48" style="color: whitesmoke;font-size:50px">credit_card</i>
+                        </div>
+                        <div class="ui-g-4">
+                            <span class="colorbox-name" style="color: whitesmoke;font-size: 20px">Gestionar Tarjeta</span>                                
                         </div>
                     </div>
-                    <div class="ui-g-4">
-                        <div class="ui-g card colorbox colorbox-1" style="height:105px">
-                            <div class="ui-g-4">
-                                <i class="material-icons md-48" style="color: whitesmoke;font-size:50px">settings</i>
-                            </div>
-                            <div class="ui-g-4" style="margin-top: 15px">
-                                <span class="colorbox-name" style="color: whitesmoke;font-size: 20px" align="center">Operaciones</span>                                
-                            </div>
+                </div>
+                <div class="ui-g-4">
+                    <div class="ui-g card colorbox colorbox-1" style="height:105px">
+                        <div class="ui-g-4">
+                            <i class="material-icons md-48" style="color: whitesmoke;font-size:50px">settings</i>
+                        </div>
+                        <div class="ui-g-4" style="margin-top: 15px">
+                            <span class="colorbox-name" style="color: whitesmoke;font-size: 20px" align="center">Operaciones</span>                                
                         </div>
                     </div>
                 </div>
@@ -170,42 +208,54 @@
                                 <h:outputText value="#{transaction.concept}" />
                             </p:column>
 
-                            <p:column headerText="#{msg.mount}" sortBy="#{transaction.amount}">
-                                <h:outputText value="#{transaction.amount}" />
-                            </p:column>
-
-
-                            <p:column headerText="#{msg.DestinationUser}" sortBy="#{transaction.destinationUser}">
-                                <h:outputText value="#{transaction.destinationUser}" />
-                            </p:column>
-                            
-                            <p:column headerText="#{msg.transactionType}" sortBy="#{transaction.transactionTypeId.value}">
-                                <h:outputText style="text-align: center" value="#{msg.convertion}" rendered="#{transaction.transactionType == '4'}" />
-
-                                <h:outputText style="text-align: center" value="#{msg.recharge}" rendered="#{transaction.transactionType == '1'}" />
-                                <h:outputText style="text-align: center" value="#{msg.payment}" rendered="#{transaction.transactionType == '2'}" />
-                                <h:outputText style="text-align: center" value="#{msg.transfer}" rendered="#{transaction.transactionType == '3'}" />
-                                <h:outputText style="text-align: center" value="#{msg.withdrawalsManual}" rendered="#{transaction.transactionType == '5'}" />
-                                <h:outputText style="text-align: center" value="#{msg.manualRecharge}" rendered="#{transaction.transactionType == '6'}" />
-                                <h:outputText style="text-align: center" value="#{msg.rechargeTopUp}" rendered="#{transaction.transactionType == '7'}" />
-                                <h:outputText style="text-align: center" value="#{msg.transferCard}" rendered="#{transaction.transactionType == '8'}" />
-                                <h:outputText style="text-align: center" value="#{msg.withdrawals}" rendered="#{transaction.transactionType == '13'}" />
-                            </p:column>
-
-                            <p:column headerText="+/-" sortBy="#{transaction.transactionType}">                            
-
-                                <h:outputText style="text-align: center" value="+" rendered="#{transaction.transactionType == '1' or transaction.transactionType == '2' 
-                                                                    or transaction.transactionType == '24' or transaction.transactionType == '7'}" />
-
-                                <h:outputText style="text-align: center" value="-" rendered="#{transaction.transactionType == '3' or transaction.transactionType == '4'
-                                                                    or transaction.transactionType == '5' or transaction.transactionType == '6' or transaction.transactionType == '27'}" />   
-                            </p:column>
-                            
-                        </p:dataTable>
-                    </div>
+                        </div>
+                    </p:dataList>
                 </div>
+                <div class="ui-g-12">
+                    <p:dataTable var="transaction"  value="#{dtSelectionView.maw_transactions}" paginator="true" rows="2" styleClass="products-datalist">
+                        <f:facet name="header">
+                            #{msg.DataTableMsg}
+                        </f:facet>
+                        <p:column headerText="#{msg.concept}" sortBy="#{transaction.concept}">
+                            <h:outputText value="#{transaction.concept}" />
+                        </p:column>
 
+                        <p:column headerText="#{msg.mount}" sortBy="#{transaction.amount}">
+                            <h:outputText value="#{transaction.amount}" />
+                        </p:column>
+
+
+                        <p:column headerText="#{msg.DestinationUser}" sortBy="#{transaction.destinationUser}">
+                            <h:outputText value="#{transaction.destinationUser}" />
+                        </p:column>
+
+                        <p:column headerText="#{msg.transactionType}" sortBy="#{transaction.transactionTypeId.value}">
+                            <h:outputText style="text-align: center" value="#{msg.convertion}" rendered="#{transaction.transactionType == '4'}" />
+
+                            <h:outputText style="text-align: center" value="#{msg.recharge}" rendered="#{transaction.transactionType == '1'}" />
+                            <h:outputText style="text-align: center" value="#{msg.payment}" rendered="#{transaction.transactionType == '2'}" />
+                            <h:outputText style="text-align: center" value="#{msg.transfer}" rendered="#{transaction.transactionType == '3'}" />
+                            <h:outputText style="text-align: center" value="#{msg.withdrawalsManual}" rendered="#{transaction.transactionType == '5'}" />
+                            <h:outputText style="text-align: center" value="#{msg.manualRecharge}" rendered="#{transaction.transactionType == '6'}" />
+                            <h:outputText style="text-align: center" value="#{msg.rechargeTopUp}" rendered="#{transaction.transactionType == '7'}" />
+                            <h:outputText style="text-align: center" value="#{msg.transferCard}" rendered="#{transaction.transactionType == '8'}" />
+                            <h:outputText style="text-align: center" value="#{msg.withdrawals}" rendered="#{transaction.transactionType == '13'}" />
+                        </p:column>
+
+                        <p:column headerText="+/-" sortBy="#{transaction.transactionType}">                            
+
+                            <h:outputText style="text-align: center" value="+" rendered="#{transaction.transactionType == '1' or transaction.transactionType == '2' 
+                                                                                           or transaction.transactionType == '24' or transaction.transactionType == '7'}" />
+
+                            <h:outputText style="text-align: center" value="-" rendered="#{transaction.transactionType == '3' or transaction.transactionType == '4'
+                                                                                           or transaction.transactionType == '5' or transaction.transactionType == '6' or transaction.transactionType == '27'}" />   
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
             </div>
+
+
         </h:form>
 
     </ui:define>
