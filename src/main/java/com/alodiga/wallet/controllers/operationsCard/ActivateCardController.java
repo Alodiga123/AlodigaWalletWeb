@@ -1,5 +1,6 @@
 package com.alodiga.wallet.controllers.operationsCard;
 
+import com.alodiga.cms.commons.ejb.CardEJB;
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.cms.ws.TransactionResponse;
@@ -12,7 +13,6 @@ import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
 import com.alodiga.wallet.common.utils.EJBServiceLocator;
-import com.alodiga.wallet.common.utils.EjbConstants;
 import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CardResponse;
@@ -49,8 +49,10 @@ import com.alodiga.wallet.utils.Utils;
 import com.alodiga.wallet.ws.PersonResponse;
 import com.cms.commons.enumeraciones.TransactionE;
 import com.cms.commons.models.Card;
+import java.text.DateFormat;
 import java.time.LocalDate;
 import static java.time.temporal.TemporalQueries.localDate;
+import com.cms.commons.util.EjbConstants;
 
 
 
@@ -86,23 +88,24 @@ public class ActivateCardController {
     private Utils utils;
     public String transformCardNumber;
     private CardResponse cardResponseWallet;
-    private String expirationDate;
-    private Card card = null;
+    private Date expirationDate;
+    private String convertionExpirationDate;
     private String email;
     private String phone;
     private String cvv;
     private String documentNumber;
     private String securityQuestions;
-    private Calendar dateOfBirth;
+    private Date dateOfBirth;
     private String cardHolder;
     private Calendar dateTransaction;
+    private Calendar converterDateOfBirth;
+    private Card card;
+    private List<Card> cardList = new ArrayList();
     
 
     @PostConstruct
     public void init() {
         try {
-
-            businessPortalEJBProxy = (BusinessPortalEJB) EJBServiceLocator.getInstance().get(EjbConstants.BUSINESS_PORTAL_EJB);
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
@@ -111,11 +114,6 @@ public class ActivateCardController {
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
-
-              //Se obtiene el producto por defecto asociado a la billetera
-            productResponse = apiAlodigaWalletProxy.getProductPrepaidCardByUser(Long.valueOf(user.getUsuarioID()));
-            String productName = productResponse.getResponse().getName();
-            this.sourceProduct = productName;
             
              //Se obtiene el nombre del usuario  
             personResponse = apiAlodigaWalletProxy.getPersonByEmail(user.getEmail());
@@ -123,20 +121,14 @@ public class ActivateCardController {
              //Se obtiene la tarjeta del usuario  
             cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
             cardNumber = cardResponseWallet.getCardNumber();
+            CardEJB  cardEJB = (CardEJB) EJBServiceLocator.getInstance().get(EjbConstants.CARD_EJB);
+            cardList  = cardEJB.getCardByEmail(user.getEmail());
+
 
             utils = new Utils();
             transformCardNumber = utils.transformCardNumber(cardNumber);
 
             cardHolder = cardResponseWallet.getCardHolder();
-            
-            //se Obtiene la fecha de expiracion de la tarjeta
-            SimpleDateFormat format = new SimpleDateFormat("MMyy");
-            expirationDate = format.format(card.getExpirationDate());
-
-            
-          //Fecha Actual
-          dateTransaction = Calendar.getInstance();
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -368,20 +360,12 @@ public class ActivateCardController {
         this.cardResponseWallet = cardResponseWallet;
     }
 
-    public String getExpirationDate() {
+    public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
     }
 
     public String getEmail() {
@@ -424,11 +408,11 @@ public class ActivateCardController {
         this.securityQuestions = securityQuestions;
     }
 
-    public Calendar getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Calendar dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -448,15 +432,8 @@ public class ActivateCardController {
     public void setCardHolder(String cardHolder) {
         this.cardHolder = cardHolder;
     }
-
- 
-
-    
-  
-    
     
     public String onFlowProcess(FlowEvent event) {
-//        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
         RespuestaUsuario respUser = new RespuestaUsuario();
         APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
         switch (event.getOldStep()) {
@@ -513,9 +490,21 @@ public class ActivateCardController {
       Long transactioExternalId = 1L;
       int countryAcquirerId = 862;
       FacesContext context = FacesContext.getCurrentInstance();
+      
       try{
+         //se Obtiene la fecha de expiracion de la tarjeta
+         SimpleDateFormat sdf = new SimpleDateFormat("MMyy");
+         convertionExpirationDate = sdf.format(cardResponseWallet.getCard().getExpirationDate());
+ 
+         //Fecha Actual
+         dateTransaction = Calendar.getInstance();
+        
+         Calendar converterDateOfBirth=Calendar.getInstance();
+         DateFormat format=new SimpleDateFormat("yyyy/mm/dd");
+         format.format(dateOfBirth);
+         converterDateOfBirth=format.getCalendar();
        
-       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.activateCard( cardNumber, cardHolder, cvv, expirationDate, documentNumber, phone, dateOfBirth, email, messageMiddlewareId, TransactionE.ACTIVACION_TARJETA.getId(), channelWallet, dateTransaction, "1", "1", "1", countryAcquirerId);
+       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.activateCard( cardNumber, cardHolder, cvv, convertionExpirationDate, documentNumber, phone, converterDateOfBirth, email, messageMiddlewareId, TransactionE.ACTIVACION_TARJETA.getId(), channelWallet, dateTransaction, "1", "1", "1", countryAcquirerId);
         if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
