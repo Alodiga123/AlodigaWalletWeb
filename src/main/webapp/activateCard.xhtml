@@ -22,7 +22,7 @@
                      <p:outputLabel value="#{msg.securityQuestionHeader}"/>
                      <br></br>
                      <p:outputLabel value="#{msg.cardholderDocumentNumber}"/>
-                     <p:inputNumber id="Document" value="#{activateCardController.documentNumber}" required="true" thousandSeparator=""/>
+                     <p:inputText id="Document" value="#{activateCardController.documentNumber}" required="true"/>
                      <p:outputLabel value="#{msg.dateofExpiry}"/>
                      <p:calendar value="#{activateCardController.expirationDate}" />
                      <p:outputLabel value="#{msg.dateOfBirth}"/>
@@ -30,9 +30,9 @@
                      <p:outputLabel value="#{msg.email}"/>
                      <p:inputText id="email1"  value="#{activateCardController.email}"/>
                      <p:outputLabel value="#{msg.phoneNumber}"/>
-                     <p:inputNumber value="#{activateCardController.phone}" id="phone"  required="true" maxlength="20" thousandSeparator=""/>
+                     <p:inputText value="#{activateCardController.phone}" id="phone"  required="true" maxlength="20"/>
                      <p:outputLabel value="#{msg.securityCode}" />
-                     <p:inputNumber value="#{activateCardController.cvv}" id="cvv" required="true" maxlength="3" thousandSeparator=""/>
+                     <p:inputText value="#{activateCardController.cvv}" id="cvv" required="true" maxlength="3"/>
                      <p:outputLabel value="#{msg.securityQuestions}"/>
                      <p:inputText id="answer" value="#{activateCardController.securityQuestions}" />
                      </h:panelGrid>

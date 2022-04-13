@@ -47,7 +47,10 @@ import org.primefaces.event.FlowEvent;
 import com.cms.commons.enumeraciones.ChannelE;
 import com.alodiga.wallet.utils.Utils;
 import com.alodiga.wallet.ws.PersonResponse;
+import com.cms.commons.enumeraciones.TransactionE;
 import com.cms.commons.models.Card;
+import java.time.LocalDate;
+import static java.time.temporal.TemporalQueries.localDate;
 
 
 
@@ -90,7 +93,9 @@ public class ActivateCardController {
     private String cvv;
     private String documentNumber;
     private String securityQuestions;
-    private Date dateOfBirth;
+    private Calendar dateOfBirth;
+    private String cardHolder;
+    private Calendar dateTransaction;
     
 
     @PostConstruct
@@ -121,12 +126,17 @@ public class ActivateCardController {
 
             utils = new Utils();
             transformCardNumber = utils.transformCardNumber(cardNumber);
+
+            cardHolder = cardResponseWallet.getCardHolder();
             
             //se Obtiene la fecha de expiracion de la tarjeta
             SimpleDateFormat format = new SimpleDateFormat("MMyy");
             expirationDate = format.format(card.getExpirationDate());
+
             
-         
+          //Fecha Actual
+          dateTransaction = Calendar.getInstance();
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -414,13 +424,32 @@ public class ActivateCardController {
         this.securityQuestions = securityQuestions;
     }
 
-    public Date getDateOfBirth() {
+    public Calendar getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(Calendar dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    public Calendar getDateTransaction() {
+        return dateTransaction;
+    }
+
+    public void setDateTransaction(Calendar dateTransaction) {
+        this.dateTransaction = dateTransaction;
+    }
+
+ 
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
+    }
+
+ 
 
     
   
@@ -478,31 +507,31 @@ public class ActivateCardController {
 
     }
 
-//   public void submit(){
-//      Long messageMiddlewareId = 1L;
-//      int channelWallet = ChannelE.WALLET.getId();
-//      Long transactioExternalId = 1L;
-//      int countryAcquirerId = 862;
-//      FacesContext context = FacesContext.getCurrentInstance();
-//      try{
-//       
-//       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.activateCard(cardNumber, user, cvv, expirationDate, documentNumber, transformCardNumber, phone, email, messageMiddlewareId, countryAcquirerId, channelWallet, transactionDate, idTranstaction, accountBankNumber, transactionNumber, countryAcquirerId);
-//        if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
-//                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
-//        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
-//               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
-//        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.ACTIVE_CARD_YES.getCode())) {
-//               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
-//        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DATE_BIRTH_NOT_MATCH.getCode())) {
-//               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
-//        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.EMAIL_CUSTOMER_NOT_MATCH.getCode())) {
-//               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
-//        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.PHONE_CUSTOMER_NOT_MATCH.getCode())) {
-//                FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
-//        }
-//        }catch (Exception ex) {
-//            ex.printStackTrace();
-//            Logger.getLogger(ActivateCardController.class.getName()).log(Level.SEVERE, null, ex);
-//       } 
-//     }
+   public void submit(){
+      Long messageMiddlewareId = 1L;
+      int channelWallet = ChannelE.WALLET.getId();
+      Long transactioExternalId = 1L;
+      int countryAcquirerId = 862;
+      FacesContext context = FacesContext.getCurrentInstance();
+      try{
+       
+       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.activateCard( cardNumber, cardHolder, cvv, expirationDate, documentNumber, phone, dateOfBirth, email, messageMiddlewareId, TransactionE.ACTIVACION_TARJETA.getId(), channelWallet, dateTransaction, "1", "1", "1", countryAcquirerId);
+        if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
+                   FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
+        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.ACTIVE_CARD_YES.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DATE_BIRTH_NOT_MATCH.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.EMAIL_CUSTOMER_NOT_MATCH.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.PHONE_CUSTOMER_NOT_MATCH.getCode())) {
+                FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            Logger.getLogger(ActivateCardController.class.getName()).log(Level.SEVERE, null, ex);
+       } 
+     }
 }
