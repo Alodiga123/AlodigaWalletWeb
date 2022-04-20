@@ -16,7 +16,7 @@
                 <p:panel header="#{msg.informationToActivateTheCard}">
                     <div align="center"  > 
                     <h:panelGrid columns="2" columnClasses="label, value">
-                     <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.user.nombre} #{activateCardController.user.apellido} #{msg.cardNumber} #{activateCardController.transformCardNumber}" />
+                        <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.cardHolder} #{msg.cardNumber} #{activateCardController.transformCardNumber}" />
                      <br></br>
                      <br></br>
                      <p:outputLabel value="#{msg.securityQuestionHeader}"/>
