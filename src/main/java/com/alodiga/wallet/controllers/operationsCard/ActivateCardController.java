@@ -12,7 +12,8 @@ import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
-import com.alodiga.wallet.common.utils.EJBServiceLocator;
+import com.cms.commons.util.EJBServiceLocator;
+import com.cms.commons.util.EjbConstants;
 import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CardResponse;
@@ -52,9 +53,6 @@ import com.cms.commons.models.Card;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import static java.time.temporal.TemporalQueries.localDate;
-import com.cms.commons.util.EjbConstants;
-
-
 
 
 @ManagedBean(name = "activateCardController")
@@ -99,7 +97,7 @@ public class ActivateCardController {
     private String cardHolder;
     private Calendar dateTransaction;
     private Calendar converterDateOfBirth;
-    private Card card;
+    private Card cardOrigin;
     private List<Card> cardList = new ArrayList();
     
 
@@ -108,6 +106,7 @@ public class ActivateCardController {
         try {
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
+            CardEJB  cardEJB = (CardEJB) EJBServiceLocator.getInstance().get(EjbConstants.CARD_EJB);
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
            
 
@@ -121,14 +120,18 @@ public class ActivateCardController {
              //Se obtiene la tarjeta del usuario  
             cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
             cardNumber = cardResponseWallet.getCardNumber();
-            CardEJB  cardEJB = (CardEJB) EJBServiceLocator.getInstance().get(EjbConstants.CARD_EJB);
             cardList  = cardEJB.getCardByEmail(user.getEmail());
+            for (Card card: cardList) {
+                cardOrigin = card;
+            }
 
 
             utils = new Utils();
             transformCardNumber = utils.transformCardNumber(cardNumber);
 
             cardHolder = cardResponseWallet.getCardHolder();
+
+            System.out.println("este es lo que imprime" + cardResponseWallet.getCard().getExpirationDate());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -494,8 +497,9 @@ public class ActivateCardController {
       try{
          //se Obtiene la fecha de expiracion de la tarjeta
          SimpleDateFormat sdf = new SimpleDateFormat("MMyy");
-         convertionExpirationDate = sdf.format(cardResponseWallet.getCard().getExpirationDate());
- 
+         
+         convertionExpirationDate = sdf.format(expirationDate);
+         
          //Fecha Actual
          dateTransaction = Calendar.getInstance();
         
