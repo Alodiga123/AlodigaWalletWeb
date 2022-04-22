@@ -1,5 +1,6 @@
 package com.alodiga.wallet.controllers.operationsCard;
 
+import com.alodiga.cms.commons.ejb.CardEJB;
 import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.cms.ws.TransactionResponse;
@@ -11,8 +12,8 @@ import com.alodiga.wallet.common.model.Country;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.Product;
 import com.alodiga.wallet.ws.ProductResponse;
-import com.alodiga.wallet.common.utils.EJBServiceLocator;
-import com.alodiga.wallet.common.utils.EjbConstants;
+import com.cms.commons.util.EJBServiceLocator;
+import com.cms.commons.util.EjbConstants;
 import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.alodiga.wallet.ws.BankListResponse;
 import com.alodiga.wallet.ws.CardResponse;
@@ -47,9 +48,11 @@ import org.primefaces.event.FlowEvent;
 import com.cms.commons.enumeraciones.ChannelE;
 import com.alodiga.wallet.utils.Utils;
 import com.alodiga.wallet.ws.PersonResponse;
+import com.cms.commons.enumeraciones.TransactionE;
 import com.cms.commons.models.Card;
-
-
+import java.text.DateFormat;
+import java.time.LocalDate;
+import static java.time.temporal.TemporalQueries.localDate;
 
 
 @ManagedBean(name = "activateCardController")
@@ -83,31 +86,33 @@ public class ActivateCardController {
     private Utils utils;
     public String transformCardNumber;
     private CardResponse cardResponseWallet;
-    private String expirationDate;
-    private Card card = null;
+    private Date expirationDate;
+    private String convertionExpirationDate;
     private String email;
     private String phone;
     private String cvv;
     private String documentNumber;
+    private String securityQuestions;
+    private Date dateOfBirth;
+    private String cardHolder;
+    private Calendar dateTransaction;
+    private Calendar converterDateOfBirth;
+    private Card cardOrigin;
+    private List<Card> cardList = new ArrayList();
+    
 
     @PostConstruct
     public void init() {
         try {
-
-            businessPortalEJBProxy = (BusinessPortalEJB) EJBServiceLocator.getInstance().get(EjbConstants.BUSINESS_PORTAL_EJB);
             apiAuthorizerCardManagementSystemProxy = new APIAuthorizerCardManagementSystemProxy();
             apiAlodigaWalletProxy = new APIAlodigaWalletProxy();
+            CardEJB  cardEJB = (CardEJB) EJBServiceLocator.getInstance().get(EjbConstants.CARD_EJB);
             msg = ResourceBundle.getBundle("com.alodiga.wallet.messages.message", Locale.forLanguageTag("es"));
            
 
             //Se obtiene el usuario de sesión
             session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
             user = (Usuario) session.getAttribute("user");
-
-              //Se obtiene el producto por defecto asociado a la billetera
-            productResponse = apiAlodigaWalletProxy.getProductPrepaidCardByUser(Long.valueOf(user.getUsuarioID()));
-            String productName = productResponse.getResponse().getName();
-            this.sourceProduct = productName;
             
              //Se obtiene el nombre del usuario  
             personResponse = apiAlodigaWalletProxy.getPersonByEmail(user.getEmail());
@@ -115,14 +120,18 @@ public class ActivateCardController {
              //Se obtiene la tarjeta del usuario  
             cardResponseWallet = apiAlodigaWalletProxy.getCardByEmail(user.getEmail());
             cardNumber = cardResponseWallet.getCardNumber();
+            cardList  = cardEJB.getCardByEmail(user.getEmail());
+            for (Card card: cardList) {
+                cardOrigin = card;
+            }
+
 
             utils = new Utils();
             transformCardNumber = utils.transformCardNumber(cardNumber);
-            
-            //se Obtiene la fecha de expiracion de la tarjeta
-            SimpleDateFormat format = new SimpleDateFormat("MMyy");
-            expirationDate = format.format(card.getExpirationDate());
-         
+
+            cardHolder = cardResponseWallet.getCardHolder();
+
+            System.out.println("este es lo que imprime" + cardResponseWallet.getCard().getExpirationDate());
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -354,20 +363,12 @@ public class ActivateCardController {
         this.cardResponseWallet = cardResponseWallet;
     }
 
-    public String getExpirationDate() {
+    public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(String expirationDate) {
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
     }
 
     public String getEmail() {
@@ -402,12 +403,40 @@ public class ActivateCardController {
         this.documentNumber = documentNumber;
     }
 
-   
-  
-    
+    public String getSecurityQuestions() {
+        return securityQuestions;
+    }
+
+    public void setSecurityQuestions(String securityQuestions) {
+        this.securityQuestions = securityQuestions;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public Calendar getDateTransaction() {
+        return dateTransaction;
+    }
+
+    public void setDateTransaction(Calendar dateTransaction) {
+        this.dateTransaction = dateTransaction;
+    }
+
+ 
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
+    }
     
     public String onFlowProcess(FlowEvent event) {
-//        APIAlodigaWalletProxy walletProxy = new APIAlodigaWalletProxy();
         RespuestaUsuario respUser = new RespuestaUsuario();
         APIRegistroUnificadoProxy unificadoProxy = new APIRegistroUnificadoProxy();
         switch (event.getOldStep()) {
@@ -464,21 +493,38 @@ public class ActivateCardController {
       Long transactioExternalId = 1L;
       int countryAcquirerId = 862;
       FacesContext context = FacesContext.getCurrentInstance();
+      
       try{
+         //se Obtiene la fecha de expiracion de la tarjeta
+         SimpleDateFormat sdf = new SimpleDateFormat("MMyy");
+         
+         convertionExpirationDate = sdf.format(expirationDate);
+         
+         //Fecha Actual
+         dateTransaction = Calendar.getInstance();
+        
+         Calendar converterDateOfBirth=Calendar.getInstance();
+         DateFormat format=new SimpleDateFormat("yyyy/mm/dd");
+         format.format(dateOfBirth);
+         converterDateOfBirth=format.getCalendar();
        
-       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.cardWithdrawalWallet(cardNumber, channelWallet, messageMiddlewareId, transactionAmount, "Retiro", transactioExternalId, countryAcquirerId);
+       TransactionResponse transactionResponse = apiAuthorizerCardManagementSystemProxy.activateCard( cardNumber, cardHolder, cvv, convertionExpirationDate, documentNumber, phone, converterDateOfBirth, email, messageMiddlewareId, TransactionE.ACTIVACION_TARJETA.getId(), channelWallet, dateTransaction, "1", "1", "1", countryAcquirerId);
         if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.SUCCESS.getCode())) {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
                FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
-        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
-               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
-        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.USER_HAS_NOT_BALANCE.getCode())) {
-               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.ACTIVE_CARD_YES.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.DATE_BIRTH_NOT_MATCH.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.EMAIL_CUSTOMER_NOT_MATCH.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
+        }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.PHONE_CUSTOMER_NOT_MATCH.getCode())) {
+                FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));       
         }
-       }catch (Exception ex) {
+        }catch (Exception ex) {
             ex.printStackTrace();
-            Logger.getLogger(CardWithdrawalController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ActivateCardController.class.getName()).log(Level.SEVERE, null, ex);
        } 
      }
 }

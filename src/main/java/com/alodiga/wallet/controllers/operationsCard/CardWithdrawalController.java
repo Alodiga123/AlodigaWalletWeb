@@ -4,7 +4,7 @@ import com.alodiga.cms.commons.ejb.PersonEJB;
 import com.alodiga.cms.ws.APIAuthorizerCardManagementSystemProxy;
 import com.alodiga.cms.ws.TransactionResponse;
 import com.alodiga.wallet.common.ejb.BusinessPortalEJB;
-import com.alodiga.wallet.common.enumeraciones.ResponseCodeE;
+import com.cms.commons.enumeraciones.ResponseCodeE;
 import com.alodiga.wallet.common.exception.KeyLongException;
 import com.alodiga.wallet.common.model.Bank;
 import com.alodiga.wallet.common.model.Country;
@@ -392,10 +392,10 @@ public class CardWithdrawalController {
                    FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("transferTitleSucces")));
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.INTERNAL_ERROR.getCode())) {
                FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
-//        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
-               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+        } else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.BALANCE_LESS_THAN_ALLOWED.getCode())) {
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));    
         }else if (transactionResponse.getCodigoRespuesta().equals(ResponseCodeE.USER_HAS_NOT_BALANCE.getCode())) {
-               context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, transactionResponse.getMensajeRespuesta(), null));    
+               FacesContext.getCurrentInstance().addMessage("notification", new FacesMessage(FacesMessage.SEVERITY_INFO, "", msg.getString("theOperationFailed")));   
         }
        }catch (Exception ex) {
             ex.printStackTrace();
