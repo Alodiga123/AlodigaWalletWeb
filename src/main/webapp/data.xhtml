@@ -207,9 +207,8 @@
                             <p:column headerText="#{msg.concept}" sortBy="#{transaction.concept}">
                                 <h:outputText value="#{transaction.concept}" />
                             </p:column>
-
-                        </div>
-                    </p:dataList>
+                        </p:dataTable>
+                    </div>
                 </div>
                 <div class="ui-g-12">
                     <p:dataTable var="transaction"  value="#{dtSelectionView.maw_transactions}" paginator="true" rows="2" styleClass="products-datalist">
