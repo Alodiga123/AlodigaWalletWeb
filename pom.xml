@@ -17,7 +17,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>6.0</version>
+            <version>6.2</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish</groupId>
@@ -63,15 +63,24 @@
         </dependency>
         <dependency>
             <groupId>com.alodiga</groupId>
-            <artifactId>MavenCardManagerSystemCommons</artifactId>
-            <version>1.0</version>
+            <artifactId>MavenAlodigaWalletWSClient</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.alodiga</groupId>
-            <artifactId>MavenAlodigaWalletWsClient</artifactId>
+            <artifactId>CardManagementSystemCommonsMaven</artifactId>
             <version>1.0</version>
         </dependency>
-        
+        <dependency>
+            <groupId>org.primefaces.extensions</groupId>
+            <artifactId>primefaces-extensions</artifactId>
+            <version>6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
     
     <repositories>

@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">#{msg.viewqr}</ui:define>
+
+    <ui:define name="content">
+        <h:form id="qrForm" >
+            
+                <div align="center">
+
+                    <p:panelGrid  columns="2" columnClasses="label,value" >
+
+                        <p:panel id="qrPanelId">
+                            <pe:qrCode id="qrCodeElem"
+                                       renderMethod="canvas"
+                                       text="#{viewqrController.qrtext}"
+                                       label="qrCodeLabel"
+                                       size="200"/>
+                        </p:panel>
+                    </p:panelGrid>
+                </div>
+
+
+           
+
+        </h:form>
+    </ui:define>
+
+</ui:composition>
