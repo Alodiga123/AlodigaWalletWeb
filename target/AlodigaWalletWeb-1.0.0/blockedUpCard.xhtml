@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <ui:define name="title">#{msg.titleWalletWithdrawal}</ui:define>
+    <ui:define name="content">
+        <h:form>
+            <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
+            <p:panel id="verification"  rendered="#{not blockedUpController.verifyCard()}">
+                <div align="center">
+                    <h1>Su tarjeta debe ser activada</h1>
+                    <p:commandButton type="button" value="Back" icon="pi pi-check" action="dashboard.xhtml?faces-redirect=true" />
+                </div>
+            </p:panel>
+             <p:panel id="verificationActivateCard">
+                <div align="center">
+                <c:if test="#{blockedUpController.blockedUpCard == true}">
+                     <h1>#{msg.unblocked}</h1> 
+                </c:if>
+                <c:if test="#{blockedUpController.blockedUpCard == false}">
+                    <h1>#{msg.blocked}</h1> 
+                </c:if>
+                <p:selectOneRadio id="radioBlocked" value="#{blockedUpController.radioBlocked}">
+                    <f:selectItem itemLabel="#{msg.blockedYes}" itemValue="true" />  
+                    <f:selectItem itemLabel="#{msg.blockedNo}" itemValue="false" /> 
+                </p:selectOneRadio> 
+                <br/>
+                <p:commandButton value="#{msg.buttonSaveBlockedCard}" icon="ui-icon-save" action="#{blockedUpController.changeBlocked()}"/>    
+                <br/>
+                <br/>
+                </div>
+            </p:panel>
+        </h:form>    
+    </ui:define>
+</ui:composition>

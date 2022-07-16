@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">#{msg.rechargeCardHeader}</ui:define>
+
+    <ui:define name="content">
+        <h:form id="rechargeCardForm">
+            <p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true"/> 
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <div align="center" style="background-color:#EBF5FB; width: 100%;">
+                                <h1>#{msg.rechargeCardHeader}</h1>
+                                <f:facet name="header">
+                                    <p:messages id="messages" autoUpdate="true" closable="true" />
+                                </f:facet>
+                                <h:panelGrid id="rechargeCardInfoGrid" columns="2">
+                                    <p:outputLabel value="#{msg.sourceProduct}" for="sourceProduct" />
+                                    <p:inputText id="sourceProduct" value="#{rechargeCardController.sourceProduct}" required="false"/>
+                                    
+                                    <p:outputLabel value="#{msg.rechargeAmount}" for="rechargeAmount" />
+                                    <p:inputNumber id="rechargeAmount" value="#{rechargeCardController.rechargeAmount}" decimalPlaces="2" required="false"/>
+                                    
+                                    <p:outputLabel value="#{msg.rechargeConcept}" for="rechargeConcept" />
+                                    <p:inputText id="rechargeConcept" value="#{rechargeCardController.rechargeConcept}" required="false"/>
+                                </h:panelGrid>
+                            </div>
+                            <br/>
+
+                            <div align="center">
+                                <p:panelGrid  columns="1" >
+                                    <p:commandButton value="#{msg.buttonRechargeCard}" icon="ui-icon-save" action="#{rechargeCardController.submit()}"/>
+                                </p:panelGrid>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>    
+    </ui:define>
+
+</ui:composition>
