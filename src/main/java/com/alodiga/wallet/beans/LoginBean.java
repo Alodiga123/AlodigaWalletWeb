@@ -8,33 +8,18 @@ import com.alodiga.wallet.common.utils.S3cur1ty3Cryt3r;
 import com.alodiga.wallet.parent.GenericController;
 import com.alodiga.wallet.ws.APIAlodigaWalletProxy;
 import com.alodiga.wallet.ws.Product;
-import com.alodiga.wallet.ws.ProductListResponse;
-import com.ericsson.alodiga.ws.APIRegistroUnificadoProxy;
-import com.ericsson.alodiga.ws.RespuestaUsuario;
-import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.primefaces.context.RequestContext;
+
 
 @ManagedBean(name = "loginBean")
 @SessionScoped
@@ -106,105 +91,105 @@ public class LoginBean extends GenericController implements Serializable {
 
     public String loginProject() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         
-        APIRegistroUnificadoProxy proxy = new APIRegistroUnificadoProxy();
-        RespuestaUsuario respuestaUsuario = new RespuestaUsuario();
-        if (uname.isEmpty()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Error Usuario", "El campo usuario no puede estar vacío");                   
-            uname = null;
-        } else if (password.isEmpty()) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Error Usuario", "El campo contraseña no puede estar vacío");
-            password = null;
-        } else {
-            try {
+//        APIRegistroUnificadoProxy proxy = new APIRegistroUnificadoProxy();
+//        RespuestaUsuario respuestaUsuario = new RespuestaUsuario();
+//        if (uname.isEmpty()) {
+//            addMessage(FacesMessage.SEVERITY_ERROR, "Error Usuario", "El campo usuario no puede estar vacío");                   
+//            uname = null;
+//        } else if (password.isEmpty()) {
+//            addMessage(FacesMessage.SEVERITY_ERROR, "Error Usuario", "El campo contraseña no puede estar vacío");
+//            password = null;
+//        } else {
+//            try {
 
-                String pass = S3cur1ty3Cryt3r.aloDesencript(password, "1nt3r4xt3l3ph0ny", null, "DESede", "0123456789ABCDEF");
-                respuestaUsuario = proxy.loginAplicacionMovil("usuarioWS", "passwordWS", uname, null, pass, "");
-                System.out.println("codigo respuest " + respuestaUsuario.getCodigoRespuesta()) ;
-                if (respuestaUsuario.getCodigoRespuesta().equals("00")) {
-                    HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-                    HttpSession session = request.getSession(false);
-                    session.setAttribute("user", respuestaUsuario.getDatosRespuesta());
-                    session.setAttribute("userId", respuestaUsuario.getDatosRespuesta().getUsuarioID());
-                    session.setAttribute("countryId", respuestaUsuario.getDatosRespuesta().getDireccion().getPaisId());
-                    session.setAttribute("zipCode", respuestaUsuario.getDatosRespuesta().getDireccion().getCodigoPostal());
-                    return "data.xhtml?faces-redirect=true";
-                } else {
-                    FacesContext.getCurrentInstance().addMessage(
-                            null,
-                            new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                    respuestaUsuario.getMensajeRespuesta(),
-                                    "Intente nuevamente"));
-                    return "login.xhtml";
-                }
+//                String pass = S3cur1ty3Cryt3r.aloDesencript(password, "1nt3r4xt3l3ph0ny", null, "DESede", "0123456789ABCDEF");
+//                respuestaUsuario = proxy.loginAplicacionMovil("usuarioWS", "passwordWS", uname, null, pass, "");
+//                System.out.println("codigo respuest " + respuestaUsuario.getCodigoRespuesta()) ;
+//                if (respuestaUsuario.getCodigoRespuesta().equals("00")) {
+//                    HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//                    HttpSession session = request.getSession(false);
+//                    session.setAttribute("user", respuestaUsuario.getDatosRespuesta());
+//                    session.setAttribute("userId", respuestaUsuario.getDatosRespuesta().getUsuarioID());
+//                    session.setAttribute("countryId", respuestaUsuario.getDatosRespuesta().getDireccion().getPaisId());
+//                    session.setAttribute("zipCode", respuestaUsuario.getDatosRespuesta().getDireccion().getCodigoPostal());
+//                    return "data.xhtml?faces-redirect=true";
+//                } else {
+//                    FacesContext.getCurrentInstance().addMessage(
+//                            null,
+//                            new FacesMessage(FacesMessage.SEVERITY_WARN,
+//                                    respuestaUsuario.getMensajeRespuesta(),
+//                                    "Intente nuevamente"));
+//                    return "login.xhtml";
+//                }
                 
 
                 
-            } catch (RegisterNotFoundException ex) {
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_WARN,
-                                "Usuario o password invalido",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (NullParameterException ex) {
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Usuario vacio",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (GeneralException ex) {
-                ex.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error general",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (IllegalBlockSizeException ex) {
-                ex.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error general",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (NoSuchPaddingException ex) {
-                ex.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error general",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (BadPaddingException ex) {
-                ex.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error general",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (KeyLongException ex) {
-                ex.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error general",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage(
-                        null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Error general",
-                                "Intente nuevamente"));
-                return "login.xhtml";
-            }
-        }
+//            } catch (RegisterNotFoundException ex) {
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_WARN,
+//                                "Usuario o password invalido",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (NullParameterException ex) {
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Usuario vacio",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (GeneralException ex) {
+//                ex.printStackTrace();
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Error general",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (IllegalBlockSizeException ex) {
+//                ex.printStackTrace();
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Error general",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (NoSuchPaddingException ex) {
+//                ex.printStackTrace();
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Error general",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (BadPaddingException ex) {
+//                ex.printStackTrace();
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Error general",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (KeyLongException ex) {
+//                ex.printStackTrace();
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Error general",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//                FacesContext.getCurrentInstance().addMessage(
+//                        null,
+//                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//                                "Error general",
+//                                "Intente nuevamente"));
+//                return "login.xhtml";
+//            }
+//        }
 
-        return null;
+           return "data.xhtml?faces-redirect=true";
     }
 
     public String logout() {

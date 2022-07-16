@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Retirar de la tarjeta</ui:define>
+    <ui:define name="content">
+    <h:form>
+        <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
+
+      <p:wizard nextLabel="#{msg.next}" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{cardWithdrawalController.onFlowProcess}">
+          <p:tab id="ActiveCard" title="#{msg.activeCard}">
+              
+                <p:panel header="#{msg.informationToActivateTheCard}">
+                    <div align="center"  > 
+                    <h:panelGrid columns="2" columnClasses="label, value">
+                        <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.cardHolder} #{msg.cardNumber} #{activateCardController.transformCardNumber}" />
+                     <br></br>
+                     <br></br>
+                     <p:outputLabel value="#{msg.securityQuestionHeader}"/>
+                     <br></br>
+                     <p:outputLabel value="#{msg.cardholderDocumentNumber}"/>
+                     <p:inputText id="Document" value="#{activateCardController.documentNumber}" required="true"/>
+                     
+                     <p:outputLabel value="#{msg.dateofExpiry}"/>
+                     <p:calendar value="#{activateCardController.expirationDate}" />
+                     
+                     <p:outputLabel value="#{msg.dateOfBirth}"/>
+                     <p:calendar value="#{activateCardController.dateOfBirth}"/>
+                     
+                     <p:outputLabel value="#{msg.email}"/>
+                     <p:inputText id="email1"  value="#{activateCardController.email}"/>
+                     
+                     <p:outputLabel value="#{msg.phoneNumber}"/>
+                     <p:inputText value="#{activateCardController.phone}" id="phone"  required="true" maxlength="20"/>
+                     
+                     <p:outputLabel value="#{msg.securityCode}" />
+                     <p:inputText value="#{activateCardController.cvv}" id="cvv" required="true" maxlength="3"/>
+                     
+                     
+                     </h:panelGrid>
+                     </div>
+                </p:panel>
+              
+            </p:tab>
+
+          <p:tab id="key" title="#{msg.specialOpsKey}">
+                <p:panel header="#{msg.transferTitle}">
+                 <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                    <h:outputText value="#{msg.keyOperations}" />
+                    <p:inputText id="keyOperations" value="#{cardWithdrawalController.keyOperations}" />
+                 </p:panelGrid>
+                </p:panel>
+            </p:tab>
+
+          <p:tab id="confirmation" title="#{msg.confirm}">
+                <p:panel header="Confirm">
+                    <h:panelGrid columns="2" columnClasses="label, value">
+                        
+                     <p:outputLabel value="#{msg.nameOfOwner} : #{activateCardController.user.nombre} #{activateCardController.user.apellido} #{msg.cardNumber} #{activateCardController.transformCardNumber}" />
+                     <br></br>
+                     <br></br>
+                     
+                     <h:outputText value="#{msg.cardholderDocumentNumber}"/>
+                     <h:outputText value="#{activateCardController.documentNumber}"/>
+                     
+                     <h:outputText value="#{msg.dateofExpiry}"/>
+                     <h:outputText value="#{activateCardController.expirationDate}"/>
+                     
+                     <h:outputText value="#{msg.dateOfBirth}"/>
+                     <h:outputText value="#{activateCardController.dateOfBirth}"/>
+                     
+                     <h:outputText value="#{msg.email}"/>
+                     <h:outputText value="#{activateCardController.email}"/>
+                     
+                     <h:outputText value="#{msg.phoneNumber}"/>
+                     <h:outputText value="#{activateCardController.phone}"/>
+                    
+                     
+                     
+                     <p:commandButton value="#{msg.confirm}" icon="ui-icon-save" action="#{activateCardController.submit()}"/>
+                    </h:panelGrid>
+                </p:panel>
+            </p:tab>
+        </p:wizard> 
+     </h:form>  
+    </ui:define>
+
+</ui:composition>
