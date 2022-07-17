@@ -24,6 +24,10 @@ body{
     width: 100%;
 }
 
+body .ui-button.danger {
+    background-color: var(--color-danger) !important;
+}
+
 
 /* ESTILOS PARA CAJAS */
 .border-radius--1 {
@@ -63,10 +67,7 @@ body{
     #loginForm .pass-input {
         margin-top: 30px;
     }
-
-    body .ui-button.danger {
-        background-color: var(--color-danger) !important;
-    }
+    
     .img-logo{
         width: 40%;
     }
