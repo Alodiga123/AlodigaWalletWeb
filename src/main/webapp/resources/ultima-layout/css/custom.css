@@ -25,6 +25,13 @@ body{
 }
 
 
+/* ESTILOS PARA CAJAS */
+.border-radius--1 {
+    border-radius: 2rem;
+    box-shadow: 0px 0px 20px 5px rgba(0,0,0,.15);
+}
+
+
 
 @media (max-width: 991px) {
     .container-box-login{
@@ -62,5 +69,13 @@ body{
     }
     .img-logo{
         width: 40%;
+    }
+    
+    .title--1 {
+        font-family: "Roboto", Helvetica, sans-serif;
+        font-size: 40px;
+        font-weight: bolder;
+        text-transform: uppercase;
+        text-align: center;
     }
 }
