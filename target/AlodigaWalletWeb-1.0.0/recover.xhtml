@@ -16,7 +16,7 @@
         <h:outputScript name="js/layout.js" library="ultima-layout" />
   
     </h:head>
-    <h:body styleClass="login-body" >
+    <h:body>
         <f:view contentType="text/html" locale="es" id="fview" >
             
             <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
@@ -24,7 +24,7 @@
                 <div class="card login-panel ui-fluid">
                     <div class="ui-g">
                         <div class="ui-g-12">
-                            <p:graphicImage name="images/img-alodiga-logo.png" library="ultima-layout" />
+                            <p:graphicImage name="images/alocash.svg" library="ultima-layout" styleClass="logo__recover" />
                         </div>
                         
                         
@@ -58,6 +58,7 @@
             </div>
             <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
             <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+            <h:outputStylesheet name="css/custom.css" library="ultima-layout" />
         </f:view>
     </h:body>
 </html>

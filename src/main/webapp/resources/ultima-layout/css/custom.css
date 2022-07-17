@@ -42,10 +42,15 @@ body{
 /*** ESTILOS PARA VERSIÓN ESCRITORIO *****/
 @media screen and (min-width: 992px) {
     
-    #loginForm img {
+    #loginForm img,
+    .logo__recover {
         display: flex;
         margin: 0 auto 15px;
         width: 150px;
+    }
+    
+    .logo__recover {
+        margin-bottom: 10px;
     }
 
     #loginForm .pass-input {
