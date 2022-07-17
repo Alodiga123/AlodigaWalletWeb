@@ -33,6 +33,9 @@ body{
         box-shadow: none;
         border-radius: none;
     }
+    .img-logo{
+        width: 25%;
+    }
 }
 
 
@@ -50,5 +53,8 @@ body{
 
     body .ui-button.danger {
         background-color: var(--color-danger) !important;
+    }
+    .img-logo{
+        width: 40%;
     }
 }
