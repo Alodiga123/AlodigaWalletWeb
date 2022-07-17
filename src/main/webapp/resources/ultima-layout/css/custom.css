@@ -1,0 +1,54 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jul 16, 2022, 4:34:53 PM
+    Author     : aserrano
+*/
+body{
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    --color-danger: #E91E63;
+}
+.container-box-login{
+    width: 80%;
+    height: 80%;
+    border-radius: 2rem;
+    box-shadow: 0px 0px 20px 5px rgba(0,0,0,.15);
+    background-color: white;
+}
+
+#loginForm .md-inputfield input {
+    width: 100%;
+}
+
+
+
+@media (max-width: 991px) {
+    .container-box-login{
+        width: 100%;
+        height: 100%;
+        box-shadow: none;
+        border-radius: none;
+    }
+}
+
+
+/*** ESTILOS PARA VERSIÓN ESCRITORIO *****/
+@media screen and (min-width: 992px) {
+    
+    #loginForm img {
+        display: flex;
+        margin: 0 auto 25px;
+    }
+
+    #loginForm .pass-input {
+        margin-top: 30px;
+    }
+
+    body .ui-button.danger {
+        background-color: var(--color-danger) !important;
+    }
+}

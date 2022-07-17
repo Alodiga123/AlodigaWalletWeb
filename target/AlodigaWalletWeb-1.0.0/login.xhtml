@@ -1,58 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <h:head>
-        <title>#{msg.title}</title>
-        <h1><p align="center">Iniciar Sesión en Billetera Web</p></h1>
-    </h:head>
-    <h:body >
-        <f:view contentType="text/html" locale="es" id="fview" >
-            <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
-            <h:form id="loginForm" >                        
-                <div class="card login-panel ui-fluid">
-                    <div class="ui-g">
-                        <div class="ui-g-12">
-                            <p:graphicImage name="images/splasss.png" library="ultima-layout" />
-                            <!--<p:graphicImage name="images/img-alodiga-logo.png" library="ultima-layout" />-->
-                        </div>
-                        <div class="ui-g-12">
-                            <h:panelGroup styleClass="md-inputfield">
-                                <p:inputText id="username" value="#{loginBean.uname}" required="true" requiredMessage="#{msg.emptyUsername}"/>
-                                <label>#{msg.loginUsermane}</label>                                        
-                            </h:panelGroup>
-                        </div>
-                 
-                        <div class="ui-g-12">
-                            <h:panelGroup styleClass="md-inputfield">
-                                <p:password id="password" value="#{loginBean.password}"  feedback="false" required="true" requiredMessage="#{msg.emptyPassword}"/>
-                                <label>#{msg.loginPassword}</label>                                        
-                            </h:panelGroup>
-                        </div>
-                        <div class="ui-g-12">
-                            <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}"  ajax="true"></p:commandButton>
-                            <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" styleClass="secondary"/>
-                        </div>
-                        <div class="ui-g-12">
-                            <p:button onclick="window.open('/AlodigaWalletWebRegister-1.0/')" href="/AlodigaWalletWebRegister-1.0/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" />
-                        </div>
-                    </div>  
-                </div>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui" xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>#{msg.title}</title>
+    <h1 class="d-none">
+        <p align="center">Iniciar Sesión en Billetera Web</p>
+    </h1>
+</h:head>
+<h:body>
+    <f:view contentType="text/html" locale="es" id="fview">
+        <div class="d-flex flex-column h-100 w-100">
 
-            </h:form>
 
-                    <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
-                    <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
-                </f:view>
-            <p:layoutUnit position="south" style="border: none">
-                <div  style="color: #757575; text-align: center;">
-                    #{msg.copyright}
-                    <p:graphicImage name="images/icon-mc.png" library="ultima-layout" />
-                    <p:graphicImage name="images/icon-veri.png" library="ultima-layout" />
-                    <p:graphicImage name="images/icon-visa.png" library="ultima-layout" />
+            <div class="container-box-login d-flex justify-content-center aling-items-center flex-column-reverse flex-lg-row m-auto p-2 p-lg-0 overflow-auto">
+                <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true" />
+
+                <h:form id="loginForm" class="col-12 col-lg-6 d-flex flex-column">
+                    <div class="col-12 col-md-6 m-auto">
+                        <div class="col-12 d-flex justify-content-center aling-items-center flex-column">
+                            <div class="d-flex justify-content-center">
+                                <p:graphicImage name="images/splasss.png" library="ultima-layout" />
+                                <div class="col-12 col-lg-6 d-flex justify-content-center aling-items-end d-lg-none">
+                                    <p:graphicImage name="images/persons.jpg" library="ultima-layout" class="w-75 h-75"/> 
+                               </div>
+                            </div>
+                            <div class="mt-3">
+                                <h:panelGroup  styleClass="md-inputfield">
+                                    <p:inputText id="username" value="#{loginBean.uname}" required="true"
+                                        requiredMessage="#{msg.emptyUsername}"/>
+                                    <label>#{msg.loginUsermane}</label>
+                                </h:panelGroup>
+                            </div>
+                            <div class="mt-4">
+                                <h:panelGroup styleClass="md-inputfield">
+                                <p:password id="password" value="#{loginBean.password}" feedback="false"
+                                    required="true" requiredMessage="#{msg.emptyPassword}"/>
+                                <label>#{msg.loginPassword}</label>
+                            </h:panelGroup>
+                            </div>
+                            
+                            
+                            <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}" ajax="true" class="mt-5"></p:commandButton>
+                            <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" class="danger mt-3"/>
+                            <p:button onclick="window.open('/AlodigaWalletWebRegister/')" href="/AlodigaWalletWebRegister/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" class="mt-3"/>
+                            
+                        </div>
+                    </div>
+                </h:form>
+                <div class="col-12 col-lg-6 d-flex justify-content-center aling-items-end">
+                     <p:graphicImage name="images/persons.jpg" library="ultima-layout" class="d-none d-lg-block w-75 h-75"/> 
                 </div>
-            </p:layoutUnit>
-    </h:body>
+            </div>
+            
+        </div>
+
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/bootstrap.css" library="ultima-layout" />
+        <h:outputStylesheet name="css/custom.css" library="ultima-layout" />
+    </f:view>
+    <p:layoutUnit position="south" style="border: none" class="d-none">
+        <div style="color: #75757570; text-align: center;">
+            #{msg.copyright}
+            <p:graphicImage name="images/icon-mc.png" library="ultima-layout" />
+            <p:graphicImage name="images/icon-veri.png" library="ultima-layout" />
+            <p:graphicImage name="images/icon-visa.png" library="ultima-layout" />
+        </div>
+    </p:layoutUnit>
+</h:body>
+
 </html>
