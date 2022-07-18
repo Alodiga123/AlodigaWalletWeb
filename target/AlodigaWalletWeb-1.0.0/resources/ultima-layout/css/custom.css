@@ -29,6 +29,7 @@ body .ui-button.danger {
 }
 
 
+
 /* ESTILOS PARA CAJAS */
 .border-radius--1 {
     border-radius: 2rem;
@@ -44,10 +45,24 @@ body .ui-button.danger {
         box-shadow: none;
         border-radius: none;
     }
+    .container-box-login form{
+        overflow: auto;
+        height: 100%
+    }
     .img-logo{
         width: 25%;
     }
+    .box-logo-login{
+        position: absolute;
+        top: 0px;
+    }
 }
+@media (max-width: 991px) {
+    .container-box-login form{
+        overflow: no-content;
+    }
+}
+
 
 
 /*** ESTILOS PARA VERSIÓN ESCRITORIO *****/

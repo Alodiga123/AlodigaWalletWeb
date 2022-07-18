@@ -23,28 +23,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <div class="d-flex flex-column h-100 w-100">
 
 
-                <div class="container-box-login d-flex justify-content-center aling-items-center flex-column-reverse flex-lg-row m-auto p-2 p-lg-0 overflow-auto">
-                    <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true" />
+                    <div class="container-box-login d-flex justify-content-center aling-items-center flex-column-reverse flex-lg-row m-auto overflow-auto">
+<!--                    <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true" />-->
 
-                    <h:form id="loginForm" class="col-12 col-lg-6 d-flex flex-column">
-                        <div class="col-11 col-lg-6 m-auto">
-                            <div class="col-12 d-flex justify-content-center aling-items-center flex-column">
-                                <div class="col-12 d-flex justify-content-center align-items-center flex-column">
-                                    <div class="col-6 col-md-4">
-                                        <p:graphicImage name="images/alocash.svg" library="ultima-layout"/>
+                    <h:form id="loginForm" class="col-12 col-lg-5 d-flex flex-column pt-md-5 pt-mb-5">
+                        <div class="col-12 col-lg-7 m-auto">
+                            <div class="col-12 d-flex justify-content-center align-items-center flex-column">
+                                <div class="col-12 d-flex justify-content-center align-items-center flex-column position-relative">
+                                    <div class="col-4 col-md-3 col-lg-6 box-logo-login">
+                                        <p:graphicImage name="images/alocash.svg" library="ultima-layout" class="w-100"/>
                                     </div>
-                                    <div class="col-12 d-flex justify-content-center aling-items-end d-lg-none">
+                                    <div class="col-12 d-flex justify-content-center aling-items-end d-lg-none  mt-5 mt-md-0">
                                         <p:graphicImage name="images/persons.jpg" library="ultima-layout" class="w-100"/> 
                                     </div>
                                 </div>
-                                <div class="col-12 mt-3">
+                                <div class="col-11 col-lg-12 mt-3">
                                     <h:panelGroup  styleClass="md-inputfield">
                                         <p:inputText id="username" value="#{loginBean.uname}" required="true"
                                                      requiredMessage="#{msg.emptyUsername}"/>
                                         <label>#{msg.loginUsermane}</label>
                                     </h:panelGroup>
                                 </div>
-                                <div class="col-12 mt-4">
+                                <div class="col-11 col-lg-12 mt-4">
                                     <h:panelGroup styleClass="md-inputfield">
                                         <p:password id="password" value="#{loginBean.password}" feedback="false"
                                                     required="true" requiredMessage="#{msg.emptyPassword}"/>
@@ -52,19 +52,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                     </h:panelGroup>
                                 </div>
 
-
-                                <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}" ajax="true" class="mt-5"></p:commandButton>
-                                <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" class="danger mt-3"/>
-                                <p:button onclick="window.open('/AlodigaWalletWebRegister/')" href="/AlodigaWalletWebRegister/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" class="mt-3"/>
-
+                                <div class="col-11 col-lg-12 mt-5">
+                                    <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}" ajax="true" class="w-100"></p:commandButton>
+                                </div>
+                                <div class="col-11 col-lg-12 mt-3">
+                                    <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" class="danger w-100"/>
+                                </div>
+                                <div class="col-11 col-lg-12 mt-3">
+                                    <p:button onclick="window.open('/AlodigaWalletWebRegister/')" href="/AlodigaWalletWebRegister/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" class="w-100"/>
+                                </div>
                             </div>
                         </div>
                     </h:form>
-                    <div class="col-12 col-lg-6 d-flex justify-content-center align-items-end flex-lg-wrap">
-                        <h1 class="title--1 d-none d-lg-block">
-                            ¡vive la transformación Digital!
-                        </h1>
-                        <p:graphicImage name="images/persons.jpg" library="ultima-layout" class="d-none d-lg-block w-100 "/> 
+                    <div class="col-12 col-lg-7 d-flex justify-content-center align-items-end">
+                        <p:graphicImage name="images/persons.png" library="ultima-layout" class="d-none d-lg-block w-100 "/> 
                     </div>
                 </div>
 
