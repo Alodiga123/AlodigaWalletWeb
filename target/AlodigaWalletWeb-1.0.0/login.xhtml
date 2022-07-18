@@ -21,13 +21,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:body>
         <f:view contentType="text/html" locale="es" id="fview">
             <div class="d-flex flex-column h-100 w-100">
-
-
                     <div class="container-box-login d-flex justify-content-center aling-items-center flex-column-reverse flex-lg-row m-auto overflow-auto">
 <!--                    <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true" />-->
 
                     <h:form id="loginForm" class="col-12 col-lg-5 d-flex flex-column pt-md-5 pt-mb-5">
-                        <div class="col-12 col-lg-7 m-auto">
+                        <div class="col-12 col-lg-9 m-auto">
                             <div class="col-12 d-flex justify-content-center align-items-center flex-column">
                                 <div class="col-12 d-flex justify-content-center align-items-center flex-column position-relative">
                                     <div class="col-4 col-md-3 col-lg-6 box-logo-login">
@@ -52,14 +50,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                     </h:panelGroup>
                                 </div>
 
+
                                 <div class="col-11 col-lg-12 mt-5">
-                                    <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}" ajax="true" class="w-100"></p:commandButton>
+                                    <p:commandButton value="#{msg.loginSignins}" icon="ui-icon-person" update="loginForm" action="#{loginBean.loginProject}" ajax="true" class="button--1 w-100"></p:commandButton>
                                 </div>
                                 <div class="col-11 col-lg-12 mt-3">
-                                    <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" class="danger w-100"/>
+                                    <p:button outcome="/recover" value="#{msg.loginForgot}" icon="ui-icon-help" class="button--2 w-100"/>
                                 </div>
                                 <div class="col-11 col-lg-12 mt-3">
-                                    <p:button onclick="window.open('/AlodigaWalletWebRegister/')" href="/AlodigaWalletWebRegister/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" class="w-100"/>
+                                    <p:button onclick="window.open('/AlodigaWalletWebRegister/')" href="/AlodigaWalletWebRegister/" icon="ui-icon-edit" value="#{msg.loginAfiliate}" class="w-100 button--1"/>
                                 </div>
                             </div>
                         </div>
