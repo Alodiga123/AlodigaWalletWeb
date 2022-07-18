@@ -28,14 +28,6 @@ body .ui-button.danger {
     background-color: var(--color-yellow) !important;
 }
 
-
-
-/* ESTILOS PARA CAJAS */
-.border-radius--1 {
-    border-radius: 2rem;
-    box-shadow: 0px 0px 20px 5px rgba(0,0,0,.15);
-}
-
 /*ESTILOS PARA BOTONES*/
 .button--1 {
     background-color: #454d3e !important;

@@ -11,7 +11,7 @@
             <div class="nano">
                 <div class="nano-content menu-scroll-content">
                     <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
-                        <div class="profile">
+                        <div class="profile testing">
                             <div class="profile-image"></div>
                             <a id="profile-options" href="#">
                                 <span class="profile-name">Alodiga</span>
@@ -50,8 +50,8 @@
                     <pu:menu widgetVar="me">
                         
                         <p:menuitem id="um_dashboard" value="Dashboard PM" icon="&#xE871;" outcome="/dashboard"/>
-                        <p:menuitem id="um_dashboard2" value="Dashboard Billetera" icon="&#xE871;" outcome="/data"/>
-                        <p:submenu id="themes" label="Themes" icon="palette">
+                        <p:menuitem id="um_dashboard2" class="d-none" value="Dashboard Billetera" icon="&#xE871;" outcome="/data"/>
+                        <p:submenu id="themes" class="d-none" label="Themes" icon="palette">
                             <p:menuitem value="Indigo - Pink" icon="brush" actionListener="#{guestPreferences.setTheme('indigo')}" ajax="false" />
                             <p:menuitem value="Brown - Green" icon="brush" actionListener="#{guestPreferences.setTheme('brown')}" ajax="false" />
                             <p:menuitem value="Blue - Amber" icon="brush" actionListener="#{guestPreferences.setTheme('blue')}" ajax="false" />
@@ -65,15 +65,15 @@
                         </p:submenu>
                         <p:submenu id="um_customization" label="Validar Cuenta" icon="settings_application">
                             <p:menuitem id="validate_document" value="Documentos" icon="desktop_mac" outcome="/validate"/>
-                            <p:menuitem value="Static Menu" icon="menu" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
-                            <p:menuitem value="Overlay Menu" icon="exit_to_app" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
-                            <p:menuitem value="Horizontal Menu" icon="border_horizontal" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
-                            <p:menuitem value="Light Menu" icon="label_outline" actionListener="#{guestPreferences.setLightMenu}" ajax="false" />
-                            <p:menuitem value="Dark Menu" icon="label" actionListener="#{guestPreferences.setDarkMenu}" ajax="false"/>
-                            <p:menuitem value="Inline Profile" icon="contacts" actionListener="#{guestPreferences.setProfileMode('inline')}" ajax="false" />
-                            <p:menuitem value="Top Profile" icon="person_pin" actionListener="#{guestPreferences.setProfileMode('overlay')}" ajax="false"/>
+                            <p:menuitem value="Static Menu" class="d-none" icon="menu" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
+                            <p:menuitem value="Overlay Menu" class="d-none" icon="exit_to_app" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
+                            <p:menuitem value="Horizontal Menu" class="d-none" icon="border_horizontal" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
+                            <p:menuitem value="Light Menu" class="d-none" icon="label_outline" actionListener="#{guestPreferences.setLightMenu}" ajax="false" />
+                            <p:menuitem value="Dark Menu" class="d-none" icon="label" actionListener="#{guestPreferences.setDarkMenu}" ajax="false"/>
+                            <p:menuitem value="Inline Profile" class="d-none" icon="contacts" actionListener="#{guestPreferences.setProfileMode('inline')}" ajax="false" />
+                            <p:menuitem value="Top Profile" class="d-none" icon="person_pin" actionListener="#{guestPreferences.setProfileMode('overlay')}" ajax="false"/>
                         </p:submenu>
-                        <p:submenu id="um_components" label="Components" icon="list">
+                        <p:submenu id="um_components" class="d-none" label="Components" icon="list">
                             <p:menuitem id="um_sample" value="Sample Page" icon="desktop_mac" outcome="/sample" />
                             <p:menuitem id="um_forms" value="Forms" icon="input" outcome="/forms" />
                             <p:menuitem id="um_data" value="Data" icon="grid_on" outcome="/data" />
@@ -85,7 +85,7 @@
                             <p:menuitem id="um_file" value="File" icon="attach_file" outcome="/file" />
                             <p:menuitem id="um_misc" value="Misc" icon="toys" outcome="/misc" />
                         </p:submenu>
-                        <p:submenu id="um_default" label="Template Pages" icon="get_app">
+                        <p:submenu id="um_default" class="d-none" label="Template Pages" icon="get_app">
                             <p:menuitem id="um_db_landing" value="Landing" icon="flight_land" outcome="/landing"/>
                             <p:menuitem id="um_empty" value="Empty Page" icon="hourglass_empty" outcome="/empty" />
                             <p:menuitem id="um_login" value="Login Page" icon="verified_user" outcome="/login" />
@@ -109,7 +109,7 @@
                         <p:submenu id="um_operation" label="Operaciones" icon="get_app">
                             <p:menuitem id="operations" value="Agregar Cuenta" icon="menu" outcome="/addAccount" />
                         </p:submenu>
-                        <p:submenu id="um_hierarchy" label="Menu Hierarchy" icon="menu">
+                        <p:submenu id="um_hierarchy" class="d-none" label="Menu Hierarchy" icon="menu">
                             <p:submenu id="um_sm1" label="Submenu 1" icon="subject">
                                 <p:submenu id="um_sm11" label="Submenu 1.1" icon="subject">
                                     <p:menuitem id="um_lnk111" value="Link 1.1.1" icon="subject" url="#" />
@@ -130,7 +130,7 @@
                                 </p:submenu>
                             </p:submenu>
                         </p:submenu>
-                        <p:menuitem id="um_utils" value="Utils" icon="build" outcome="/utils"/>
+                        <p:menuitem id="um_utils" class="d-none" value="Utils" icon="build" outcome="/utils"/>
                         <p:menuitem id="um_doc" value="Documentation" icon="find_in_page" outcome="/docs"/>
                     </pu:menu>
                 </div>
