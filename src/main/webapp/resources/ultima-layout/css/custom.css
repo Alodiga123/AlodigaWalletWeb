@@ -81,15 +81,12 @@ body .ui-button.danger {
 
 /* MENÚ */
 .layout-wrapper .layout-menu .profile .profile-name,
-.layout-wrapper .ultima-menu li a,
- profile-options i {
-    color: rgba(255,255,255,.6) !important;
+.layout-wrapper .ultima-menu li a {
+    color: rgba(255,255,255,.6);
 }
 
-.layout-wrapper .ultima-menu li a:hover,
-.layout-wrapper .ultima-menu li.active-menuitem > a {
-    background-color: var(--color-yellow) !important;
-    color: var(--gray--1) !important;
+.layout-wrapper .ultima-menu li a:hover {
+    color: var(--gray--1);
 }
 
 .topbar-logo{
