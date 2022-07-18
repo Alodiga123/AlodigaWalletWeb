@@ -9,7 +9,7 @@
     <h:form id="menuform"> 
         <div class="layout-menu #{guestPreferences.menuClass}">
             <div class="nano">
-                <div class="nano-content menu-scroll-content">
+                <div class="nano-content menu-scroll-content bg-menu">
                     <ui:fragment rendered="#{guestPreferences.profileMode == 'inline' and guestPreferences.menuLayout != 'menu-layout-static menu-layout-horizontal'}">
                         <div class="profile testing">
                             <div class="profile-image"></div>
@@ -65,6 +65,7 @@
                         </p:submenu>
                         <p:submenu id="um_customization" label="Validar Cuenta" icon="settings_application">
                             <p:menuitem id="validate_document" value="Documentos" icon="desktop_mac" outcome="/validate"/>
+                            
                             <p:menuitem value="Static Menu" class="d-none" icon="menu" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
                             <p:menuitem value="Overlay Menu" class="d-none" icon="exit_to_app" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
                             <p:menuitem value="Horizontal Menu" class="d-none" icon="border_horizontal" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
