@@ -10,7 +10,7 @@ body{
     width: 100%;
     height: 100%;
     box-sizing: border-box;
-    --color-danger: #E91E63;
+    --color-yellow: #fdb813;
 }
 .container-box-login{
     width: 80%;
@@ -25,7 +25,7 @@ body{
 }
 
 body .ui-button.danger {
-    background-color: var(--color-danger) !important;
+    background-color: var(--color-yellow) !important;
 }
 
 
@@ -36,7 +36,17 @@ body .ui-button.danger {
     box-shadow: 0px 0px 20px 5px rgba(0,0,0,.15);
 }
 
+/*ESTILOS PARA BOTONES*/
+.button--1 {
+    background-color: #454d3e !important;
+    color: #ffffff !important;
+}
 
+.button--2,
+.button--2.ui-button .ui-icon {
+    background-color: #fdb813 !important;
+    color: #454d3e !important;
+}
 
 @media (max-width: 991px) {
     .container-box-login{
