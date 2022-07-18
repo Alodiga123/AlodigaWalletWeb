@@ -22,6 +22,14 @@ body{
     height: 100%;
     box-sizing: border-box;
 }
+.bg-yellow{
+    background-color: var(--color-yellow) !important;
+}
+.bg-gray{
+    background-color: var(--gray--1) !important;
+}
+
+
 .container-box-login{
     width: 80%;
     height: 80%;
