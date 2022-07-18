@@ -49,9 +49,9 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card overview">
                     <div class="overview-content clearfix">
-                        <span class="overview-title">Sales</span>
+                        <span class="overview-title">Total Moneda Virtual</span>
                         <span class="overview-badge">+%90</span>
-                        <span class="overview-detail">$22,650 / week</span>
+                        <span class="overview-detail">$1,650 / week</span>
                     </div>
                     <div class="overview-footer">
                         <p:graphicImage name="images/dashboard/sales.svg" library="ultima-layout" style="width: 100%" />
@@ -61,9 +61,9 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card overview">
                     <div class="overview-content clearfix">
-                        <span class="overview-title">Views</span>
+                        <span class="overview-title">Total Moneda Fiat</span>
                         <span class="overview-badge">+%60</span>
-                        <span class="overview-detail">6,520 / day</span>
+                        <span class="overview-detail">$520 / day</span>
                     </div>
                     <div class="overview-footer">
                         <p:graphicImage name="images/dashboard/views.svg" library="ultima-layout" style="width: 100%" />
@@ -73,9 +73,9 @@
             <div class="ui-g-12 ui-md-4">
                 <div class="card overview">
                     <div class="overview-content clearfix">
-                        <span class="overview-title">Users</span>
+                        <span class="overview-title">Total Criptomonedas</span>
                         <span class="overview-badge">+%45</span>
-                        <span class="overview-detail">5,200 / day</span>
+                        <span class="overview-detail">$200 / day</span>
                     </div>
                     <div class="overview-footer">
                         <p:graphicImage name="images/dashboard/progress.svg" library="ultima-layout" style="width: 100%" />
@@ -85,51 +85,51 @@
             
             <div class="ui-g-12 ui-md-6 ui-lg-3">
                 <div class="ui-g card colorbox colorbox-1">
-                    <div class="ui-g-4">
+                    <div class="ui-g-4 bg-green">
                         <i class="material-icons">check_circle</i>
                     </div>
-                    <div class="ui-g-8">
-                        <span class="colorbox-name">Tasks</span>
+                    <div class="ui-g-8 bg-green-op">
+                        <span class="colorbox-name">Transferencias Recibidas</span>
                         <span class="colorbox-count">50</span>
                     </div>
                 </div>
             </div>
             <div class="ui-g-12 ui-md-6 ui-lg-3">
                 <div class="ui-g card colorbox colorbox-2">
-                    <div class="ui-g-4">
+                    <div class="ui-g-4 bg-blue">
                         <i class="material-icons">shopping_card</i>
                     </div>
-                    <div class="ui-g-8">
-                        <span class="colorbox-name">Purchases</span>
+                    <div class="ui-g-8 bg-blue-op">
+                        <span class="colorbox-name">Transferencias Enviadas</span>
                         <span class="colorbox-count">1200</span>
                     </div>
                 </div>
             </div>
             <div class="ui-g-12 ui-md-6 ui-lg-3">
                 <div class="ui-g card colorbox colorbox-3">
-                    <div class="ui-g-4">
+                    <div class="ui-g-4 bg-red">
                         <i class="material-icons">report</i>
                     </div>
-                    <div class="ui-g-8">
-                        <span class="colorbox-name">Issues</span>
+                    <div class="ui-g-8 bg-red-op">
+                        <span class="colorbox-name">Pagos a Comercios</span>
                         <span class="colorbox-count">22</span>
                     </div>
                 </div>
             </div>
             <div class="ui-g-12 ui-md-6 ui-lg-3">
                 <div class="ui-g card colorbox colorbox-4">
-                    <div class="ui-g-4">
+                    <div class="ui-g-4 bg-blackberry">
                         <i class="material-icons">email</i>
                     </div>
-                    <div class="ui-g-8">
-                        <span class="colorbox-name">Messages</span>
+                    <div class="ui-g-8 bg-blackberry-op">
+                        <span class="colorbox-name pb-0">Todas Las Cuentas Afiliadas</span>
                         <span class="colorbox-count">10</span>
                     </div>
                 </div>
             </div>
             
             <div class="ui-g-12 ui-md-6 ui-lg-4 task-list">
-                <p:panel header="Tasks">
+                <p:panel header="Ultimas Transacciones Realizadas">
                     <ul>
                         <li>
                             <p:selectBooleanCheckbox />
@@ -165,7 +165,7 @@
                 </p:panel>
             </div>
             <div class="ui-g-12 ui-md-6 ui-lg-4 ui-fluid">
-                <p:panel header="Contact Us" styleClass="contact-form">
+                <p:panel header="Ultimas Transacciones Recibidas" styleClass="contact-form">
                     <div class="ui-g">
                         <div class="ui-g-12">
                             <p:selectOneMenu id="console" value="#{selectOneMenuView.console}" autoWidth="false">
@@ -198,7 +198,7 @@
                 </p:panel>
             </div>
             <div class="ui-g-12 ui-lg-4 contacts">
-                <p:panel header="Contacts">
+                <p:panel header="Favoritos">
                     <ul>
                         <li>
                             <a href="#">
@@ -231,8 +231,8 @@
                     </ul>
                 </p:panel>
             </div>
-            
-            <div class="ui-g-12 ui-md-4">
+<!--            
+            <div class="ui-g-12 ui-md-4 d-none">
                 <div class="card timeline ui-fluid">
                     <div class="ui-g">
                         <div class="ui-g-3">
@@ -302,7 +302,7 @@
                 </div>
             </div>
             
-            <div class="ui-g-12 ui-md-8">
+            <div class="ui-g-12 ui-md-8 d-none">
                 <h:form>
                     <div class="card">
                         <p:dataTable var="car" value="#{dtBasicView.cars}" selectionMode="single" rowKey="#{car.id}" reflow="true" style="margin-bottom:20px">
@@ -331,12 +331,12 @@
                 </h:form>
             </div>
             
-            <div class="ui-g-12 ui-md-8">
+            <div class="ui-g-12 ui-md-8 d-none">
                 <p:panel header="Calendar" style="height:100%">
                     <p:schedule value="#{scheduleView.eventModel}"/>
                 </p:panel>
             </div>
-            <div class="ui-g-12 ui-md-4">
+            <div class="ui-g-12 ui-md-4 d-none">
                 <p:panel header="Activity" style="height:100%">
                     <div class="activity-header">
                         <div class="ui-g">
@@ -394,7 +394,7 @@
                         </li>
                     </ul>
                 </p:panel>
-            </div>
+            </div>-->
         </div>
     </ui:define>
 

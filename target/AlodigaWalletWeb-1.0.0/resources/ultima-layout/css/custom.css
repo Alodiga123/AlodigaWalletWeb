@@ -14,7 +14,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     
     /*ESCALA DE GRISES*/
     --gray--1           : #454d3e;
-    
 }
 
 body{
@@ -28,8 +27,30 @@ body{
 .bg-gray{
     background-color: var(--gray--1) !important;    
 }
-
-
+.bg-green{
+    background-color: rgb(77, 141, 49) !important; 
+}
+.bg-green-op{
+    background-color: rgba(77, 141, 49, .7) !important; 
+}
+.bg-red{
+    background-color: rgb(229, 38, 89) !important; 
+}
+.bg-red-op{
+    background-color: rgba(229, 38, 89,.7) !important; 
+}
+.bg-blue{
+    background-color: rgb(25, 80, 158) !important; 
+}
+.bg-blue-op{
+    background-color: rgba(25, 80, 158,.7) !important; 
+}
+.bg-blackberry{
+    background-color: rgb(127, 29, 90) !important; 
+}
+.bg-blackberry-op{
+    background-color: rgba(127, 29, 90,.7) !important; 
+}
 .container-box-login{
     width: 80%;
     height: 80%;
