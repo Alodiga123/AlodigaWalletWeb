@@ -26,7 +26,7 @@ body{
     background-color: var(--color-yellow) !important;
 }
 .bg-gray{
-    background-color: var(--gray--1) !important;
+    background-color: var(--gray--1) !important;    
 }
 
 
@@ -61,6 +61,15 @@ body .ui-button.danger {
 /* MENÚ */
 .bg-menu {
     background-color: var(--gray--1);
+}
+
+.topbar-logo{
+    background: url("../images/login/logo-green.svg");
+    background-size: cover;
+}
+
+.topbar-left{
+    padding: 5px !important;
 }
 
 /**** MEDIA QUERYS ****/
