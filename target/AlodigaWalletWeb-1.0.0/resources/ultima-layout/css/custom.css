@@ -59,8 +59,13 @@ body .ui-button.danger {
 }
 
 /* MENÚ */
-.bg-menu {
-    background-color: var(--gray--1);
+.layout-wrapper .layout-menu .profile .profile-name,
+.layout-wrapper .ultima-menu li a {
+    color: rgba(255,255,255,.6);
+}
+
+.layout-wrapper .ultima-menu li a:hover {
+    color: var(--gray--1);
 }
 
 .topbar-logo{
