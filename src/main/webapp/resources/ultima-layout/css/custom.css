@@ -92,6 +92,10 @@ body .ui-button.danger {
     color: var(--gray--1) !important;
 }
 
+.topbar-items .ultima-menu li a {
+    background-color: var(--gray--1) !important;
+}
+
 .topbar-logo{
     background: url("../images/login/logo-green.svg");
     background-size: cover;
@@ -101,7 +105,7 @@ body .ui-button.danger {
     padding: 5px !important;
 }
 
-/**** MEDIA QUERYS ****/
+/**** MEDIA QUERIES ****/
 
 @media (max-width: 991px) {
     .container-box-login{
