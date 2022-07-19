@@ -83,7 +83,7 @@ body .ui-button.danger {
 .layout-wrapper .layout-menu .profile .profile-name,
 .layout-wrapper .ultima-menu li a,
 #profile-options i {
-    color: rgba(255,255,255,.6) !important;
+    color: rgba(255,255,255,1) !important;
 }
 
 .layout-wrapper .ultima-menu li a:hover,
