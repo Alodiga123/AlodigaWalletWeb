@@ -113,12 +113,12 @@ body .ui-button {
     background-color: var(--gray--1);
 }
 
-body .ui-button:hover,
-body .ui-button:hover .ui-icon {
+/*BOTONES*/
+body .layout-main .ui-button:hover,
+body .layout-main .ui-button:hover .ui-icon {
     background-color: var(--color-yellow);
     color: var(--gray--1);
 }
-
 
 /**** MEDIA QUERIES ****/
 
@@ -154,6 +154,10 @@ body .ui-button:hover .ui-icon {
     
     .layout-wrapper.menu-layout-static .layout-main {
         height: 100vh;
+    }
+    
+    .container-box-login {
+        height: 85%; /* NÚMERO MÑAGICO (EVITA SCROLL) */
     }
     
     #loginForm img,
