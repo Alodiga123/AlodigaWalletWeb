@@ -109,7 +109,8 @@ body .ui-button.danger {
 /**** COMPONENTES ****/
 /*BARRAS DE TÍTULOS*/
 body .ui-panel .ui-panel-titlebar,
-body .ui-button {
+body .ui-button,
+body .ui-button.ui-state-focus {
     background-color: var(--gray--1);
 }
 
