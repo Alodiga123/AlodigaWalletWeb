@@ -11,6 +11,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     
     /*COLORES*/
     --color-yellow      : #fdb813;
+    --color-green       : #4c8d31;
     
     /*ESCALA DE GRISES*/
     --gray--1           : #454d3e;
@@ -104,6 +105,20 @@ body .ui-button.danger {
 .topbar-left{
     padding: 5px !important;
 }
+
+/**** COMPONENTES ****/
+/*BARRAS DE TÍTULOS*/
+body .ui-panel .ui-panel-titlebar,
+body .ui-button {
+    background-color: var(--gray--1);
+}
+
+body .ui-button:hover,
+body .ui-button:hover .ui-icon {
+    background-color: var(--color-yellow);
+    color: var(--gray--1);
+}
+
 
 /**** MEDIA QUERIES ****/
 
