@@ -137,6 +137,10 @@ body .ui-button.danger {
 /*** ESTILOS PARA VERSIÓN ESCRITORIO *****/
 @media screen and (min-width: 992px) {
     
+    .layout-wrapper.menu-layout-static .layout-main {
+        height: 100vh;
+    }
+    
     #loginForm img,
     .logo__recover {
         display: flex;
