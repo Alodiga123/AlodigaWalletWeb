@@ -11,7 +11,7 @@
         <h:form enctype="multipart/form-data">
             <div class="ui-fluid">
                 <p:panelGrid>
-                    <p:wizard nextLabel="continuar" backLabel="#{msg.back}"  showStepStatus="false" style="overflow: auto; height: 100%;" flowListener="#{fileUploadView.onFlowProcess}">
+                    <p:wizard nextLabel="continuar" backLabel="#{msg.back}"  showStepStatus="false" flowListener="#{fileUploadView.onFlowProcess}">
                         <p:tab title="Documento de identidad">
                             <div class="ui-g">
                                 <div class="ui-g-12">
@@ -100,7 +100,7 @@
 
                             </div>
                         </p:tab>
-                    </p:wizard>>
+                    </p:wizard>
                 </p:panelGrid>
             </div>
         </h:form>
