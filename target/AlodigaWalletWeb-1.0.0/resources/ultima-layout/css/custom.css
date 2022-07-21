@@ -148,6 +148,13 @@ body .layout-main .ui-button:hover .ui-icon {
     }
 }
 
+@media screen and (max-width: 1024px) {
+    /* ÍCONO DE HAMBURGUESA */
+    .layout-wrapper .topbar .topbar-right #topbar-menu-button {
+        margin-right: 0;
+    }
+}
+
 
 
 /*** ESTILOS PARA VERSIÓN ESCRITORIO *****/
